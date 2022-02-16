@@ -83,6 +83,8 @@ public class Player extends Sprite {
         BodyDef bdef = new BodyDef();
         bdef.position.set(1200  / PirateGame.PPM, 2500 / PirateGame.PPM); // Default Pos: 1800,2500
         bdef.type = BodyDef.BodyType.DynamicBody;
+        // linear damping slows the player if no movement key is pressed
+        bdef.linearDamping = 1f;
         b2body = world.createBody(bdef);
 
         // Defines a player's shape and contact borders
