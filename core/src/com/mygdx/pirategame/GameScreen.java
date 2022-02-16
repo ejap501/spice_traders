@@ -32,8 +32,8 @@ import java.util.HashMap;
  *@version 1.0
  */
 public class GameScreen implements Screen {
-    private static float maxSpeed = 2.5f;
-    private static float accel = 0.05f;
+    private static float maxSpeed = 4f;
+    private static float accel = 0.1f;
     private float stateTime;
 
     protected static PirateGame game;
