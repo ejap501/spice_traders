@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.mygdx.pirategame.screen.SkillTreeScreen;
 
 /**
  * Hud
@@ -113,7 +114,7 @@ public class Hud implements Disposable {
             timeCount = 0;
 
             //Check if a points boundary is met
-            SkillTree.pointsCheck(score);
+            SkillTreeScreen.pointsCheck(score);
         }
     }
 
@@ -148,7 +149,7 @@ public class Hud implements Disposable {
         score += value;
         scoreLabel.setText(String.format("%03d", score));
         //Check if a points boundary is met
-        SkillTree.pointsCheck(score);
+        SkillTreeScreen.pointsCheck(score);
     }
 
     /**

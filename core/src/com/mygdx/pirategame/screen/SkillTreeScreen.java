@@ -1,4 +1,4 @@
-package com.mygdx.pirategame;
+package com.mygdx.pirategame.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -11,6 +11,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.mygdx.pirategame.Hud;
+import com.mygdx.pirategame.PirateGame;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +25,7 @@ import java.util.List;
  * @author Sam Pearson
  * @version 1.0
  */
-public class SkillTree implements Screen {
+public class SkillTreeScreen implements Screen {
 
     private final PirateGame parent;
     private final Stage stage;
@@ -41,7 +44,7 @@ public class SkillTree implements Screen {
      * @param pirateGame the main starting body of the game. Where screen swapping is carried out.
      */
 //In the constructor, the parent and stage are set. Also the states list is set
-    public SkillTree(PirateGame pirateGame){
+    public SkillTreeScreen(PirateGame pirateGame){
         parent = pirateGame;
         stage = new Stage(new ScreenViewport());
 

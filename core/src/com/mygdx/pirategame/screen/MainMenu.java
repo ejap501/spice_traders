@@ -1,4 +1,4 @@
-package com.mygdx.pirategame;
+package com.mygdx.pirategame.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -10,6 +10,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.mygdx.pirategame.PirateGame;
+import com.mygdx.pirategame.screen.OptionsScreen;
 
 /**
  * Main menu is the first screen the player sees. Allows them to navigate where they want to go to
@@ -83,7 +85,7 @@ public class MainMenu implements Screen {
         options.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor){
-                parent.setScreen(new Options(parent,parent.getScreen()));
+                parent.setScreen(new OptionsScreen(parent,parent.getScreen()));
             }
         });
 

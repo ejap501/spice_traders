@@ -1,4 +1,4 @@
-package com.mygdx.pirategame;
+package com.mygdx.pirategame.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -17,6 +17,15 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.*;
+import com.mygdx.pirategame.*;
+import com.mygdx.pirategame.gameobjects.Player;
+import com.mygdx.pirategame.gameobjects.entity.Coin;
+import com.mygdx.pirategame.gameobjects.enemy.College;
+import com.mygdx.pirategame.gameobjects.enemy.EnemyShip;
+import com.mygdx.pirategame.world.AvailableSpawn;
+import com.mygdx.pirategame.world.WorldContactListener;
+import com.mygdx.pirategame.world.WorldCreator;
+
 import java.util.Random;
 
 import java.util.ArrayList;
@@ -36,7 +45,7 @@ public class GameScreen implements Screen {
     private static float accel = 0.1f;
     private float stateTime;
 
-    protected static PirateGame game;
+    public static PirateGame game;
     private OrthographicCamera camera;
     private Viewport viewport;
     private final Stage stage;
@@ -229,7 +238,7 @@ public class GameScreen implements Screen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 pauseTable.setVisible(false);
-                game.setScreen(new Options(game,game.getScreen()));
+                game.setScreen(new OptionsScreen(game,game.getScreen()));
             }
         }
         );

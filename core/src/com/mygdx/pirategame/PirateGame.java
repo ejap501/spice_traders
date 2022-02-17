@@ -4,6 +4,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.mygdx.pirategame.screen.*;
 
 
 /**
@@ -31,9 +32,9 @@ public class PirateGame extends Game {
 	//Variable for each screen
 	private MainMenu menuScreen;
 	private GameScreen gameScreen;
-	private SkillTree skillTreeScreen;
+	private SkillTreeScreen skillTreeScreen;
 	private DeathScreen deathScreen;
-	private Help helpScreen;
+	private HelpScreen helpScreen;
 	private VictoryScreen victoryScreen;
 
 	private audioControls options;
@@ -85,12 +86,12 @@ public class PirateGame extends Game {
 
 			case GAME:
 				if (gameScreen == null) gameScreen = new GameScreen(this);
-				if (skillTreeScreen == null) skillTreeScreen = new SkillTree(this);
+				if (skillTreeScreen == null) skillTreeScreen = new SkillTreeScreen(this);
 				this.setScreen(gameScreen);
 				break;
 
 			case SKILL:
-				if (skillTreeScreen == null) skillTreeScreen = new SkillTree(this);
+				if (skillTreeScreen == null) skillTreeScreen = new SkillTreeScreen(this);
 				this.setScreen(skillTreeScreen);
 				break;
 
@@ -100,7 +101,7 @@ public class PirateGame extends Game {
 				break;
 
 			case HELP:
-				if (helpScreen == null) helpScreen = new Help(this);
+				if (helpScreen == null) helpScreen = new HelpScreen(this);
 				this.setScreen(helpScreen);
 				break;
 

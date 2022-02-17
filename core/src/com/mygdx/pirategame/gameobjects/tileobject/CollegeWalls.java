@@ -1,15 +1,18 @@
-package com.mygdx.pirategame;
+package com.mygdx.pirategame.gameobjects.tileobject;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Rectangle;
+import com.mygdx.pirategame.PirateGame;
+import com.mygdx.pirategame.gameobjects.tileobject.InteractiveTileObject;
+import com.mygdx.pirategame.screen.GameScreen;
 
 /**
- * College Walls (Anne Lister)
+ * College Walls (Alcuin)
  * Checks interaction with walls from map
  *
  *@author Ethan Alabaster, Sam Pearson
  *@version 1.0
  */
-public class CollegeWalls4 extends InteractiveTileObject {
+public class CollegeWalls extends InteractiveTileObject {
     private GameScreen screen;
 
     /**
@@ -18,7 +21,7 @@ public class CollegeWalls4 extends InteractiveTileObject {
      * @param screen Visual data
      * @param bounds Wall bounds
      */
-    public CollegeWalls4(GameScreen screen, Rectangle bounds) {
+    public CollegeWalls(GameScreen screen, Rectangle bounds) {
         super(screen, bounds);
         this.screen = screen;
         fixture.setUserData(this);
@@ -33,7 +36,6 @@ public class CollegeWalls4 extends InteractiveTileObject {
     public void onContact() {
         Gdx.app.log("wall", "collision");
         //Deal damage to the assigned college
-        screen.getCollege("Anne Lister").onContact();
-
+        screen.getCollege("Alcuin").onContact();
     }
 }
