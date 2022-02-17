@@ -1,4 +1,4 @@
-package com.mygdx.pirategame;
+package com.mygdx.pirategame.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -10,15 +10,16 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.mygdx.pirategame.PirateGame;
 
 /**
  * Provides a UI for the user to interact with the audioControls interface
  * @author Sam Pearson
  * @version 1.0
  */
-public class Options implements Screen {
+public class OptionsScreen implements Screen {
 
-    private final PirateGame PirateGame;
+    private final com.mygdx.pirategame.PirateGame PirateGame;
     private final Screen parent;
     private final Stage stage;
 
@@ -28,7 +29,7 @@ public class Options implements Screen {
      * @param pirateGame the main starting body of the game. Where screen swapping is carried out.
      * @param parent     the screen that called the options screen. Allows for easy return
      */
-    public Options(PirateGame pirateGame, Screen parent){
+    public OptionsScreen(PirateGame pirateGame, Screen parent){
         this.PirateGame = pirateGame;
         this.parent = parent;
         stage = new Stage(new ScreenViewport());

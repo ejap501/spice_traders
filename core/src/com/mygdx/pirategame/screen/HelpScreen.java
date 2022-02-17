@@ -1,4 +1,4 @@
-package com.mygdx.pirategame;
+package com.mygdx.pirategame.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -13,15 +13,14 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.mygdx.pirategame.PirateGame;
 
-import java.util.ArrayList;
-import java.util.List;
 /**
  * Screen with instructions for the user
  * @author Sam Pearson
  * @version 1.0
  */
-public class Help implements Screen {
+public class HelpScreen implements Screen {
     private final PirateGame parent;
     private final Stage stage;
 
@@ -30,7 +29,7 @@ public class Help implements Screen {
      *
      * @param pirateGame Game data
      */
-    public Help(PirateGame pirateGame){
+    public HelpScreen(PirateGame pirateGame){
         parent = pirateGame;
         stage = new Stage(new ScreenViewport());
     }

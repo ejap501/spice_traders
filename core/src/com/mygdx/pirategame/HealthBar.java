@@ -4,6 +4,7 @@ package com.mygdx.pirategame;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.mygdx.pirategame.gameobjects.enemy.Enemy;
 
 /**
  * Health Bar
@@ -15,7 +16,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
  *@author Sam Pearson
  *@version 1.0
  */
-class HealthBar {
+public class HealthBar {
     private Sprite healthBar;
     private Texture image;
 

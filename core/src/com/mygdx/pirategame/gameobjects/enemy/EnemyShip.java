@@ -1,4 +1,4 @@
-package com.mygdx.pirategame;
+package com.mygdx.pirategame.gameobjects.enemy;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
@@ -7,6 +7,10 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.mygdx.pirategame.gameobjects.enemy.Enemy;
+import com.mygdx.pirategame.screen.GameScreen;
+import com.mygdx.pirategame.Hud;
+import com.mygdx.pirategame.PirateGame;
 
 /**
  * Enemy Ship
@@ -16,7 +20,7 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
  *@author Ethan Alabaster, Sam Pearson, Edward Poulter
  *@version 1.0
  */
-public class EnemyShip extends Enemy{
+public class EnemyShip extends Enemy {
     private Texture enemyShip;
     public String college;
     private Sound destroy;
