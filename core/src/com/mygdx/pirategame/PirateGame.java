@@ -6,15 +6,13 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.pirategame.screen.*;
 
 
 /**
- * The start of the program. Sets up the main back bone of the game.
- * This includes most constants used throught for collision and changing screens
- * Provides access for screens to interact with eachother and the options interface
+ * The start of the program. Sets up the main backbone of the game.
+ * This includes most constants used for collision and changing screens
+ * Provides access for screens to interact with each other and the options interface
  * @author Sam Pearson
  * @version 1.0
  */
@@ -137,21 +135,6 @@ public class PirateGame extends Game {
 		int mouseX = Gdx.input.getX();
 		int mouseY = Gdx.graphics.getHeight() - Gdx.input.getY();
 		return getScaledLocation(new Vector2(mouseX, mouseY), camera);
-	}
-
-	public static Vector3 mousePositionInWorld(Vector3 v, OrthographicCamera camera) {
-
-		v.set(Gdx.input.getX(), Gdx.input.getY(), 0f);
-		camera.unproject(v);
-
-		return v;
-	}
-
-	public static Vector3 worldToScreenPosition(Vector3 v, OrthographicCamera camera) {
-
-		camera.project(v);
-
-		return v;
 	}
 
 	/**
