@@ -102,7 +102,6 @@ public class CannonFire extends Sprite {
 
         float velX = (float) (Math.cos(angle) * velocity);
         float velY = (float) (Math.sin(angle) * velocity);
-        System.out.println(Math.toDegrees(angle));
 
         b2body.applyLinearImpulse(new Vector2(velX, velY), b2body.getWorldCenter(), true);
     }
