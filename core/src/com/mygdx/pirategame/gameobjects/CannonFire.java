@@ -5,7 +5,6 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.mygdx.pirategame.PirateGame;
@@ -22,20 +21,18 @@ import com.mygdx.pirategame.screen.GameScreen;
  */
 public class CannonFire extends Sprite {
     private World world;
-    private Texture cannonBall;
     private float stateTime;
     private boolean destroyed;
     private boolean setToDestroy;
     private Body b2body;
     private double angle;
     private float velocity;
-    private Vector2 bodyVel;
     private Sound fireNoise;
     private final Texture texture;
-    private final Sprite sprite;
     private float sourceX, sourceY;
     private float x, y;
     private Vector2 mouse;
+    private float targetX, targetY;
 
     /**
      * Instantiates cannon fire
@@ -43,47 +40,32 @@ public class CannonFire extends Sprite {
      * Determines firing sound
      *
      * @param screen visual data
-     * @param sourceX x value of origin
-     * @param sourceY y value of origin
-     * @param targetX x value of the target
-     * @param targetY y value of the target
      * @param body body of origin
+     * @param camera game scaling camera
      * @param velocity velocity of the cannonball
      */
-    public CannonFire(GameScreen screen, float targetX, float targetY, Vector2 position, Texture ship, Body body, OrthographicCamera camera, float velocity, Vector2 middleScaled) {
+    public CannonFire(GameScreen screen, Body body, OrthographicCamera camera, float velocity) {
         this.velocity = velocity;
         this.world = screen.getWorld();
-        //sets the angle and velocity
-        bodyVel = body.getLinearVelocity();
-        //angle = body.getAngle();
 
-        //sourceX = body.getPosition().x;
-        //sourceY = body.getPosition().y;
-
+        // Get values of mouse location, scaled to size of screen
         mouse = PirateGame.getScaledMouseLocation(camera);
         targetX = mouse.x;
         targetY = mouse.y;
 
+        // Value of player source used to calculate angle
         sourceX = Gdx.graphics.getWidth() / 2;
         sourceY = Gdx.graphics.getHeight() / 2;
 
+        // Value of player source used to set where the cannonball comes from
         x = body.getPosition().x;
         y = body.getPosition().y;
-
-        System.out.println(sourceX);
-        System.out.println(sourceY);
-        System.out.println(targetX);
-        System.out.println(targetY);
-        //System.out.println(x);
-        //System.out.println(y);
 
         // Uses a triangle to calculate the new trajectory
         angle = Math.atan2(targetY - sourceY, targetX - sourceX);
 
         //set cannonBall dimensions for the texture
         this.texture = new Texture("cannonBall.png");
-        this.sprite = new Sprite(texture);
-
         setRegion(texture);
         setBounds(x, y, 10 / PirateGame.PPM, 10 / PirateGame.PPM);
         //set collision bounds
@@ -93,11 +75,6 @@ public class CannonFire extends Sprite {
         if (screen.game.getPreferences().isEffectsEnabled()) {
             fireNoise.play(screen.game.getPreferences().getEffectsVolume());
         }
-        /*
-        // sets center of sprite at source coordinates
-        b2body.getPosition().x = sourceX - (getWidth() / 2);
-        b2body.getPosition().y = sourceY - (getHeight() / 2);
-         */
     }
 
     /**
@@ -123,25 +100,10 @@ public class CannonFire extends Sprite {
         fDef.isSensor = true;
         b2body.createFixture(fDef).setUserData(this);
 
-        //Velocity maths
-        //System.out.println(velocity);
-        //System.out.println(angle);
-        /*
-        float velX = MathUtils.cos(angle) * velocity + bodyVel.x;
-        float velY = MathUtils.sin(angle) * velocity + bodyVel.y;
-
-         */
-
-        //float velX = (float) (Math.cos(angle) * velocity + bodyVel.x);
-        //float velY = (float) (Math.sin(angle) * velocity + bodyVel.y);
         float velX = (float) (Math.cos(angle) * velocity);
         float velY = (float) (Math.sin(angle) * velocity);
         System.out.println(Math.toDegrees(angle));
-        /*
-        System.out.println(velX);
-        System.out.println(velY);
 
-         */
         b2body.applyLinearImpulse(new Vector2(velX, velY), b2body.getWorldCenter(), true);
     }
 
@@ -156,7 +118,7 @@ public class CannonFire extends Sprite {
         //Update position of ball
         setPosition(b2body.getPosition().x - getWidth() / 2, b2body.getPosition().y - getHeight() / 2);
 
-        //If ball is set to destroy and isnt, destroy it
+        //If ball is set to destroy and isn't, destroy it
         if((setToDestroy) && !destroyed) {
             world.destroyBody(b2body);
             destroyed = true;
@@ -165,30 +127,6 @@ public class CannonFire extends Sprite {
         if(stateTime > 0.98f) {
             setToDestroy();
         }
-
-        /*
-        //float velocity = 200 * delta;
-        x += Math.cos(angle) * velocity;
-        y += Math.sin(angle) * velocity;
-
-        setPosition(x, y);
-
-         */
-
-        /*
-        // destroy cannonball if it goes off the screen
-        // limiting x
-        if (b2body.getPosition().x <= -getWidth() / 2 || b2body.getPosition().x >= camera.viewportWidth - getWidth() / 2) {
-            dispose();
-        }
-
-        // limiting y
-        if (b2body.getPosition().y <= -getHeight() / 2 || b2body.getPosition().y >= camera.viewportHeight - height / 2) {
-            dispose();
-        }
-
-         */
-
     }
 
     /**
