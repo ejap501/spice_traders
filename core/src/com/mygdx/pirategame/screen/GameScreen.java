@@ -25,9 +25,7 @@ import com.mygdx.pirategame.gameobjects.enemy.EnemyShip;
 import com.mygdx.pirategame.world.AvailableSpawn;
 import com.mygdx.pirategame.world.WorldContactListener;
 import com.mygdx.pirategame.world.WorldCreator;
-
 import java.util.Random;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -174,7 +172,6 @@ public class GameScreen implements Screen {
         final TextButton options = new TextButton("Options", skin);
         TextButton exit = new TextButton("Exit", skin);
 
-
         //Create main table and pause tables
         table = new Table();
         table.setFillParent(true);
@@ -184,8 +181,7 @@ public class GameScreen implements Screen {
         pauseTable.setFillParent(true);
         stage.addActor(pauseTable);
 
-
-        //Set the visability of the tables. Particuarly used when coming back from options or skillTree
+        //Set the visibility of the tables. Particularly used when coming back from options or skillTree
         if (gameStatus == GAME_PAUSED){
             table.setVisible(false);
             pauseTable.setVisible(true);
@@ -261,19 +257,19 @@ public class GameScreen implements Screen {
     public void handleInput(float dt) {
         if (gameStatus == GAME_RUNNING) {
             // Left physics impulse on 'A'
-            if (Gdx.input.isKeyPressed(Input.Keys.A)) {
+            if (Gdx.input.isKeyPressed(Input.Keys.A) || Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
                 player.b2body.applyLinearImpulse(new Vector2(-accel, 0), player.b2body.getWorldCenter(), true);
             }
             // Right physics impulse on 'D'
-            if (Gdx.input.isKeyPressed(Input.Keys.D)) {
+            if (Gdx.input.isKeyPressed(Input.Keys.D) || Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
                 player.b2body.applyLinearImpulse(new Vector2(accel, 0), player.b2body.getWorldCenter(), true);
             }
             // Up physics impulse on 'W'
-            if (Gdx.input.isKeyPressed(Input.Keys.W)) {
+            if (Gdx.input.isKeyPressed(Input.Keys.W) || Gdx.input.isKeyPressed(Input.Keys.UP)) {
                 player.b2body.applyLinearImpulse(new Vector2(0, accel), player.b2body.getWorldCenter(), true);
             }
             // Down physics impulse on 'S'
-            if (Gdx.input.isKeyPressed(Input.Keys.S)) {
+            if (Gdx.input.isKeyPressed(Input.Keys.S) || Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
                 player.b2body.applyLinearImpulse(new Vector2(0, -accel), player.b2body.getWorldCenter(), true);
             }
             // Checking if player at max velocity, and keeping them below max
