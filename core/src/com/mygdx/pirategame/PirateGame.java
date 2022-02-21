@@ -3,7 +3,11 @@ package com.mygdx.pirategame;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.pirategame.screen.*;
 
 
@@ -110,6 +114,44 @@ public class PirateGame extends Game {
 				this.setScreen(victoryScreen);
 				break;
 		}//
+	}
+
+	/**
+	 * Used to scale a location on the screen to a location within game coordinates
+	 *
+	 * @param point  The point on the screen
+	 * @param camera The camera that is in charge of scaling
+	 * @return The point translated into in-game coordinates
+	 */
+	public static Vector2 getScaledLocation(Vector2 point, OrthographicCamera camera) {
+		return new Vector2(point.x * (camera.viewportWidth / Gdx.graphics.getWidth()), point.y * (camera.viewportHeight / Gdx.graphics.getHeight()));
+	}
+
+	/**
+	 * Used to get the in game coordinates of the mouse
+	 *
+	 * @param camera The camera that is in charge of scaling
+	 * @return The location of the mouse pointer in in-game coordinates
+	 */
+	public static Vector2 getScaledMouseLocation(OrthographicCamera camera) {
+		int mouseX = Gdx.input.getX();
+		int mouseY = Gdx.graphics.getHeight() - Gdx.input.getY();
+		return getScaledLocation(new Vector2(mouseX, mouseY), camera);
+	}
+
+	public static Vector3 mousePositionInWorld(Vector3 v, OrthographicCamera camera) {
+
+		v.set(Gdx.input.getX(), Gdx.input.getY(), 0f);
+		camera.unproject(v);
+
+		return v;
+	}
+
+	public static Vector3 worldToScreenPosition(Vector3 v, OrthographicCamera camera) {
+
+		camera.project(v);
+
+		return v;
 	}
 
 	/**

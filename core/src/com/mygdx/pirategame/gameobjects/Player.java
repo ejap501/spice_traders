@@ -1,10 +1,14 @@
 package com.mygdx.pirategame.gameobjects;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.pirategame.PirateGame;
@@ -49,7 +53,7 @@ public class Player extends Sprite {
     }
 
     /**
-     * Update the position of the player. Also updates any cannon balls the player generates
+     * Update the position of the player. Also updates any cannonballs the player generates
      *
      * @param dt Delta Time
      */
@@ -107,11 +111,12 @@ public class Player extends Sprite {
     /**
      * Called when E is pushed. Causes 1 cannon ball to spawn on both sides of the ships wih their relative velocity
      */
-    public void fire() {
+    public void fire(Vector2 mouse, OrthographicCamera camera) {
         // Fires cannons
+        /*
         cannonBalls.add(new CannonFire(screen, b2body.getPosition().x, b2body.getPosition().y, b2body, 5));
         cannonBalls.add(new CannonFire(screen, b2body.getPosition().x, b2body.getPosition().y, b2body, -5));
-
+         */
         // Cone fire below
         /*cannonBalls.add(new CannonFire(screen, b2body.getPosition().x, b2body.getPosition().y, (float) (b2body.getAngle() - Math.PI / 6), -5, b2body.getLinearVelocity()));
         cannonBalls.add(new CannonFire(screen, b2body.getPosition().x, b2body.getPosition().y, (float) (b2body.getAngle() - Math.PI / 6), 5, b2body.getLinearVelocity()));
@@ -119,6 +124,25 @@ public class Player extends Sprite {
         cannonBalls.add(new CannonFire(screen, b2body.getPosition().x, b2body.getPosition().y, (float) (b2body.getAngle() + Math.PI / 6), 5, b2body.getLinearVelocity()));
         }
          */
+        /*
+        // Center of boat sprite
+        float playerCenterX = b2body.getPosition().x + getTexture().getWidth() / 2;
+        float playerCenterY = b2body.getPosition().y + getTexture().getHeight() / 2;
+
+         */
+
+        //cannonBalls.add(new CannonFire(screen, b2body.getPosition().x, b2body.getPosition().y, b2body, 5));
+        //cannonBalls.add(new CannonFire(screen, playerCenterX, playerCenterY, scaledMouse.x, scaledMouse.y, b2body, 5));
+        //cannonBalls.add(new CannonFire(screen, mouse.x, mouse.y, ship, b2body, 5));
+        Vector3 position = new Vector3(b2body.getPosition().x, b2body.getPosition().y, 0);
+        Vector3 scaledPosition = PirateGame.worldToScreenPosition(position, camera);
+        Vector2 positionFire = new Vector2(scaledPosition.x, scaledPosition.y);
+
+        Vector3 middle = new Vector3(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2, 0);
+        Vector3 middleScaled = PirateGame.worldToScreenPosition(middle, camera);
+        Vector2 middleFire = new Vector2(middleScaled.x, middleScaled.y);
+
+        cannonBalls.add(new CannonFire(screen, mouse.x, mouse.y, positionFire, ship, b2body, camera, 5, middleFire));
     }
 
     /**
