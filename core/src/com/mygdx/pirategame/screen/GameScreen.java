@@ -9,6 +9,7 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -276,10 +277,12 @@ public class GameScreen implements Screen {
             if (Gdx.input.isKeyPressed(Input.Keys.S)) {
                 player.b2body.applyLinearImpulse(new Vector2(0, -accel), player.b2body.getWorldCenter(), true);
             }
+            /*
             // Cannon fire on 'E'
             if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
                 player.fire();
             }
+             */
             // Checking if player at max velocity, and keeping them below max
             if (player.b2body.getLinearVelocity().x >= maxSpeed) {
                 player.b2body.applyLinearImpulse(new Vector2(-accel, 0), player.b2body.getWorldCenter(), true);
@@ -292,6 +295,41 @@ public class GameScreen implements Screen {
             }
             if (player.b2body.getLinearVelocity().y <= -maxSpeed) {
                 player.b2body.applyLinearImpulse(new Vector2(0, accel), player.b2body.getWorldCenter(), true);
+            }
+            // Firing Code
+            if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
+
+                //Vector2 scaledMouse = PirateGame.getScaledMouseLocation(camera);
+                /*
+                int mouseX = Gdx.input.getX();
+                int mouseY = Gdx.graphics.getHeight() - Gdx.input.getY();
+                Vector3 mouse = new Vector3(mouseX, mouseY, 0);
+                Vector3 scaledMouse = PirateGame.worldToScreenPosition(mouse, camera);
+
+                // Center of boat sprite
+                //float playerCenterX = getPlayerPos().x + player.getWidth() / 2;
+                //float playerCenterY = getPlayerPos().y + player.getHeight() / 2;
+                Vector2 mouseFire = new Vector2(scaledMouse.x, scaledMouse.y);
+                player.fire(mouseFire);
+                 */
+
+                int mouseX = Gdx.input.getX();
+                int mouseY = Gdx.graphics.getHeight() - Gdx.input.getY();
+                Vector2 mouse = new Vector2(mouseX, mouseY);
+
+                player.fire(mouse, camera);
+
+                /*
+                int mouseX = Gdx.input.getX();
+                int mouseY = Gdx.graphics.getHeight() - Gdx.input.getY();
+                Vector3 mouse = new Vector3(mouseX, mouseY, 0);
+                Vector3 scaledMouse = PirateGame.mousePositionInWorld(mouse, camera);
+                Vector2 mouseFire = new Vector2(scaledMouse.x, scaledMouse.y);
+                player.fire(mouseFire, camera);
+
+                 */
+
+
             }
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
