@@ -7,6 +7,8 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.mygdx.pirategame.PirateGame;
 import com.mygdx.pirategame.screen.GameScreen;
 
+import java.util.Random;
+
 /**
  * College Fire
  * Defines college attack method
@@ -35,7 +37,8 @@ public class CollegeFire extends Sprite {
      */
     public CollegeFire(GameScreen screen, float x, float y) {
         this.world = screen.getWorld();
-        playerPos = screen.getPlayerPos();
+        playerPos = screen.getCenteredPlayerPos();
+
         cannonBall = new Texture("cannonBall.png");
         //Set the position and size of the ball
         setRegion(cannonBall);
@@ -53,6 +56,9 @@ public class CollegeFire extends Sprite {
         bDef.position.set(getX(), getY());
         bDef.type = BodyDef.BodyType.DynamicBody;
         b2body = world.createBody(bDef);
+        MassData mass = new MassData();
+        mass.mass = (float) 0.01;
+        b2body.setMassData(mass);
         //Sets collision boundaries
         FixtureDef fDef = new FixtureDef();
         CircleShape shape = new CircleShape();
@@ -67,6 +73,13 @@ public class CollegeFire extends Sprite {
 
         // Math for firing the cannonball at the player
         playerPos.sub(b2body.getPosition());
+
+        // adding randomness to cannon firing
+        Random rnd = new Random();
+        float rndX = (float) (rnd.nextInt(2) - 1 + rnd.nextDouble());
+        float rndY = (float) (rnd.nextInt(2) - 1 + rnd.nextDouble());
+        playerPos.sub(rndX, rndY);
+
         playerPos.nor();
         float speed = 5f;
         b2body.setLinearVelocity(playerPos.scl(speed));
@@ -80,7 +93,7 @@ public class CollegeFire extends Sprite {
      */
     public void update(float dt){
         stateTime += dt;
-        //If college is set to destroy and isnt, destroy it
+        //If college is set to destroy and isn't, destroy it
         setPosition(b2body.getPosition().x - getWidth() / 2, b2body.getPosition().y - getHeight() / 2);
         if((setToDestroy) && !destroyed) {
             world.destroyBody(b2body);
