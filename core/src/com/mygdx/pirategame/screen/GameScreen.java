@@ -478,6 +478,14 @@ public class GameScreen implements Screen {
     }
 
     /**
+     * Calculates the players position centered in the middle of the player
+     * @return The centered position of the player
+     */
+    public Vector2 getCenteredPlayerPos(){
+        return getPlayerPos().add(player.getWidth(), player.getHeight());
+    }
+
+    /**
      * Updates acceleration by a given percentage. Accessed by skill tree
      *
      * @param percentage percentage increase

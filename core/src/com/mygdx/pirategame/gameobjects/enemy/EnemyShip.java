@@ -116,6 +116,7 @@ public class EnemyShip extends Enemy {
         bdef.type = BodyDef.BodyType.DynamicBody;
         b2body = world.createBody(bdef);
 
+        b2body.setLinearDamping(1);
         //Sets collision boundaries
         FixtureDef fdef = new FixtureDef();
         CircleShape shape = new CircleShape();
