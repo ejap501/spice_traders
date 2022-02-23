@@ -42,7 +42,7 @@ public class Coin extends Entity {
         setRegion(coin);
         //Sets origin of the coin
         setOrigin(24 / PirateGame.PPM,24 / PirateGame.PPM);
-        coinPickup = Gdx.audio.newSound(Gdx.files.internal("coin-pickup.mp3"));
+        coinPickup = Gdx.audio.newSound(Gdx.files.internal("sfx_and_music/coin-pickup.mp3"));
     }
 
     /**

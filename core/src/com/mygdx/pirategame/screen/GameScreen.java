@@ -95,7 +95,7 @@ public class GameScreen implements Screen {
 
         // making the Tiled tmx file render as a map
         maploader = new TmxMapLoader();
-        map = maploader.load("map.tmx");
+        map = maploader.load("map/map.tmx");
         renderer = new OrthogonalTiledMapRenderer(map, 1 / PirateGame.PPM);
         new WorldCreator(this);
 
@@ -105,13 +105,13 @@ public class GameScreen implements Screen {
         // Spawning enemy ship and coin. x and y is spawn location
         colleges = new HashMap<>();
         colleges.put("Alcuin", new College(this, "Alcuin", 1900 / PirateGame.PPM, 2100 / PirateGame.PPM,
-                "alcuin_flag.png", "alcuin_ship.png", 0, invalidSpawn));
+                "college/Flags/alcuin_flag.png", "college/Ships/alcuin_ship.png", 0, invalidSpawn));
         colleges.put("Anne Lister", new College(this, "Anne Lister", 6304 / PirateGame.PPM, 1199 / PirateGame.PPM,
-                "anne_lister_flag.png", "anne_lister_ship.png", 8, invalidSpawn));
+                "college/Flags/anne_lister_flag.png", "college/Ships/anne_lister_ship.png", 8, invalidSpawn));
         colleges.put("Constantine", new College(this, "Constantine", 6240 / PirateGame.PPM, 6703 / PirateGame.PPM,
-                "constantine_flag.png", "constantine_ship.png", 8, invalidSpawn));
+                "college/Flags/constantine_flag.png", "college/Ships/constantine_ship.png", 8, invalidSpawn));
         colleges.put("Goodricke", new College(this, "Goodricke", 1760 / PirateGame.PPM, 6767 / PirateGame.PPM,
-                "goodricke_flag.png", "goodricke_ship.png", 8, invalidSpawn));
+                "college/Flags/goodricke_flag.png", "college/Ships/goodricke_ship.png", 8, invalidSpawn));
         ships = new ArrayList<>();
         ships.addAll(colleges.get("Alcuin").fleet);
         ships.addAll(colleges.get("Anne Lister").fleet);
@@ -132,7 +132,7 @@ public class GameScreen implements Screen {
                 validLoc = checkGenPos(a, b);
             }
             //Add a ship at the random coords
-            ships.add(new EnemyShip(this, a, b, "unaligned_ship.png", "Unaligned"));
+            ships.add(new EnemyShip(this, a, b, "college/Ships/unaligned_ship.png", "Unaligned"));
         }
 
         //Random coins
@@ -161,7 +161,7 @@ public class GameScreen implements Screen {
     @Override
     public void show() {
         Gdx.input.setInputProcessor(stage);
-        Skin skin = new Skin(Gdx.files.internal("skin\\uiskin.json"));
+        Skin skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
 
         //GAME BUTTONS
         final TextButton pauseButton = new TextButton("Pause",skin);
@@ -395,7 +395,7 @@ public class GameScreen implements Screen {
                 //Flips a colleges allegence if their college is destroyed
                 if (colleges.get(ships.get(i).college).destroyed) {
 
-                    ships.get(i).updateTexture("Alcuin", "alcuin_ship.png");
+                    ships.get(i).updateTexture("Alcuin", "college/Ships/alcuin_ship.png");
                 }
             }
             ships.get(i).draw(game.batch);
