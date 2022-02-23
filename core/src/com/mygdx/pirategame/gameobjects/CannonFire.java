@@ -71,7 +71,7 @@ public class CannonFire extends Sprite {
         //set collision bounds
         defineCannonBall();
         //set sound for fire and play if on
-        fireNoise = Gdx.audio.newSound(Gdx.files.internal("explosion.wav"));
+        fireNoise = Gdx.audio.newSound(Gdx.files.internal("sfx_and_music/explosion.wav"));
         if (screen.game.getPreferences().isEffectsEnabled()) {
             fireNoise.play(screen.game.getPreferences().getEffectsVolume());
         }
