@@ -65,7 +65,7 @@ public class PirateGame extends Game {
 		options = new audioControls();
 
 		//Set background music and play if valid
-		song = Gdx.audio.newMusic(Gdx.files.internal("pirate-music.mp3"));
+		song = Gdx.audio.newMusic(Gdx.files.internal("sfx_and_music/pirate-music.mp3"));
 		song.setLooping(true);
 		if(getPreferences().isMusicEnabled()){
 			song.play();

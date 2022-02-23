@@ -43,7 +43,7 @@ public class VictoryScreen implements Screen {
     @Override
     public void show() {
             //Creates the skin for the buttons and labels to use
-            Skin skin = new Skin(Gdx.files.internal("skin\\uiskin.json"));
+            Skin skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
             //Sets stage to be the input processor
             Gdx.input.setInputProcessor(stage);
 

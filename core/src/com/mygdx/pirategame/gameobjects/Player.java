@@ -32,7 +32,7 @@ public class Player extends Sprite {
     public Player(GameScreen screen) {
         // Retrieves world data and creates ship texture
         this.screen = screen;
-        ship = new Texture("player_ship.png");
+        ship = new Texture("college/Ships/player_ship.png");
         this.world = screen.getWorld();
 
         // Defines a player, and the players position on screen and world
@@ -42,7 +42,7 @@ public class Player extends Sprite {
         setOrigin(32 / PirateGame.PPM,55 / PirateGame.PPM);
 
         // Sound effect for damage
-        breakSound = Gdx.audio.newSound(Gdx.files.internal("wood-bump.mp3"));
+        breakSound = Gdx.audio.newSound(Gdx.files.internal("sfx_and_music/wood-bump.mp3"));
 
         // Sets cannonball array
         cannonBalls = new Array<CannonFire>();
