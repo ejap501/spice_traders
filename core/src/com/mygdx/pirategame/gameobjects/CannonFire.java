@@ -54,8 +54,13 @@ public class CannonFire extends Sprite {
         targetY = mouse.y;
 
         // Value of player source used to calculate angle
-        sourceX = Gdx.graphics.getWidth() / 2;
-        sourceY = Gdx.graphics.getHeight() / 2;
+        // Changed to fix issues with shooting and resize
+        //sourceX = Gdx.graphics.getWidth() / 2;
+        //sourceY = Gdx.graphics.getHeight() / 2;
+
+        // Value of player source used to calculate angle
+        sourceX = camera.viewportWidth /2;
+        sourceY = camera.viewportHeight /2;
 
         // Value of player source used to set where the cannonball comes from
         x = body.getPosition().x;
