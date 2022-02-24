@@ -45,7 +45,7 @@ public class GameScreen implements Screen {
 
     public static PirateGame game;
     private OrthographicCamera camera;
-    private Viewport viewport;
+    private FitViewport viewport;
     private final Stage stage;
 
     private TmxMapLoader maploader;
@@ -82,8 +82,8 @@ public class GameScreen implements Screen {
         // Initialising camera and extendable viewport for viewing game
         camera = new OrthographicCamera();
         camera.zoom = 0.0155f;
-        viewport = new ScreenViewport(camera);
-        camera.position.set(viewport.getWorldWidth() / 2, viewport.getWorldHeight() / 2, 0);
+        viewport = new FitViewport(1280,720,camera);
+        camera.position.set(viewport.getWorldWidth() / 3, viewport.getWorldHeight() / 3, 0);
 
         // Initialize a hud
         hud = new Hud(game.batch);
