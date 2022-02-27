@@ -25,11 +25,13 @@ jobs:
       with:
         java-version: '11'
         distribution: 'temurin'
+#    - name: Build with Gradle
+#      uses: gradle/gradle-build-action@937999e9cc2425eddc7fd62d1053baf041147db7
+#      with:
+#        arguments: desktop:dist
+
     - name: Build with Gradle
-      uses: gradle/gradle-build-action@937999e9cc2425eddc7fd62d1053baf041147db7
-      with:
-        arguments: desktop:dist
-    
+      run: ./gradlew desktop:dist
     
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v2.3.1
