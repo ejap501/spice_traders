@@ -1,6 +1,7 @@
 package com.mygdx.pirategame.gameobjects.enemy;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.physics.box2d.*;
@@ -31,6 +32,7 @@ public class College extends Enemy {
     private Array<CollegeFire> cannonBalls;
     private AvailableSpawn noSpawn;
     public ArrayList<EnemyShip> fleet = new ArrayList<>();
+    private Sound cannonballHitSound;
 
     /**
      *
@@ -71,6 +73,9 @@ public class College extends Enemy {
             }
             fleet.add(new EnemyShip(screen, ranX, ranY, ship, college));
         }
+
+        // explosion sound effect
+        cannonballHitSound = Gdx.audio.newSound(Gdx.files.internal("sfx_and_music/explode.mp3"));
     }
 
     /**
@@ -181,6 +186,11 @@ public class College extends Enemy {
         Gdx.app.log("enemy", "collision");
         health -= damage;
         bar.changeHealth(damage);
+
+        // Plays explosion sound effect
+        if (screen.game.getPreferences().isEffectsEnabled()) {
+            cannonballHitSound.play(screen.game.getPreferences().getEffectsVolume());
+        }
     }
 
     /**

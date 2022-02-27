@@ -21,7 +21,7 @@ public class Player extends Sprite {
     private Texture ship;
     public World world;
     public Body b2body;
-    private Sound breakSound;
+    private Sound breakSound, cannonballHitSound;
     private Array<CannonFire> cannonBalls;
 
     /**
@@ -41,8 +41,11 @@ public class Player extends Sprite {
         setRegion(ship);
         setOrigin(32 / PirateGame.PPM,55 / PirateGame.PPM);
 
-        // Sound effect for damage
+        // Sound effect for terrain collision
         breakSound = Gdx.audio.newSound(Gdx.files.internal("sfx_and_music/wood-bump.mp3"));
+        // Sound effect for cannonball hit
+        cannonballHitSound = Gdx.audio.newSound(Gdx.files.internal("sfx_and_music/ship-hit.wav"));
+
 
         // Sets cannonball array
         cannonBalls = new Array<CannonFire>();
@@ -72,9 +75,19 @@ public class Player extends Sprite {
      * Plays the break sound when a boat takes damage
      */
     public void playBreakSound() {
-        // Plays damage sound effect
+        // Plays terrain collision sound effect
         if (screen.game.getPreferences().isEffectsEnabled()) {
             breakSound.play(screen.game.getPreferences().getEffectsVolume());
+        }
+    }
+
+    /**
+     * Plays the explosion sound when a boat is hit by a cannonball
+     */
+    public void playCannonballHitSound() {
+        // Plays cannonball hit sound effect
+        if (screen.game.getPreferences().isEffectsEnabled()) {
+            cannonballHitSound.play(screen.game.getPreferences().getEffectsVolume());
         }
     }
 
