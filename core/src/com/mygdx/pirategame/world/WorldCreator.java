@@ -36,7 +36,7 @@ public class WorldCreator {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
 
             new CollegeWalls2(screen, rect);
-        }
+        } 
         for(MapObject object : map.getLayers().get(7).getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
 

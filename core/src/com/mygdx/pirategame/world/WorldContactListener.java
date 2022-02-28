@@ -25,7 +25,7 @@ public class WorldContactListener implements ContactListener {
      */
     @Override
     public void beginContact(Contact contact) {
-        // Finds contact
+        // Finds contact, fixA and fixB are the two entities causing collision
         Fixture fixA = contact.getFixtureA();
         Fixture fixB = contact.getFixtureB();
 
@@ -86,6 +86,7 @@ public class WorldContactListener implements ContactListener {
                     ((CannonFire) fixA.getUserData()).setToDestroy();
                 }
                 break;
+            // Player collision with college cannonball
             case PirateGame.COLLEGEFIRE_BIT | PirateGame.PLAYER_BIT:
                 if(fixA.getFilterData().categoryBits == PirateGame.COLLEGEFIRE_BIT) {
                     Hud.changeHealth(-15);
@@ -94,6 +95,8 @@ public class WorldContactListener implements ContactListener {
                 else {
                     Hud.changeHealth(-15);
                     ((CollegeFire) fixB.getUserData()).setToDestroy();
+                    ((Player) fixA.getUserData()).playCannonballHitSound();
+
                 }
                 break;
         }
