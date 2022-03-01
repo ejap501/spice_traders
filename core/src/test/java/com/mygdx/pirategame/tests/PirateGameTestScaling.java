@@ -16,7 +16,7 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
 /**
- * This class is used to target the class PirateDucks with tests
+ * This class is used to target the class pirategame with scaling tests
  */
 @RunWith(PirateGameTest.class)
 public class PirateGameTestScaling {
@@ -37,7 +37,7 @@ public class PirateGameTestScaling {
     }
 
     /**
-     * Used to test if the PirateDucks.getScaledLocaiton provides correct results
+     * Used to test if the pirategame.getScaledLocaiton provides correct results
      */
     @Test
     public void testScaling() {

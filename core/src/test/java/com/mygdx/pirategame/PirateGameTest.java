@@ -45,7 +45,7 @@ public class PirateGameTest extends BlockJUnit4ClassRunner implements Applicatio
 
     @Override
     public void render() {
-        /**
+        /*
          * Runs the function runChild for each test
          * val.getKey() represents the specific test
          * val.getValue() represents whether the specific test has passed or not
