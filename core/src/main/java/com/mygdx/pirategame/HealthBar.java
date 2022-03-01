@@ -1,10 +1,10 @@
-package main.java.com.mygdx.pirategame;
+package com.mygdx.pirategame;
 
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import main.java.com.mygdx.pirategame.gameobjects.enemy.Enemy;
+import com.mygdx.pirategame.gameobjects.enemy.Enemy;
 
 /**
  * Health Bar

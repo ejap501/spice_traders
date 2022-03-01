@@ -1,4 +1,4 @@
-package main.java.com.mygdx.pirategame.screen;
+package com.mygdx.pirategame.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -13,7 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import main.java.com.mygdx.pirategame.PirateGame;
+import com.mygdx.pirategame.PirateGame;
 
 /**
  * Screen with instructions for the user

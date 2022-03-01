@@ -1,10 +1,10 @@
-package main.java.com.mygdx.pirategame.gameobjects.tileobject;
+package com.mygdx.pirategame.gameobjects.tileobject;
 
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.physics.box2d.*;
-import main.java.com.mygdx.pirategame.PirateGame;
-import main.java.com.mygdx.pirategame.screen.GameScreen;
+import com.mygdx.pirategame.PirateGame;
+import com.mygdx.pirategame.screen.GameScreen;
 
 /**
  * Interactive Tile Object

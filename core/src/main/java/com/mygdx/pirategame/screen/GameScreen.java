@@ -1,4 +1,4 @@
-package main.java.com.mygdx.pirategame.screen;
+package com.mygdx.pirategame.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -19,15 +19,15 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import main.java.com.mygdx.pirategame.Hud;
-import main.java.com.mygdx.pirategame.PirateGame;
-import main.java.com.mygdx.pirategame.gameobjects.Player;
-import main.java.com.mygdx.pirategame.gameobjects.enemy.College;
-import main.java.com.mygdx.pirategame.gameobjects.enemy.EnemyShip;
-import main.java.com.mygdx.pirategame.gameobjects.entity.Coin;
-import main.java.com.mygdx.pirategame.world.AvailableSpawn;
-import main.java.com.mygdx.pirategame.world.WorldContactListener;
-import main.java.com.mygdx.pirategame.world.WorldCreator;
+import com.mygdx.pirategame.Hud;
+import com.mygdx.pirategame.PirateGame;
+import com.mygdx.pirategame.gameobjects.Player;
+import com.mygdx.pirategame.gameobjects.enemy.College;
+import com.mygdx.pirategame.gameobjects.enemy.EnemyShip;
+import com.mygdx.pirategame.gameobjects.entity.Coin;
+import com.mygdx.pirategame.world.AvailableSpawn;
+import com.mygdx.pirategame.world.WorldContactListener;
+import com.mygdx.pirategame.world.WorldCreator;
 
 import java.util.ArrayList;
 import java.util.HashMap;

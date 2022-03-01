@@ -1,11 +1,11 @@
-package main.java.com.mygdx.pirategame.world;
+package com.mygdx.pirategame.world;
 
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.Rectangle;
-import main.java.com.mygdx.pirategame.gameobjects.tileobject.*;
-import main.java.com.mygdx.pirategame.screen.GameScreen;
+import com.mygdx.pirategame.gameobjects.tileobject.*;
+import com.mygdx.pirategame.screen.GameScreen;
 
 /**
  * This is the class where all boundaries and collisions are created for the map.

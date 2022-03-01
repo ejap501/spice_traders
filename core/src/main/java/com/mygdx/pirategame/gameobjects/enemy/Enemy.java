@@ -1,10 +1,10 @@
-package main.java.com.mygdx.pirategame.gameobjects.enemy;
+package com.mygdx.pirategame.gameobjects.enemy;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
-import main.java.com.mygdx.pirategame.HealthBar;
-import main.java.com.mygdx.pirategame.screen.GameScreen;
+import com.mygdx.pirategame.HealthBar;
+import com.mygdx.pirategame.screen.GameScreen;
 
 /**
  * Enemy

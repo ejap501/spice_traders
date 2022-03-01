@@ -1,4 +1,4 @@
-package main.java.com.mygdx.pirategame.gameobjects;
+package com.mygdx.pirategame.gameobjects;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
@@ -8,8 +8,8 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Array;
-import main.java.com.mygdx.pirategame.PirateGame;
-import main.java.com.mygdx.pirategame.screen.GameScreen;
+import com.mygdx.pirategame.PirateGame;
+import com.mygdx.pirategame.screen.GameScreen;
 
 /**
  * Creates the class of the player. Everything that involves actions coming from the player boat

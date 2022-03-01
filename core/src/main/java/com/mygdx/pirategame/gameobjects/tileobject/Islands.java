@@ -1,9 +1,9 @@
-package main.java.com.mygdx.pirategame.gameobjects.tileobject;
+package com.mygdx.pirategame.gameobjects.tileobject;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Rectangle;
-import main.java.com.mygdx.pirategame.Hud;
-import main.java.com.mygdx.pirategame.PirateGame;
-import main.java.com.mygdx.pirategame.screen.GameScreen;
+import com.mygdx.pirategame.Hud;
+import com.mygdx.pirategame.PirateGame;
+import com.mygdx.pirategame.screen.GameScreen;
 
 /**
  * Sets up the class for all the Islands. Deals with what happens on collision and its properties

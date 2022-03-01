@@ -1,4 +1,4 @@
-package main.java.com.mygdx.pirategame;
+package com.mygdx.pirategame;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 

@@ -1,15 +1,16 @@
-package main.java.com.mygdx.pirategame.world;
+package com.mygdx.pirategame.world;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.physics.box2d.*;
-import main.java.com.mygdx.pirategame.Hud;
-import main.java.com.mygdx.pirategame.PirateGame;
-import main.java.com.mygdx.pirategame.gameobjects.CannonFire;
-import main.java.com.mygdx.pirategame.gameobjects.CollegeFire;
-import main.java.com.mygdx.pirategame.gameobjects.Player;
-import main.java.com.mygdx.pirategame.gameobjects.enemy.Enemy;
-import main.java.com.mygdx.pirategame.gameobjects.entity.Entity;
-import main.java.com.mygdx.pirategame.gameobjects.tileobject.InteractiveTileObject;
+import com.mygdx.pirategame.Hud;
+import com.mygdx.pirategame.PirateGame;
+import com.mygdx.pirategame.gameobjects.CannonFire;
+import com.mygdx.pirategame.gameobjects.CollegeFire;
+import com.mygdx.pirategame.gameobjects.Player;
+import com.mygdx.pirategame.gameobjects.enemy.Enemy;
+import com.mygdx.pirategame.gameobjects.entity.Entity;
+import com.mygdx.pirategame.gameobjects.tileobject.InteractiveTileObject;
+
 
 /**
  * Tells the game what to do when certain entities come into contact with each other

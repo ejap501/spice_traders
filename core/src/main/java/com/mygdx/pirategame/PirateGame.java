@@ -1,4 +1,4 @@
-package main.java.com.mygdx.pirategame;
+package com.mygdx.pirategame;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -6,7 +6,7 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-import main.java.com.mygdx.pirategame.screen.*;
+import com.mygdx.pirategame.screen.*;
 
 
 /**
