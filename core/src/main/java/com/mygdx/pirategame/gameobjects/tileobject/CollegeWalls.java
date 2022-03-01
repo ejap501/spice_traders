@@ -2,7 +2,6 @@ package com.mygdx.pirategame.gameobjects.tileobject;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Rectangle;
 import com.mygdx.pirategame.PirateGame;
-import com.mygdx.pirategame.gameobjects.tileobject.InteractiveTileObject;
 import com.mygdx.pirategame.screen.GameScreen;
 
 /**

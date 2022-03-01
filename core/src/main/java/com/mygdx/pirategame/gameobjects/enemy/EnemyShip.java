@@ -7,10 +7,9 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.mygdx.pirategame.gameobjects.enemy.Enemy;
-import com.mygdx.pirategame.screen.GameScreen;
 import com.mygdx.pirategame.Hud;
 import com.mygdx.pirategame.PirateGame;
+import com.mygdx.pirategame.screen.GameScreen;
 
 /**
  * Enemy Ship

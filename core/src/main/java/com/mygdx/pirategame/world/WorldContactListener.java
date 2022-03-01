@@ -11,6 +11,7 @@ import com.mygdx.pirategame.gameobjects.enemy.Enemy;
 import com.mygdx.pirategame.gameobjects.entity.Entity;
 import com.mygdx.pirategame.gameobjects.tileobject.InteractiveTileObject;
 
+
 /**
  * Tells the game what to do when certain entities come into contact with each other
  *

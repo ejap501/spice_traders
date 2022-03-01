@@ -4,13 +4,15 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.utils.Array;
-import com.mygdx.pirategame.world.AvailableSpawn;
-import com.mygdx.pirategame.gameobjects.CollegeFire;
 import com.mygdx.pirategame.Hud;
 import com.mygdx.pirategame.PirateGame;
+import com.mygdx.pirategame.gameobjects.CollegeFire;
 import com.mygdx.pirategame.screen.GameScreen;
+import com.mygdx.pirategame.world.AvailableSpawn;
 
 import java.util.ArrayList;
 import java.util.Random;

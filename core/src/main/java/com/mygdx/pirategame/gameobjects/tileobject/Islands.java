@@ -3,7 +3,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Rectangle;
 import com.mygdx.pirategame.Hud;
 import com.mygdx.pirategame.PirateGame;
-import com.mygdx.pirategame.gameobjects.tileobject.InteractiveTileObject;
 import com.mygdx.pirategame.screen.GameScreen;
 
 /**

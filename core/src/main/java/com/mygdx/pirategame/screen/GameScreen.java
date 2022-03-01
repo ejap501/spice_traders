@@ -9,25 +9,29 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.utils.viewport.*;
-import com.mygdx.pirategame.*;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.mygdx.pirategame.Hud;
+import com.mygdx.pirategame.PirateGame;
 import com.mygdx.pirategame.gameobjects.Player;
-import com.mygdx.pirategame.gameobjects.entity.Coin;
 import com.mygdx.pirategame.gameobjects.enemy.College;
 import com.mygdx.pirategame.gameobjects.enemy.EnemyShip;
+import com.mygdx.pirategame.gameobjects.entity.Coin;
 import com.mygdx.pirategame.world.AvailableSpawn;
 import com.mygdx.pirategame.world.WorldContactListener;
 import com.mygdx.pirategame.world.WorldCreator;
-import java.util.Random;
+
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 
 
 /**
