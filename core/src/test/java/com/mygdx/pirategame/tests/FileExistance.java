@@ -22,6 +22,7 @@ public class FileExistance {
     public void mapbasetxt() {
         assertTrue("This test will pass if mapbase.txt exists", Gdx.files
                 .internal("../core/assets/mapBase.txt").exists());
+        assertTrue(false);
     }
 
 }
