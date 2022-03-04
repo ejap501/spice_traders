@@ -29,9 +29,7 @@ import com.mygdx.pirategame.world.AvailableSpawn;
 import com.mygdx.pirategame.world.WorldContactListener;
 import com.mygdx.pirategame.world.WorldCreator;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Random;
+import java.util.*;
 
 
 /**
@@ -60,7 +58,7 @@ public class GameScreen implements Screen {
     private Box2DDebugRenderer b2dr;
 
     private Player player;
-    private static HashMap<String, College> colleges = new HashMap<>();
+    private static HashMap<Integer, College> colleges = new HashMap<>();
     private static ArrayList<EnemyShip> ships = new ArrayList<>();
     private static ArrayList<Coin> Coins = new ArrayList<>();
     private AvailableSpawn invalidSpawn = new AvailableSpawn();
@@ -74,6 +72,10 @@ public class GameScreen implements Screen {
     private Table table;
 
     public Random rand = new Random();
+
+    private Integer attackingCollege;
+    private List<Integer> collegesLeft = new LinkedList<Integer>(Arrays.asList(1, 2, 3));;
+    private Random collegeRand = new Random();
 
     /**
      * Initialises the Game Screen,
@@ -108,19 +110,31 @@ public class GameScreen implements Screen {
 
         // Spawning enemy ship and coin. x and y is spawn location
         colleges = new HashMap<>();
-        colleges.put("Alcuin", new College(this, "Alcuin", 1900 / PirateGame.PPM, 2100 / PirateGame.PPM,
+        /*
+        colleges.put(0, new College(this, 0, 1900 / PirateGame.PPM, 2100 / PirateGame.PPM,
                 "college/Flags/alcuin_flag.png", "college/Ships/alcuin_ship.png", 0, invalidSpawn));
-        colleges.put("Anne Lister", new College(this, "Anne Lister", 6304 / PirateGame.PPM, 1199 / PirateGame.PPM,
+        colleges.put(1, new College(this, 1, 6304 / PirateGame.PPM, 1199 / PirateGame.PPM,
                 "college/Flags/anne_lister_flag.png", "college/Ships/anne_lister_ship.png", 8, invalidSpawn));
-        colleges.put("Constantine", new College(this, "Constantine", 6240 / PirateGame.PPM, 6703 / PirateGame.PPM,
+        colleges.put(2, new College(this, 2, 6240 / PirateGame.PPM, 6703 / PirateGame.PPM,
                 "college/Flags/constantine_flag.png", "college/Ships/constantine_ship.png", 8, invalidSpawn));
-        colleges.put("Goodricke", new College(this, "Goodricke", 1760 / PirateGame.PPM, 6767 / PirateGame.PPM,
+        colleges.put(3, new College(this, 3, 1760 / PirateGame.PPM, 6767 / PirateGame.PPM,
                 "college/Flags/goodricke_flag.png", "college/Ships/goodricke_ship.png", 8, invalidSpawn));
+
+         */
+        // Alcuin college
+        colleges.put(0, new College(this, 0, 1900 / PirateGame.PPM, 2100 / PirateGame.PPM, 0, invalidSpawn));
+        // Anne Lister college
+        colleges.put(1, new College(this, 1, 6304 / PirateGame.PPM, 1199 / PirateGame.PPM, 8, invalidSpawn));
+        // Constantine college
+        colleges.put(2, new College(this, 2, 6240 / PirateGame.PPM, 6703 / PirateGame.PPM, 8, invalidSpawn));
+        // Goodricke college
+        colleges.put(3, new College(this, 3, 1760 / PirateGame.PPM, 6767 / PirateGame.PPM, 8, invalidSpawn));
+
         ships = new ArrayList<>();
-        ships.addAll(colleges.get("Alcuin").fleet);
-        ships.addAll(colleges.get("Anne Lister").fleet);
-        ships.addAll(colleges.get("Constantine").fleet);
-        ships.addAll(colleges.get("Goodricke").fleet);
+        ships.addAll(colleges.get(0).fleet);
+        ships.addAll(colleges.get(1).fleet);
+        ships.addAll(colleges.get(2).fleet);
+        ships.addAll(colleges.get(3).fleet);
 
         //Random ships
         Boolean validLoc;
@@ -136,7 +150,7 @@ public class GameScreen implements Screen {
                 validLoc = checkGenPos(a, b);
             }
             //Add a ship at the random coords
-            ships.add(new EnemyShip(this, a, b, "college/Ships/unaligned_ship.png", "Unaligned"));
+            ships.add(new EnemyShip(this, a, b, "college/Ships/unaligned_ship.png", -1));
         }
 
         //Random coins
@@ -155,6 +169,9 @@ public class GameScreen implements Screen {
 
         //Setting stage
         stage = new Stage(new ScreenViewport());
+
+        //Setting the college that can currently be attacked
+        nextCollege();
     }
 
     /**
@@ -321,10 +338,10 @@ public class GameScreen implements Screen {
 
         // Update all players and entities
         player.update(dt);
-        colleges.get("Alcuin").update(dt);
-        colleges.get("Anne Lister").update(dt);
-        colleges.get("Constantine").update(dt);
-        colleges.get("Goodricke").update(dt);
+        colleges.get(0).update(dt);
+        colleges.get(1).update(dt);
+        colleges.get(2).update(dt);
+        colleges.get(3).update(dt);
 
         //Update ships
         for (int i = 0; i < ships.size(); i++) {
@@ -337,14 +354,14 @@ public class GameScreen implements Screen {
         }
         //After a delay check if a college is destroyed. If not, if can fire
         if (stateTime > 1) {
-            if (!colleges.get("Anne Lister").destroyed) {
-                colleges.get("Anne Lister").fire();
+            if (!colleges.get(1).destroyed) {
+                colleges.get(1).fire();
             }
-            if (!colleges.get("Constantine").destroyed) {
-                colleges.get("Constantine").fire();
+            if (!colleges.get(2).destroyed) {
+                colleges.get(2).fire();
             }
-            if (!colleges.get("Goodricke").destroyed) {
-                colleges.get("Goodricke").fire();
+            if (!colleges.get(3).destroyed) {
+                colleges.get(3).fire();
         }
         stateTime = 0;
     }
@@ -388,18 +405,18 @@ public class GameScreen implements Screen {
 
         //Renders colleges
         player.draw(game.batch);
-        colleges.get("Alcuin").draw(game.batch);
-        colleges.get("Anne Lister").draw(game.batch);
-        colleges.get("Constantine").draw(game.batch);
-        colleges.get("Goodricke").draw(game.batch);
+        colleges.get(0).draw(game.batch);
+        colleges.get(1).draw(game.batch);
+        colleges.get(2).draw(game.batch);
+        colleges.get(3).draw(game.batch);
 
         //Updates all ships
         for (int i = 0; i < ships.size(); i++){
-            if (ships.get(i).college != "Unaligned") {
-                //Flips a colleges allegence if their college is destroyed
-                if (colleges.get(ships.get(i).college).destroyed) {
+            if (ships.get(i).collegeID != -1) {
+                //Flips a colleges allegiance if their college is destroyed
+                if (colleges.get(ships.get(i).collegeID).destroyed) {
 
-                    ships.get(i).updateTexture("Alcuin", "college/Ships/alcuin_ship.png");
+                    ships.get(i).updateTexture(0, "college/Ships/alcuin_ship.png");
                 }
             }
             ships.get(i).draw(game.batch);
@@ -448,25 +465,45 @@ public class GameScreen implements Screen {
     /**
      * Returns the college from the colleges hashmap
      *
-     * @param collegeName uses a college name as an index
+     * @param collegeID uses a collegeID as an index
      * @return college : returns the college fetched from colleges
      */
-    public College getCollege(String collegeName) {
-        return colleges.get(collegeName);
+    public College getCollege(Integer collegeID) {
+        return colleges.get(collegeID);
+    }
+
+    /**
+     * When called, finds the next college that the player can attack
+     */
+    public void nextCollege() {
+        // Selects, at random, an index from length of collegeLeft list
+        Integer collegeIndex = collegeRand.nextInt(collegesLeft.size());
+        // Gets the collegeID from the collegeLeft list
+        attackingCollege = collegesLeft.get(collegeIndex);
+        // Removes the college selected from the collegeLeft list
+        collegesLeft.remove(collegeIndex);
+    }
+
+    /**
+     * Returns the college which can currently be attacked
+     * @return integer : returns CollegeID
+     */
+    public Integer getAttackingCollege() {
+        return attackingCollege;
     }
 
     /**
      * Checks if the game is over
-     * i.e. goal reached (all colleges bar "Alcuin" are destroyed)
+     * i.e. goal reached (all colleges bar 0 are destroyed)
      */
     public void gameOverCheck(){
         //Lose game if ship on 0 health or Alcuin is destroyed
-        if (Hud.getHealth() <= 0 || colleges.get("Alcuin").destroyed) {
+        if (Hud.getHealth() <= 0 || colleges.get(0).destroyed) {
             game.changeScreen(PirateGame.DEATH);
             game.killGame();
         }
         //Win game if all colleges destroyed
-        else if (colleges.get("Anne Lister").destroyed && colleges.get("Constantine").destroyed && colleges.get("Goodricke").destroyed){
+        else if (colleges.get(1).destroyed && colleges.get(2).destroyed && colleges.get(3).destroyed){
             game.changeScreen(PirateGame.VICTORY);
             game.killGame();
         }
@@ -517,9 +554,9 @@ public class GameScreen implements Screen {
         for (int i = 0; i < ships.size(); i++){
             ships.get(i).changeDamageReceived(value);
         }
-        colleges.get("Anne Lister").changeDamageReceived(value);
-        colleges.get("Constantine").changeDamageReceived(value);
-        colleges.get("Goodricke").changeDamageReceived(value);
+        colleges.get(1).changeDamageReceived(value);
+        colleges.get(2).changeDamageReceived(value);
+        colleges.get(3).changeDamageReceived(value);
 
     }
 
