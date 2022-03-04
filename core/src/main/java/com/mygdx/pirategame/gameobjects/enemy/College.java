@@ -191,10 +191,8 @@ public class College extends Enemy {
     public void onContact() {
         //Damage the college and lower health bar
         Gdx.app.log("enemy", "collision");
-        if (collegeID == screen.getAttackingCollege()) {
-            health -= damage;
-            bar.changeHealth(damage);
-        }
+        health -= damage;
+        bar.changeHealth(damage);
 
         // Plays explosion sound effect
         if (screen.game.getPreferences().isEffectsEnabled()) {
