@@ -80,6 +80,7 @@ public class GameScreen implements Screen {
     /**
      * Initialises the Game Screen,
      * generates the world data and data for entities that exist upon it,
+     *
      * @param game passes game data to current class,
      */
     public GameScreen(PirateGame game){
@@ -110,17 +111,7 @@ public class GameScreen implements Screen {
 
         // Spawning enemy ship and coin. x and y is spawn location
         colleges = new HashMap<>();
-        /*
-        colleges.put(0, new College(this, 0, 1900 / PirateGame.PPM, 2100 / PirateGame.PPM,
-                "college/Flags/alcuin_flag.png", "college/Ships/alcuin_ship.png", 0, invalidSpawn));
-        colleges.put(1, new College(this, 1, 6304 / PirateGame.PPM, 1199 / PirateGame.PPM,
-                "college/Flags/anne_lister_flag.png", "college/Ships/anne_lister_ship.png", 8, invalidSpawn));
-        colleges.put(2, new College(this, 2, 6240 / PirateGame.PPM, 6703 / PirateGame.PPM,
-                "college/Flags/constantine_flag.png", "college/Ships/constantine_ship.png", 8, invalidSpawn));
-        colleges.put(3, new College(this, 3, 1760 / PirateGame.PPM, 6767 / PirateGame.PPM,
-                "college/Flags/goodricke_flag.png", "college/Ships/goodricke_ship.png", 8, invalidSpawn));
 
-         */
         // Alcuin college
         colleges.put(0, new College(this, 0, 1900 / PirateGame.PPM, 2100 / PirateGame.PPM, 0, invalidSpawn));
         // Anne Lister college
@@ -269,7 +260,7 @@ public class GameScreen implements Screen {
 
     /**
      * Checks for input and performs an action
-     * Applies to keys "W" "A" "S" "D" "E" "Esc"
+     * Applies to key "W" "A" "S" "D" "E" "Esc" "Left" "Right" "Up" "Down"
      *
      * Caps player velocity
      *
@@ -486,6 +477,7 @@ public class GameScreen implements Screen {
 
     /**
      * Returns the college which can currently be attacked
+     *
      * @return integer : returns CollegeID
      */
     public Integer getAttackingCollege() {
