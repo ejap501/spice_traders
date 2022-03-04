@@ -34,7 +34,7 @@ public class CollegeWalls3 extends InteractiveTileObject {
     @Override
     public void onContact() {
         Gdx.app.log("wall", "collision");
-        //Deal damage to the assigned college
-        screen.getCollege("Constantine").onContact();
+        //Deal damage to the assigned college (Constantine)
+        screen.getCollege(2).onContact();
     }
 }

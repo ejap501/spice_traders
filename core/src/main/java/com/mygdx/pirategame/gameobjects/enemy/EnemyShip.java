@@ -21,7 +21,7 @@ import com.mygdx.pirategame.screen.GameScreen;
  */
 public class EnemyShip extends Enemy {
     private Texture enemyShip;
-    public String college;
+    public Integer collegeID;
     private Sound destroy;
     private Sound hit;
 
@@ -34,11 +34,11 @@ public class EnemyShip extends Enemy {
      * @param path path of texture file
      * @param assignment College ship is assigned to
      */
-    public EnemyShip(GameScreen screen, float x, float y, String path, String assignment) {
+    public EnemyShip(GameScreen screen, float x, float y, String path, Integer assignment) {
         super(screen, x, y);
         enemyShip = new Texture(path);
         //Assign college
-        college = assignment;
+        collegeID = assignment;
         //Set audios
         destroy = Gdx.audio.newSound(Gdx.files.internal("sfx_and_music/ship-explosion-2.wav"));
         hit = Gdx.audio.newSound(Gdx.files.internal("sfx_and_music/ship-hit.wav"));
@@ -152,8 +152,8 @@ public class EnemyShip extends Enemy {
      * @param alignment Associated college
      * @param path Path of new texture
      */
-    public void updateTexture(String alignment, String path){
-        college = alignment;
+    public void updateTexture(Integer alignment, String path){
+        collegeID = alignment;
         enemyShip = new Texture(path);
         setRegion(enemyShip);
     }
