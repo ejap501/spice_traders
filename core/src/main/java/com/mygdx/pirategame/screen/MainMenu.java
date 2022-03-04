@@ -25,7 +25,6 @@ public class MainMenu implements Screen {
     private final PirateGame parent;
     private final Stage stage;
     private Texture backgroundTexture;
-    private Sprite backgroundSprite;
     private Image backgroundImage;
 
     /**
@@ -36,7 +35,6 @@ public class MainMenu implements Screen {
     public MainMenu(PirateGame PirateGame){
         parent = PirateGame;
         stage = new Stage(new ScreenViewport());
-        //stage = new Stage(new StretchViewport(Gdx.graphics.getHeight(), Gdx.graphics.getWidth()));
     }
 
     /**
@@ -46,15 +44,9 @@ public class MainMenu implements Screen {
     @Override
     public void show() {
         backgroundTexture = new Texture("map_blurred.png");
-        //backgroundSprite = new Sprite(backgroundTexture);
-        //backgroundSprite.setSize(camera.viewportWidth, camera.viewportHeight);
-        //backgroundSprite.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        //backgroundSprite.setPosition(0, 0);
 
         backgroundImage = new Image(backgroundTexture);
-        //backgroundImage.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         backgroundImage.setScaling(Scaling.stretch);
-        //backgroundImage.setPosition(0,0);
         stage.addActor(backgroundImage);
 
         //Set the input processor
@@ -123,13 +115,9 @@ public class MainMenu implements Screen {
      */
     @Override
     public void render(float delta) {
-        //Gdx.gl.glClearColor(0f, 0f, 0f, 1);
-        //Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
+        backgroundImage.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         stage.draw();
-
-        // set Background
-        //ScreenUtils.clear(0, 0, 0.2f, 1);
     }
 
     /**
