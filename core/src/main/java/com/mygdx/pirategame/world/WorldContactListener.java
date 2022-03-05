@@ -88,8 +88,8 @@ public class WorldContactListener implements ContactListener {
                 }
                 break;
             // Player collision with college cannonball
-            case PirateGame.COLLEGEFIRE_BIT | PirateGame.PLAYER_BIT:
-                if(fixA.getFilterData().categoryBits == PirateGame.COLLEGEFIRE_BIT) {
+            case PirateGame.COLLEGE_FIRE_BIT | PirateGame.PLAYER_BIT:
+                if(fixA.getFilterData().categoryBits == PirateGame.COLLEGE_FIRE_BIT) {
                     Hud.changeHealth(-15);
                     ((CollegeFire) fixA.getUserData()).setToDestroy();
                 }

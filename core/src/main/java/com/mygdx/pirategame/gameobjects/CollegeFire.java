@@ -64,7 +64,7 @@ public class CollegeFire extends Sprite {
         CircleShape shape = new CircleShape();
         shape.setRadius(5 / PirateGame.PPM);
         // setting BIT identifier
-        fDef.filter.categoryBits = PirateGame.COLLEGEFIRE_BIT;
+        fDef.filter.categoryBits = PirateGame.COLLEGE_FIRE_BIT;
         // determining what this BIT can collide with
         fDef.filter.maskBits = PirateGame.PLAYER_BIT;
 
