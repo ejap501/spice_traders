@@ -2,10 +2,12 @@ package com.mygdx.pirategame.gameobjects.entity;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.mygdx.pirategame.screen.GameScreen;
 
 public abstract class PowerUp extends Entity {
     private Sound pickupSound;
+
 
     /**
      * x
@@ -33,6 +35,17 @@ public abstract class PowerUp extends Entity {
         return pickupSound;
     }
 
+    public abstract void endPowerUp();
 
+    /**
+     * Draws the coin using batch
+     *
+     * @param batch The batch of the program
+     */
+    public void draw(Batch batch) {
+        if(!destroyed) {
+            super.draw(batch);
+        }
+    }
 }
 

@@ -42,6 +42,15 @@ public class WorldContactListener implements ContactListener {
                     ((Entity) fixB.getUserData()).entityContact();
                 }
                 break;
+                // TODO: ABSORPTION_HEART_BIT collides twice ??????
+            case PirateGame.ABSORPTION_HEART_BIT | PirateGame.PLAYER_BIT:
+                if(fixA.getFilterData().categoryBits == PirateGame.ABSORPTION_HEART_BIT) {
+                    ((Entity) fixA.getUserData()).entityContact();
+                }
+                else {
+                    ((Entity) fixB.getUserData()).entityContact();
+                }
+                break;
             case PirateGame.DEFAULT_BIT | PirateGame.PLAYER_BIT:
                 if(fixA.getFilterData().categoryBits == PirateGame.DEFAULT_BIT) {
                     if (fixA.getUserData() != null && InteractiveTileObject.class.isAssignableFrom(fixA.getUserData().getClass())) {
