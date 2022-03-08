@@ -1,0 +1,239 @@
+package com.mygdx.pirategame.pathfinding;
+
+import com.badlogic.gdx.maps.MapLayer;
+import com.badlogic.gdx.maps.MapProperties;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
+import com.mygdx.pirategame.PirateGame;
+import com.mygdx.pirategame.screen.GameScreen;
+import com.mygdx.pirategame.world.AvailableSpawn;
+
+import java.util.*;
+
+public class PathFinder {
+
+    private final GameScreen gameScreen;
+    private final float tileSize;
+
+    /**
+     * NOTE: the greater the gradient, the less accurate the result is to the true result but results will be generated faster
+     *
+     * @param gameScreen The gameScreen for the world
+     * @param tileSize   How small each tile in the tilemap should be (ie 5 game units large tiles)
+     */
+    public PathFinder(GameScreen gameScreen, float tileSize) {
+        this.gameScreen = gameScreen;
+        this.tileSize = tileSize;
+
+    }
+
+    /**
+     * @param sourceX      the x source location
+     * @param sourceY      the y source location
+     * @param destinationX the x destination
+     * @param destinationY the y destination
+     * @return the path as a list of checkpoint, or null if no path could be found
+     */
+    public List<Checkpoint> getPath(float sourceX, float sourceY, float destinationX, float destinationY) {
+
+        // checking if the start or finish location is an invalid
+   if (!isTraversable(sourceX, sourceY) || !isTraversable(destinationX, destinationY)) {
+            return null;
+        }
+
+        // converting locations into tilemap equivalents
+        Checkpoint source = new Checkpoint(sourceX, sourceY, tileSize);
+        Checkpoint dest = new Checkpoint(destinationX, destinationY, tileSize);
+
+        PriorityQueue<PathNode> open = new PriorityQueue<>();
+
+        List<PathNode> close = new ArrayList<>();
+
+        open.add(new PathNode(source, 0, dest, null));
+        int count = 0;
+        PathNode solutionNode = null;
+        while (!open.isEmpty()) {
+            count++;
+            if (count > 10000) {
+                break;
+            }
+            PathNode currentNode = open.poll();
+            if (currentNode.checkpoint.equals(dest)) {
+                // if we have found the solution
+                solutionNode = currentNode;
+                break;
+            }
+
+            // looping through successor nodes
+            for (PathNode successorNode : successor(currentNode)) {
+                if (open.contains(successorNode)) {
+                    // already in the fringe
+                    continue;
+                } else if (close.contains(successorNode)) {
+                    // already visited
+                    continue;
+                } else {
+                    // path cost is too great, limiting scope
+                    if (successorNode.fx > 10000) {
+                        continue;
+                    }
+                    open.add(successorNode);
+                }
+
+            }
+
+        }
+
+        if (solutionNode == null) {
+            return null;
+        }
+
+        List<Checkpoint> checkpoints = new ArrayList<>();
+        checkpoints.add(dest);
+        PathNode nextNode = solutionNode;
+
+        while (nextNode.parent != null) {
+            checkpoints.add(nextNode.parent.checkpoint);
+            nextNode = nextNode.parent;
+        }
+
+        Collections.reverse(checkpoints);
+        System.out.println("resultant checkpoints = " + checkpoints);
+        return checkpoints;
+    }
+
+    /**
+     * Used to lookup a location in the tilemap to check if the location is traversable
+     *
+     * @param x the x coord in game space
+     * @param y the y coord in game space
+     * @return if the location is traversable
+     */
+    public boolean isTraversable(float x, float y) {
+/*        int ix = (int)(x / PirateGame.PPM);
+        int iy = (int)(y / PirateGame.PPM);
+        AvailableSpawn noSpawn = gameScreen.getInvalidSpawn();
+
+        if (ix < noSpawn.xBase || ix >= noSpawn.xCap || iy < noSpawn.yBase || iy >= noSpawn.yCap) {
+            return false;
+        }else if (noSpawn.tileBlocked.containsKey(ix)) {
+            if (noSpawn.tileBlocked.get(ix).contains(iy)) {
+                return false;
+            }
+        }
+        return true;*/
+
+        TiledMapTileLayer islands = (TiledMapTileLayer) gameScreen.getMap().getLayers().get("islands");
+        TiledMapTileLayer.Cell cell = islands.getCell((int) (x / tileSize), (int) (y / tileSize));
+        if (cell != null && cell.getTile().getId() != 0) {
+            System.out.println("s cell = " + cell.getTile().getId());
+            return false;
+        }
+
+
+        TiledMapTileLayer rocks = (TiledMapTileLayer) gameScreen.getMap().getLayers().get("rocks + leaves");
+        cell = rocks.getCell((int) (x / tileSize), (int) (y / tileSize));
+
+        if (cell != null && cell.getTile().getId() != 0) {
+            System.out.println("r cell = " + cell.getTile().getId());
+            return false;
+        }
+
+
+        return true;
+    }
+
+    /**
+     * Used to get a list of all successor nodes of the provided node
+     *
+     * @param node The node to get the successors of
+     * @return The list of successors
+     */
+    private List<PathNode> successor(PathNode node) {
+        List<PathNode> toReturn = new ArrayList<>();
+        int mapWidth = gameScreen.getTileMapWidth();
+        int mapHeight = gameScreen.getTileMapHeight();
+
+        for (int x = -1; x <= 1; x++) {
+            for (int y = -1; y <= 1; y++) {
+
+                if (x == 0 && y == 0) {
+                    // cannot travel to itself as a successor
+                    continue;
+                }
+
+                float calcX = node.checkpoint.x + (x * tileSize);
+                float calcY = node.checkpoint.y + (y * tileSize);
+
+                if (calcX >= mapWidth * tileSize) {
+                    continue;
+                }
+                if (calcY >= mapHeight * tileSize) {
+                    continue;
+                }
+
+                if (isTraversable(calcX, calcY)) {
+                    toReturn.add(new PathNode(new Checkpoint(calcX, calcY, tileSize), (float) Math.sqrt(Math.abs(x * tileSize) + Math.abs(y * tileSize)), node.dest, node));
+                }
+            }
+        }
+        return toReturn;
+    }
+
+    /**
+     * Used as to avoid repeated calculations and to store the checkpoint within the priority list
+     */
+    private class PathNode implements Comparable<PathNode> {
+        float fx;
+        float gx;
+        Checkpoint checkpoint;
+        Checkpoint dest;
+        PathNode parent;
+
+        public PathNode(Checkpoint checkpoint, float gx, Checkpoint dest, PathNode parent) {
+            this.checkpoint = checkpoint;
+            this.dest = dest;
+            this.parent = parent;
+            if (parent == null) {
+                this.gx = gx;
+            } else {
+                this.gx = gx + parent.gx;
+            }
+            fx = hx(dest) + this.gx;
+        }
+
+        private float hx(Checkpoint dest) {
+            return (float) Math.sqrt(Math.pow(checkpoint.x - dest.x, 2) + Math.pow(checkpoint.y - dest.y, 2));
+        }
+
+        /**
+         * comparator for the priority list
+         *
+         * @param o the other PathNode to compare it to
+         * @return The comparison of fx
+         */
+        @Override
+        public int compareTo(PathNode o) {
+            return (int) (fx - o.fx);
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            PathNode pathNode = (PathNode) o;
+            return checkpoint.equals(pathNode.checkpoint);
+        }
+
+        @Override
+        public String toString() {
+            return "PathNode{" +
+                    "fx=" + fx +
+                    ", gx=" + gx +
+                    ", checkpoint=" + checkpoint +
+                    ", dest=" + dest +
+                    ", parent=" + parent +
+                    '}';
+        }
+    }
+}
