@@ -1,16 +1,17 @@
 package com.mygdx.pirategame.pathfinding;
 
-import com.badlogic.gdx.maps.MapLayer;
-import com.badlogic.gdx.maps.MapProperties;
-import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
-import com.mygdx.pirategame.PirateGame;
+import com.badlogic.gdx.math.Vector2;
 import com.mygdx.pirategame.screen.GameScreen;
-import com.mygdx.pirategame.world.AvailableSpawn;
 
 import java.util.*;
 
 public class PathFinder {
+
+    /**
+     * Used to determine if debug information about the pathfinder should be displayed
+     */
+    public static final boolean PATHFINDERDEBUG = true;
 
     private final GameScreen gameScreen;
     private final float tileSize;
@@ -34,12 +35,17 @@ public class PathFinder {
      * @param destinationY the y destination
      * @return the path as a list of checkpoint, or null if no path could be found
      */
-    public List<Checkpoint> getPath(float sourceX, float sourceY, float destinationX, float destinationY) {
+    public List<Checkpoint> getPath(float sourceX, float sourceY, float destinationX, float destinationY, float width, float height) {
 
         // checking if the start or finish location is an invalid
-   if (!isTraversable(sourceX, sourceY) || !isTraversable(destinationX, destinationY)) {
+        if (!isTraversable(sourceX, sourceY, width, height) || !isTraversable(destinationX, destinationY, width, height)) {
             return null;
         }
+
+        destinationX = destinationX - (destinationX % tileSize);
+        destinationY = destinationY - (destinationY % tileSize);
+        sourceX = sourceX - (sourceX % tileSize);
+        sourceY = sourceY - (sourceY % tileSize);
 
         // converting locations into tilemap equivalents
         Checkpoint source = new Checkpoint(sourceX, sourceY, tileSize);
@@ -54,7 +60,7 @@ public class PathFinder {
         PathNode solutionNode = null;
         while (!open.isEmpty()) {
             count++;
-            if (count > 10000) {
+            if (count > 1000) {
                 break;
             }
             PathNode currentNode = open.poll();
@@ -65,7 +71,7 @@ public class PathFinder {
             }
 
             // looping through successor nodes
-            for (PathNode successorNode : successor(currentNode)) {
+            for (PathNode successorNode : successor(currentNode, width, height)) {
                 if (open.contains(successorNode)) {
                     // already in the fringe
                     continue;
@@ -98,49 +104,55 @@ public class PathFinder {
         }
 
         Collections.reverse(checkpoints);
-        System.out.println("resultant checkpoints = " + checkpoints);
         return checkpoints;
     }
 
     /**
      * Used to lookup a location in the tilemap to check if the location is traversable
      *
-     * @param x the x coord in game space
-     * @param y the y coord in game space
+     * @param xb     the x coord in game space
+     * @param yb     the y coord in game space
+     * @param width  the width of the object
+     * @param height the height of the object
      * @return if the location is traversable
      */
-    public boolean isTraversable(float x, float y) {
-/*        int ix = (int)(x / PirateGame.PPM);
-        int iy = (int)(y / PirateGame.PPM);
-        AvailableSpawn noSpawn = gameScreen.getInvalidSpawn();
+    public boolean isTraversable(float xb, float yb, float width, float height) {
 
-        if (ix < noSpawn.xBase || ix >= noSpawn.xCap || iy < noSpawn.yBase || iy >= noSpawn.yCap) {
-            return false;
-        }else if (noSpawn.tileBlocked.containsKey(ix)) {
-            if (noSpawn.tileBlocked.get(ix).contains(iy)) {
+        float hw = width * 4;
+        float hh = height * 4;
+        Vector2[] vlst = new Vector2[4];
+        vlst[0] = new Vector2(xb - hw, yb - hh);
+        vlst[1] = new Vector2(xb + hw, yb - hh);
+        vlst[2] = new Vector2(xb - hw, yb + hh);
+        vlst[3] = new Vector2(xb + hw, yb + hh);
+        for (Vector2 v : vlst) {
+            int x = (int) (v.x / tileSize);
+            int y = (int) (v.y / tileSize);
+            TiledMapTileLayer islands = (TiledMapTileLayer) gameScreen.getMap().getLayers().get("islands");
+
+            if (isColliding(islands, x, y)) {
                 return false;
             }
+
+
+            TiledMapTileLayer rocks = (TiledMapTileLayer) gameScreen.getMap().getLayers().get("rocks + leaves");
+
+            if (isColliding(rocks, x, y)) {
+                return false;
+            }
+
         }
-        return true;*/
-
-        TiledMapTileLayer islands = (TiledMapTileLayer) gameScreen.getMap().getLayers().get("islands");
-        TiledMapTileLayer.Cell cell = islands.getCell((int) (x / tileSize), (int) (y / tileSize));
-        if (cell != null && cell.getTile().getId() != 0) {
-            System.out.println("s cell = " + cell.getTile().getId());
-            return false;
-        }
-
-
-        TiledMapTileLayer rocks = (TiledMapTileLayer) gameScreen.getMap().getLayers().get("rocks + leaves");
-        cell = rocks.getCell((int) (x / tileSize), (int) (y / tileSize));
-
-        if (cell != null && cell.getTile().getId() != 0) {
-            System.out.println("r cell = " + cell.getTile().getId());
-            return false;
-        }
-
 
         return true;
+    }
+
+    private boolean isColliding(TiledMapTileLayer layer, int x, int y) {
+        TiledMapTileLayer.Cell cell = layer.getCell(x, y);
+        if (cell == null) {
+            return false;
+        }
+
+        return cell.getTile().getId() != 0;
     }
 
     /**
@@ -149,7 +161,7 @@ public class PathFinder {
      * @param node The node to get the successors of
      * @return The list of successors
      */
-    private List<PathNode> successor(PathNode node) {
+    private List<PathNode> successor(PathNode node, float width, float height) {
         List<PathNode> toReturn = new ArrayList<>();
         int mapWidth = gameScreen.getTileMapWidth();
         int mapHeight = gameScreen.getTileMapHeight();
@@ -172,7 +184,7 @@ public class PathFinder {
                     continue;
                 }
 
-                if (isTraversable(calcX, calcY)) {
+                if (isTraversable(calcX, calcY, width, height)) {
                     toReturn.add(new PathNode(new Checkpoint(calcX, calcY, tileSize), (float) Math.sqrt(Math.abs(x * tileSize) + Math.abs(y * tileSize)), node.dest, node));
                 }
             }

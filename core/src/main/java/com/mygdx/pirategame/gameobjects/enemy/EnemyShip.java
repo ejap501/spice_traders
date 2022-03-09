@@ -8,11 +8,14 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.mygdx.pirategame.DebugUtils;
 import com.mygdx.pirategame.Hud;
 import com.mygdx.pirategame.PirateGame;
 import com.mygdx.pirategame.pathfinding.Checkpoint;
+import com.mygdx.pirategame.pathfinding.PathFinder;
 import com.mygdx.pirategame.screen.GameScreen;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -60,7 +63,7 @@ public class EnemyShip extends Enemy {
         setOrigin(32 / PirateGame.PPM, 55 / PirateGame.PPM);
 
         damage = 20;
-
+        // give a seconds speed instead of a portin of it, then limit to a portion of the speed
         generateNewPath();
     }
 
@@ -70,10 +73,12 @@ public class EnemyShip extends Enemy {
     public void generateNewPath() {
 
         Vector2 destination = generateDestination();
-        path = screen.getPathFinder().getPath((b2body.getPosition().x * PirateGame.PPM) + getWidth() / 2, (b2body.getPosition().y * PirateGame.PPM) + getHeight() / 2, destination.x, destination.y);
-        if (path != null) {
+        int tilewidth = screen.getTileWidth();
+        path = screen.getPathFinder().getPath((b2body.getPosition().x * PirateGame.PPM), (b2body.getPosition().y * PirateGame.PPM), destination.x, destination.y, getWidth() * tilewidth, getHeight() * tilewidth);
+        if (path != null && path.size() > 1) {
             // removing the start node from the path as ship is already at it
             path.remove(0);
+
         }
 
     }
@@ -84,10 +89,24 @@ public class EnemyShip extends Enemy {
     private Vector2 generateDestination() {
         Random rnd = new Random();
 
+        int tileWidth = (int)PirateGame.PPM;
+
         while (true) {
-            int x = rnd.nextInt(screen.getTileMapHeight());
-            int y = rnd.nextInt(screen.getTileMapWidth());
-            if (screen.getPathFinder().isTraversable(x, y)) {
+            int x = rnd.nextInt(2000) - 1000 + (int) (b2body.getPosition().x * tileWidth);
+            int y = rnd.nextInt(2000) - 1000 + (int) (b2body.getPosition().y * tileWidth);
+            if (x < 0) {
+                x = 0;
+            }
+            if (y < 0) {
+                y = 0;
+            }
+            if (x > screen.getTileMapWidth()) {
+                x = screen.getTileMapWidth();
+            }
+            if (y > screen.getTileMapHeight()) {
+                y = screen.getTileMapHeight();
+            }
+            if (screen.getPathFinder().isTraversable(x, y, getWidth() * tileWidth, getHeight() * tileWidth)) {
                 return new Vector2(x, y);
             }
         }
@@ -137,26 +156,22 @@ public class EnemyShip extends Enemy {
         }
 
         if (path == null || path.isEmpty()) {
+            generateNewPath();
             return;
         }
 
         Checkpoint cp = path.get(0);
 
-//        v = v.limit(dt);
-        System.out.println("current = " + (b2body.getPosition().x * PirateGame.PPM) + " " + (b2body.getPosition().y * PirateGame.PPM));
-        System.out.println("target = " + cp.x + " " + cp.y);
-        System.out.println("distance = " + cp.getVector2().dst(b2body.getPosition().scl(PirateGame.PPM)));
         if (cp.getVector2().dst(b2body.getPosition().scl(PirateGame.PPM)) < PirateGame.PPM / 2) {
-               path.remove(cp);
+            path.remove(cp);
             if (path.isEmpty()) {
                 generateNewPath();
             }
         }
 
-        final float speed = 0.01f * dt;
+        final float speed = 100f * dt;
         Vector2 v = travelToCheckpoint(speed, cp);
-
-        b2body.setLinearVelocity(v.scl(1/dt));
+        b2body.setLinearVelocity(v);
 
         // below code is to move the ship to a coordinate (target)
         //Vector2 target = new Vector2(960 / PirateGame.PPM, 2432 / PirateGame.PPM);
@@ -176,7 +191,7 @@ public class EnemyShip extends Enemy {
     private Vector2 travelToCheckpoint(float maxDistance, Checkpoint cp) {
         Vector2 v = new Vector2(cp.x - (b2body.getPosition().x * PirateGame.PPM) - getWidth() / 2, cp.y - (b2body.getPosition().y * PirateGame.PPM) - getHeight() / 2);
 
-        return v.scl(maxDistance);
+        return v.limit(maxDistance);
     }
 
     /**
@@ -189,6 +204,16 @@ public class EnemyShip extends Enemy {
             super.draw(batch);
             //Render health bar
             bar.render(batch);
+            // checking if pathfinding information should be displayed
+            if (PathFinder.PATHFINDERDEBUG && path != null && !path.isEmpty()) {
+                batch.end();
+                for (int i = 0; i < path.size() - 1; i++) {
+
+                    DebugUtils.drawDebugLine(path.get(i).getVector2().scl(1 / PirateGame.PPM), path.get(i + 1).getVector2().scl(1 / PirateGame.PPM), batch.getProjectionMatrix());
+                    DebugUtils.drawDebugDot(path.get(i).getVector2().scl(1 / PirateGame.PPM), batch.getProjectionMatrix());
+                }
+                batch.begin();
+            }
         }
     }
 

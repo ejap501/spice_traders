@@ -48,7 +48,7 @@ public class Player extends Sprite {
 
 
         // Sets cannonball array
-        cannonBalls = new Array<CannonFire>();
+        cannonBalls = new Array<>();
     }
 
     /**

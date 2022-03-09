@@ -108,7 +108,8 @@ public class GameScreen implements Screen {
         maploader = new TmxMapLoader();
         map = maploader.load("map/map.tmx");
         renderer = new OrthogonalTiledMapRenderer(map, getUnitScale());
-        pathFinder = new PathFinder(this, PirateGame.PPM);
+        pathFinder = new PathFinder(this, 64);
+
         new WorldCreator(this);
 
         // Setting up contact listener for collisions
@@ -118,13 +119,13 @@ public class GameScreen implements Screen {
         colleges = new HashMap<>();
 
         // Alcuin college
-        colleges.put(0, new College(this, 0, 1900 / PirateGame.PPM, 2100 / PirateGame.PPM, 1, invalidSpawn));
+        colleges.put(0, new College(this, 0, 1900 / PirateGame.PPM, 2100 / PirateGame.PPM, 6, invalidSpawn));
         // Anne Lister college
-        colleges.put(1, new College(this, 1, 6304 / PirateGame.PPM, 1199 / PirateGame.PPM, 0, invalidSpawn));
+        colleges.put(1, new College(this, 1, 6304 / PirateGame.PPM, 1199 / PirateGame.PPM, 8, invalidSpawn));
         // Constantine college
-        colleges.put(2, new College(this, 2, 6240 / PirateGame.PPM, 6703 / PirateGame.PPM, 0, invalidSpawn));
+        colleges.put(2, new College(this, 2, 6240 / PirateGame.PPM, 6703 / PirateGame.PPM, 8, invalidSpawn));
         // Goodricke college
-        colleges.put(3, new College(this, 3, 1760 / PirateGame.PPM, 6767 / PirateGame.PPM, 0, invalidSpawn));
+        colleges.put(3, new College(this, 3, 1760 / PirateGame.PPM, 6767 / PirateGame.PPM, 8, invalidSpawn));
 
         ships = new ArrayList<>();
         ships.addAll(colleges.get(0).fleet);
@@ -136,7 +137,7 @@ public class GameScreen implements Screen {
         Boolean validLoc;
         int a = 0;
         int b = 0;
-        for (int i = 0; i < 0; i++) {
+        for (int i = 0; i < 20; i++) {
             validLoc = false;
             while (!validLoc) {
                 //Get random x and y coords
@@ -453,8 +454,20 @@ public class GameScreen implements Screen {
      */
     public int getTileMapWidth() {
         MapProperties prop = getMap().getProperties();
+        int mapWidth = prop.get("width", Integer.class);
+        int tilePixelWidth = prop.get("tilewidth", Integer.class);
 
-        return prop.get("width", Integer.class) * (int) PirateGame.PPM;
+        return mapWidth * tilePixelWidth;
+    }
+
+    /**
+     * @return the width of a single tile on the tilemap
+     */
+    public int getTileWidth(){
+        MapProperties prop = getMap().getProperties();
+        int tilePixelWidth = prop.get("tilewidth", Integer.class);
+
+        return tilePixelWidth;
     }
 
     /**
@@ -462,8 +475,10 @@ public class GameScreen implements Screen {
      */
     public int getTileMapHeight() {
         MapProperties prop = getMap().getProperties();
+        int mapHeight = prop.get("height", Integer.class);
+        int tilePixelHeight = prop.get("tileheight", Integer.class);
 
-        return (int) (prop.get("height", Integer.class) * PirateGame.PPM);
+        return mapHeight * tilePixelHeight;
     }
 
     /**
