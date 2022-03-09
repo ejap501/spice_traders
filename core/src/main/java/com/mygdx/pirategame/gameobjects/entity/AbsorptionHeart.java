@@ -84,13 +84,14 @@ public class AbsorptionHeart extends PowerUp {
     }
 
     @Override
-    public void entityContact () {
+    public void entityContact() {
         if (!destroyed) {
             // Heal player
             Hud.changeHealth(10);
+
             // Set to destroy
             setToDestroyed = true;
-            Gdx.app.log("absorptionheart", "collision");
+            Gdx.app.log("absorptionHeart", "collision");
             // Play pickup sound
             if (screen.game.getPreferences().isEffectsEnabled()) {
                 getSound().play(screen.game.getPreferences().getEffectsVolume());

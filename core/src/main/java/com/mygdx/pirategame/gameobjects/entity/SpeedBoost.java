@@ -1,8 +1,6 @@
 package com.mygdx.pirategame.gameobjects.entity;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
@@ -12,8 +10,7 @@ import com.mygdx.pirategame.screen.GameScreen;
 
 public class SpeedBoost extends PowerUp {
     private Texture speedBoost;
-    private boolean setToDestroyed;
-    private boolean destroyed;
+
     /**
      * x
      * Instantiates an entity
@@ -86,28 +83,19 @@ public class SpeedBoost extends PowerUp {
      * What happens when an entity collides with the speed boost, only the player ship can
      */
     @Override
-    public void entityContact () {
-        // Increase speed variable
+    public void entityContact() {
+        if (!destroyed) {
+            // Increase speed and acceleration variables (by percentage)
+            GameScreen.changeMaxSpeed((float) 5);
+            GameScreen.changeAcceleration((float) 10);
 
-        // Set to destroy
-        setToDestroyed = true;
-        Gdx.app.log("speedBoost", "collision");
-        // Play pickup sound
-        if (screen.game.getPreferences().isEffectsEnabled()) {
-            getSound().play(screen.game.getPreferences().getEffectsVolume());
-        }
-
-    }
-
-    /**
-     * Draws the coin using batch
-     *
-     * @param batch The batch of the program
-     */
-    public void draw(Batch batch) {
-        if(!destroyed) {
-            super.draw(batch);
+            // Set to destroy
+            setToDestroyed = true;
+            Gdx.app.log("speedBoost", "collision");
+            // Play pickup sound
+            if (screen.game.getPreferences().isEffectsEnabled()) {
+                getSound().play(screen.game.getPreferences().getEffectsVolume());
+            }
         }
     }
-
 }

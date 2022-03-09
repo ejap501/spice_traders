@@ -112,7 +112,7 @@ public class Player extends Sprite {
         fdef.filter.categoryBits = PirateGame.PLAYER_BIT;
 
         // determining what this BIT can collide with
-        fdef.filter.maskBits = PirateGame.DEFAULT_BIT | PirateGame.COIN_BIT | PirateGame.ABSORPTION_HEART_BIT | PirateGame.ENEMY_BIT | PirateGame.COLLEGE_BIT | PirateGame.COLLEGE_SENSOR_BIT | PirateGame.COLLEGE_FIRE_BIT;
+        fdef.filter.maskBits = PirateGame.DEFAULT_BIT | PirateGame.COIN_BIT | PirateGame.COIN_MAGNET_BIT | PirateGame.SPEED_BOOST_BIT | PirateGame.ABSORPTION_HEART_BIT | PirateGame.FASTER_SHOOTING_BIT | PirateGame.FREEZE_ENEMY_BIT | PirateGame.ENEMY_BIT | PirateGame.COLLEGE_BIT | PirateGame.COLLEGE_SENSOR_BIT | PirateGame.COLLEGE_FIRE_BIT;
         fdef.shape = shape;
         b2body.createFixture(fdef).setUserData(this);
     }
