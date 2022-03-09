@@ -32,6 +32,7 @@ public class EnemyShip extends Enemy {
     public Integer collegeID;
     private final Sound destroy;
     private final Sound hit;
+    private final int COLLISIONRADIUS = 55;
 
     /**
      * used to delay patfinding when the ship collides with something
@@ -60,7 +61,7 @@ public class EnemyShip extends Enemy {
         //Set the position and size of the college
         setBounds(0, 0, 64 / PirateGame.PPM, 110 / PirateGame.PPM);
         setRegion(enemyShip);
-        setOrigin(32 / PirateGame.PPM, 55 / PirateGame.PPM);
+        setOrigin(32 / PirateGame.PPM, COLLISIONRADIUS / PirateGame.PPM);
 
         damage = 20;
         // give a seconds speed instead of a portin of it, then limit to a portion of the speed
@@ -74,7 +75,7 @@ public class EnemyShip extends Enemy {
 
         Vector2 destination = generateDestination();
         int tilewidth = screen.getTileWidth();
-        path = screen.getPathFinder().getPath((b2body.getPosition().x * PirateGame.PPM), (b2body.getPosition().y * PirateGame.PPM), destination.x, destination.y, getWidth() * tilewidth, getHeight() * tilewidth);
+        path = screen.getPathFinder().getPath((b2body.getPosition().x * PirateGame.PPM), (b2body.getPosition().y * PirateGame.PPM), destination.x, destination.y, COLLISIONRADIUS, COLLISIONRADIUS);
         if (path != null && path.size() > 1) {
             // removing the start node from the path as ship is already at it
             path.remove(0);
@@ -106,7 +107,7 @@ public class EnemyShip extends Enemy {
             if (y > screen.getTileMapHeight()) {
                 y = screen.getTileMapHeight();
             }
-            if (screen.getPathFinder().isTraversable(x, y, getWidth() * tileWidth, getHeight() * tileWidth)) {
+            if (screen.getPathFinder().isTraversable(x, y, COLLISIONRADIUS, COLLISIONRADIUS)) {
                 return new Vector2(x, y);
             }
         }
@@ -233,7 +234,7 @@ public class EnemyShip extends Enemy {
         //Sets collision boundaries
         FixtureDef fdef = new FixtureDef();
         CircleShape shape = new CircleShape();
-        shape.setRadius(55 / PirateGame.PPM);
+        shape.setRadius(COLLISIONRADIUS / PirateGame.PPM);
         // setting BIT identifier
         fdef.filter.categoryBits = PirateGame.ENEMY_BIT;
         // determining what this BIT can collide with

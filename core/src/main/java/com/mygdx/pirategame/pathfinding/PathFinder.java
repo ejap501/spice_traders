@@ -118,18 +118,21 @@ public class PathFinder {
      */
     public boolean isTraversable(float xb, float yb, float width, float height) {
 
-        float hw = width * 4;
-        float hh = height * 4;
-        Vector2[] vlst = new Vector2[4];
+        float hw = width;
+        float hh = height;
+        Vector2[] vlst = new Vector2[8];
         vlst[0] = new Vector2(xb - hw, yb - hh);
         vlst[1] = new Vector2(xb + hw, yb - hh);
         vlst[2] = new Vector2(xb - hw, yb + hh);
         vlst[3] = new Vector2(xb + hw, yb + hh);
+        vlst[4] = new Vector2(xb, yb + hh);
+        vlst[5] = new Vector2(xb, yb - hh);
+        vlst[6] = new Vector2(xb + hw, yb);
+        vlst[7] = new Vector2(xb - hw, yb);
         for (Vector2 v : vlst) {
             int x = (int) (v.x / tileSize);
             int y = (int) (v.y / tileSize);
             TiledMapTileLayer islands = (TiledMapTileLayer) gameScreen.getMap().getLayers().get("islands");
-
             if (isColliding(islands, x, y)) {
                 return false;
             }
