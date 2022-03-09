@@ -5,15 +5,11 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.mygdx.pirategame.Hud;
 import com.mygdx.pirategame.PirateGame;
 import com.mygdx.pirategame.screen.GameScreen;
 
-/**
- * Heals the player when picked up
- */
-public class AbsorptionHeart extends PowerUp {
-    private Texture absorptionHeart;
+public class FasterShooting extends PowerUp {
+    private Texture fasterShooting;
 
     /**
      * x
@@ -24,21 +20,21 @@ public class AbsorptionHeart extends PowerUp {
      * @param x      x position of entity
      * @param y      y position of entity
      */
-    public AbsorptionHeart(GameScreen screen, float x, float y) {
+    public FasterShooting(GameScreen screen, float x, float y) {
         super(screen, x, y);
 
         // Set speed boost image
-        absorptionHeart = new Texture("cannonBall.png"); // CHANGE
+        fasterShooting = new Texture("cannonBall.png"); // CHANGE
         //Set the position and size of the speed boost
         setBounds(0,0,48 / PirateGame.PPM, 48 / PirateGame.PPM);
         //Set the texture
-        setRegion(absorptionHeart);
+        setRegion(fasterShooting);
         //Sets origin of the speed boost
         setOrigin(24 / PirateGame.PPM,24 / PirateGame.PPM);
     }
 
     /**
-     * Updates the absorption heart state. If needed, deletes the absorption heart if picked up
+     * Updates the speed boost state. If needed, deletes the speed boost if picked up
      */
     public void update() {
         //If coin is set to destroy and isnt, destroy it
@@ -46,7 +42,7 @@ public class AbsorptionHeart extends PowerUp {
             world.destroyBody(b2body);
             destroyed = true;
         }
-        //Update position of power up
+        //Update position of coin
         else if(!destroyed) {
             setPosition(b2body.getPosition().x - getWidth() / 2f, b2body.getPosition().y - getHeight() / 2f);
         }
@@ -74,7 +70,7 @@ public class AbsorptionHeart extends PowerUp {
         shape.setRadius(24 / PirateGame.PPM);
 
         // Setting BIT identifier
-        fdef.filter.categoryBits = PirateGame.ABSORPTION_HEART_BIT;
+        fdef.filter.categoryBits = PirateGame.SPEED_BOOST_BIT;
 
         // Determining what this BIT can collide with
         fdef.filter.maskBits = PirateGame.DEFAULT_BIT | PirateGame.PLAYER_BIT | PirateGame.ENEMY_BIT;
@@ -83,15 +79,18 @@ public class AbsorptionHeart extends PowerUp {
         b2body.createFixture(fdef).setUserData(this);
     }
 
+    /**
+     * What happens when an entity collides with the speed boost, only the player ship can
+     */
     @Override
     public void entityContact() {
         if (!destroyed) {
-            // Heal player
-            Hud.changeHealth(10);
+            // Increase speed of shooting by decreasing shooting delay
+            GameScreen.changeShootingDelay((float) 10);
 
             // Set to destroy
             setToDestroyed = true;
-            Gdx.app.log("absorptionHeart", "collision");
+            Gdx.app.log("fasterShooting", "collision");
             // Play pickup sound
             if (screen.game.getPreferences().isEffectsEnabled()) {
                 getSound().play(screen.game.getPreferences().getEffectsVolume());

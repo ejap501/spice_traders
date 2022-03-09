@@ -24,6 +24,8 @@ public class Player extends Sprite {
     private Sound breakSound, cannonballHitSound;
     private Array<CannonFire> cannonBalls;
 
+    private float timeFired = 0;
+
     /**
      * Instantiates a new Player. Constructor only called once per game
      *
@@ -69,6 +71,9 @@ public class Player extends Sprite {
             if(ball.isDestroyed())
                 cannonBalls.removeValue(ball, true);
         }
+
+        // Add delay timer between shots
+        timeFired += dt;
     }
 
     /**
@@ -112,17 +117,23 @@ public class Player extends Sprite {
         fdef.filter.categoryBits = PirateGame.PLAYER_BIT;
 
         // determining what this BIT can collide with
-        fdef.filter.maskBits = PirateGame.DEFAULT_BIT | PirateGame.COIN_BIT | PirateGame.ABSORPTION_HEART_BIT | PirateGame.ENEMY_BIT | PirateGame.COLLEGE_BIT | PirateGame.COLLEGE_SENSOR_BIT | PirateGame.COLLEGE_FIRE_BIT;
+        fdef.filter.maskBits = PirateGame.DEFAULT_BIT | PirateGame.COIN_BIT | PirateGame.COIN_MAGNET_BIT | PirateGame.SPEED_BOOST_BIT | PirateGame.ABSORPTION_HEART_BIT | PirateGame.FASTER_SHOOTING_BIT | PirateGame.FREEZE_ENEMY_BIT | PirateGame.ENEMY_BIT | PirateGame.COLLEGE_BIT | PirateGame.COLLEGE_SENSOR_BIT | PirateGame.COLLEGE_FIRE_BIT;
         fdef.shape = shape;
         b2body.createFixture(fdef).setUserData(this);
     }
 
     /**
-     * Called when E is pushed. Causes 1 cannonball to spawn on both sides of the ships wih their relative velocity
+     * Called when left button is pressed.
+     * One cannonball is launched towards the mouse position from the centre of the player.
+     *
+     * @param camera The camera that is in charge of scaling
      */
     public void fire(OrthographicCamera camera) {
-        // Fires cannons
-        cannonBalls.add(new CannonFire(screen, b2body, camera, 5));
+        // Fires cannon if specified delay time has passed
+        if (timeFired > GameScreen.getShootingDelay()) {
+            cannonBalls.add(new CannonFire(screen, b2body, camera, 5));
+            timeFired = 0;
+        }
     }
 
     /**

@@ -24,9 +24,7 @@ import com.mygdx.pirategame.PirateGame;
 import com.mygdx.pirategame.gameobjects.Player;
 import com.mygdx.pirategame.gameobjects.enemy.College;
 import com.mygdx.pirategame.gameobjects.enemy.EnemyShip;
-import com.mygdx.pirategame.gameobjects.entity.Coin;
-import com.mygdx.pirategame.gameobjects.entity.AbsorptionHeart;
-import com.mygdx.pirategame.gameobjects.entity.PowerUp;
+import com.mygdx.pirategame.gameobjects.entity.*;
 import com.mygdx.pirategame.world.AvailableSpawn;
 import com.mygdx.pirategame.world.WorldContactListener;
 import com.mygdx.pirategame.world.WorldCreator;
@@ -45,6 +43,7 @@ import java.util.*;
 public class GameScreen implements Screen {
     private static float maxSpeed = 4f;
     private static float accel = 0.1f;
+    private static float shootingDelay = 1f;
     private float stateTime;
 
     public static PirateGame game;
@@ -63,7 +62,7 @@ public class GameScreen implements Screen {
     private static HashMap<Integer, College> colleges = new HashMap<>();
     private static ArrayList<EnemyShip> ships = new ArrayList<>();
     private static ArrayList<Coin> Coins = new ArrayList<>();
-    private static ArrayList<PowerUp> Powerups = new ArrayList<>();
+    private static ArrayList<PowerUp> PowerUps = new ArrayList<>();
     private AvailableSpawn invalidSpawn = new AvailableSpawn();
     private Hud hud;
 
@@ -175,12 +174,15 @@ public class GameScreen implements Screen {
      */
     public void addPowerUps() {
         //Random powerups
-        Powerups = new ArrayList<>();
+        PowerUps = new ArrayList<>();
         // Add Speedboosts
         for (int i = 0; i < 100; i++) {
             int[] loc = getRandomLocation();
+
             //Add a powerup at the random coords
-            Powerups.add(new AbsorptionHeart(this, loc[0], loc[1]));
+            PowerUps.add(new AbsorptionHeart(this, loc[0], loc[1]));
+            PowerUps.add(new SpeedBoost(this, loc[0], loc[1]));
+            PowerUps.add(new FasterShooting(this, loc[0], loc[1]));
         }
     }
 
@@ -363,8 +365,8 @@ public class GameScreen implements Screen {
             Coins.get(i).update();
         }
         //Updates powerups
-        for (int i = 0; i < Powerups.size(); i++) {
-            Powerups.get(i).update();
+        for (int i = 0; i < PowerUps.size(); i++) {
+            PowerUps.get(i).update();
         }
         //After a delay check if a college is destroyed. If not, if can fire
         if (stateTime > 1) {
@@ -417,8 +419,8 @@ public class GameScreen implements Screen {
             Coins.get(i).draw(game.batch);
         }
         //Renders powerups
-        for(int i=0;i<Powerups.size();i++) {
-            Powerups.get(i).draw(game.batch);
+        for(int i = 0; i< PowerUps.size(); i++) {
+            PowerUps.get(i).draw(game.batch);
         }
 
         //Renders colleges
@@ -546,12 +548,21 @@ public class GameScreen implements Screen {
     }
 
     /**
-     * Updates acceleration by a given percentage. Accessed by skill tree
+     * Updates acceleration by a given percentage. Accessed by skill tree and power ups
      *
      * @param percentage percentage increase
      */
     public static void changeAcceleration(Float percentage){
         accel = accel * (1 + (percentage / 100));
+    }
+
+    /**
+     * Sets acceleration to a given value
+     *
+     * @param value new acceleration value
+     */
+    public static void setAcceleration(Float value){
+        accel = value;
     }
 
     /**
@@ -561,6 +572,51 @@ public class GameScreen implements Screen {
      */
     public static void changeMaxSpeed(Float percentage){
         maxSpeed = maxSpeed * (1 +(percentage/100));
+    }
+
+    /**
+     * Sets max speed to a given value
+     *
+     * @param value new max speed value
+     */
+    public static void setMaxSpeed(Float value){
+        maxSpeed = value;
+    }
+
+    /**
+     * Resets game values to default, used on game restart
+     */
+    public static void resetValues(){
+        setMaxSpeed(4f);
+        setAcceleration(0.1f);
+        setShootingDelay(1f);
+    }
+
+    /**
+     * Fetches the current shooting delay
+     *
+     * @return shooting delay : returns the current shooting delay value
+     */
+    public static float getShootingDelay() {
+        return shootingDelay;
+    }
+
+    /**
+     * Sets shooting delay to a given value
+     *
+     * @param value new shooting delay value
+     */
+    public static void setShootingDelay(Float value){
+        shootingDelay = value;
+    }
+
+    /**
+     * Updates shooting delay by a given percentage. Accessed by power ups
+     *
+     * @param percentage percentage decrease
+     */
+    public static void changeShootingDelay(Float percentage){
+        shootingDelay = shootingDelay * (1 - (percentage/100));
     }
 
     /**
