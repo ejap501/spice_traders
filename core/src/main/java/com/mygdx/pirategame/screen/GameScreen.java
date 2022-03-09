@@ -24,9 +24,7 @@ import com.mygdx.pirategame.PirateGame;
 import com.mygdx.pirategame.gameobjects.Player;
 import com.mygdx.pirategame.gameobjects.enemy.College;
 import com.mygdx.pirategame.gameobjects.enemy.EnemyShip;
-import com.mygdx.pirategame.gameobjects.entity.Coin;
-import com.mygdx.pirategame.gameobjects.entity.PowerUp;
-import com.mygdx.pirategame.gameobjects.entity.SpeedBoost;
+import com.mygdx.pirategame.gameobjects.entity.*;
 import com.mygdx.pirategame.world.AvailableSpawn;
 import com.mygdx.pirategame.world.WorldContactListener;
 import com.mygdx.pirategame.world.WorldCreator;
@@ -45,6 +43,7 @@ import java.util.*;
 public class GameScreen implements Screen {
     private static float maxSpeed = 4f;
     private static float accel = 0.1f;
+    private static float shootingDelay = 1f;
     private float stateTime;
 
     public static PirateGame game;
@@ -179,9 +178,11 @@ public class GameScreen implements Screen {
         // Add Speedboosts
         for (int i = 0; i < 100; i++) {
             int[] loc = getRandomLocation();
+
             //Add a powerup at the random coords
-            //Powerups.add(new AbsorptionHeart(this, loc[0], loc[1]));
+            PowerUps.add(new AbsorptionHeart(this, loc[0], loc[1]));
             PowerUps.add(new SpeedBoost(this, loc[0], loc[1]));
+            PowerUps.add(new FasterShooting(this, loc[0], loc[1]));
         }
     }
 
@@ -583,11 +584,39 @@ public class GameScreen implements Screen {
     }
 
     /**
-     * Resets game values to default, used on restart
+     * Resets game values to default, used on game restart
      */
     public static void resetValues(){
         setMaxSpeed(4f);
         setAcceleration(0.1f);
+        setShootingDelay(1f);
+    }
+
+    /**
+     * Fetches the current shooting delay
+     *
+     * @return shooting delay : returns the current shooting delay value
+     */
+    public static float getShootingDelay() {
+        return shootingDelay;
+    }
+
+    /**
+     * Sets shooting delay to a given value
+     *
+     * @param value new shooting delay value
+     */
+    public static void setShootingDelay(Float value){
+        shootingDelay = value;
+    }
+
+    /**
+     * Updates shooting delay by a given percentage. Accessed by power ups
+     *
+     * @param percentage percentage decrease
+     */
+    public static void changeShootingDelay(Float percentage){
+        shootingDelay = shootingDelay * (1 - (percentage/100));
     }
 
     /**

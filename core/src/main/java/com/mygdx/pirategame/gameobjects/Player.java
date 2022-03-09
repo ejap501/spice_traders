@@ -24,6 +24,8 @@ public class Player extends Sprite {
     private Sound breakSound, cannonballHitSound;
     private Array<CannonFire> cannonBalls;
 
+    private float timeFired = 0;
+
     /**
      * Instantiates a new Player. Constructor only called once per game
      *
@@ -69,6 +71,9 @@ public class Player extends Sprite {
             if(ball.isDestroyed())
                 cannonBalls.removeValue(ball, true);
         }
+
+        // Add delay timer between shots
+        timeFired += dt;
     }
 
     /**
@@ -118,11 +123,17 @@ public class Player extends Sprite {
     }
 
     /**
-     * Called when E is pushed. Causes 1 cannonball to spawn on both sides of the ships wih their relative velocity
+     * Called when left button is pressed.
+     * One cannonball is launched towards the mouse position from the centre of the player.
+     *
+     * @param camera The camera that is in charge of scaling
      */
     public void fire(OrthographicCamera camera) {
-        // Fires cannons
-        cannonBalls.add(new CannonFire(screen, b2body, camera, 5));
+        // Fires cannon if specified delay time has passed
+        if (timeFired > GameScreen.getShootingDelay()) {
+            cannonBalls.add(new CannonFire(screen, b2body, camera, 5));
+            timeFired = 0;
+        }
     }
 
     /**
