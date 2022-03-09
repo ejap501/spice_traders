@@ -688,4 +688,8 @@ public class GameScreen implements Screen {
         hud.dispose();
         stage.dispose();
     }
+
+    public HashMap<Integer,College> getColleges(){
+        return colleges;
+    }
 }
