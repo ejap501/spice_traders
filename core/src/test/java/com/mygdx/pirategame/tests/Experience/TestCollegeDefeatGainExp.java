@@ -1,7 +1,6 @@
 package com.mygdx.pirategame.tests.Experience;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.graphics.GL20;
 import com.mygdx.pirategame.Hud;
 import com.mygdx.pirategame.PirateGameTest;
@@ -15,7 +14,6 @@ import org.mockito.Mockito;
 import java.util.HashMap;
 
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 import static org.junit.Assert.assertTrue;
 
 @RunWith (PirateGameTest.class)
@@ -28,11 +26,6 @@ public class TestCollegeDefeatGainExp {
         // Use Mockito to mock the OpenGL methods since we are running headlessly
         Gdx.gl20 = mock(GL20.class);
         Gdx.gl = Gdx.gl20;
-
-        // Mock the graphics class.
-        Gdx.graphics = mock(Graphics.class);
-        when(Gdx.graphics.getWidth()).thenReturn(500);
-        when(Gdx.graphics.getHeight()).thenReturn(500);
 
     }
 
