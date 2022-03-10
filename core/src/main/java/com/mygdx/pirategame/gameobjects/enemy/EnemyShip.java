@@ -156,6 +156,10 @@ public class EnemyShip extends Enemy {
             return;
         }
 
+        if(!inPlayerRange()){
+            return;
+        }
+
         if (path == null || path.isEmpty()) {
             generateNewPath();
             return;
@@ -262,6 +266,11 @@ public class EnemyShip extends Enemy {
         Hud.changePoints(5);
     }
 
+    @Override
+    public void onEnemyShipContact() {
+        updateDelay = 50;
+    }
+
     /**
      * Updates the ship image. Particuarly change texture on college destruction
      *
@@ -272,5 +281,14 @@ public class EnemyShip extends Enemy {
         collegeID = alignment;
         enemyShip = new Texture(path);
         setRegion(enemyShip);
+    }
+
+
+    /**
+     * Checks if the ship should pathfind or just sit still (used to reduce needless load)
+     * @return If the ship is in range of the player
+     */
+    public boolean inPlayerRange(){
+        return screen.getPlayerPos().dst(b2body.getPosition()) < 3000;
     }
 }
