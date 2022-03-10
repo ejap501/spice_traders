@@ -8,8 +8,8 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.mygdx.pirategame.PirateGame;
 import com.mygdx.pirategame.screen.GameScreen;
 
-public class SpeedBoost extends PowerUp {
-    private Texture speedBoost;
+public class FasterShooting extends PowerUp {
+    private Texture fasterShooting;
 
     /**
      * x
@@ -20,15 +20,15 @@ public class SpeedBoost extends PowerUp {
      * @param x      x position of entity
      * @param y      y position of entity
      */
-    public SpeedBoost(GameScreen screen, float x, float y) {
+    public FasterShooting(GameScreen screen, float x, float y) {
         super(screen, x, y);
 
         // Set speed boost image
-        speedBoost = new Texture("cannonBall.png"); // CHANGE
+        fasterShooting = new Texture("cannonBall.png"); // CHANGE
         //Set the position and size of the speed boost
         setBounds(0,0,48 / PirateGame.PPM, 48 / PirateGame.PPM);
         //Set the texture
-        setRegion(speedBoost);
+        setRegion(fasterShooting);
         //Sets origin of the speed boost
         setOrigin(24 / PirateGame.PPM,24 / PirateGame.PPM);
     }
@@ -85,13 +85,12 @@ public class SpeedBoost extends PowerUp {
     @Override
     public void entityContact() {
         if (!destroyed) {
-            // Increase speed and acceleration variables (by percentage)
-            GameScreen.changeMaxSpeed((float) 5);
-            GameScreen.changeAcceleration((float) 10);
+            // Increase speed of shooting by decreasing shooting delay
+            GameScreen.changeShootingDelay((float) 10);
 
             // Set to destroy
             setToDestroyed = true;
-            Gdx.app.log("speedBoost", "collision");
+            Gdx.app.log("fasterShooting", "collision");
             // Play pickup sound
             if (screen.game.getPreferences().isEffectsEnabled()) {
                 getSound().play(screen.game.getPreferences().getEffectsVolume());

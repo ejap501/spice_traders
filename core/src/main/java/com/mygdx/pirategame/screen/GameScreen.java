@@ -27,6 +27,9 @@ import com.mygdx.pirategame.gameobjects.enemy.College;
 import com.mygdx.pirategame.gameobjects.enemy.EnemyShip;
 import com.mygdx.pirategame.gameobjects.entity.Coin;
 import com.mygdx.pirategame.pathfinding.PathFinder;
+
+import com.mygdx.pirategame.gameobjects.entity.*;
+
 import com.mygdx.pirategame.world.AvailableSpawn;
 import com.mygdx.pirategame.world.WorldContactListener;
 import com.mygdx.pirategame.world.WorldCreator;
@@ -45,6 +48,7 @@ import java.util.*;
 public class GameScreen implements Screen {
     private static float maxSpeed = 4f;
     private static float accel = 0.1f;
+    private static float shootingDelay = 1f;
     private float stateTime;
 
     public static PirateGame game;
@@ -63,8 +67,11 @@ public class GameScreen implements Screen {
     private static HashMap<Integer, College> colleges = new HashMap<>();
     private static ArrayList<EnemyShip> ships = new ArrayList<>();
     private static ArrayList<Coin> Coins = new ArrayList<>();
+
+    private static ArrayList<PowerUp> PowerUps = new ArrayList<>();
     private final AvailableSpawn invalidSpawn = new AvailableSpawn();
-    private final Hud hud;
+    private Hud hud;
+
 
     public static final int GAME_RUNNING = 0;
     public static final int GAME_PAUSED = 1;
@@ -134,41 +141,60 @@ public class GameScreen implements Screen {
         ships.addAll(colleges.get(3).fleet);
 
         //Random ships
-        Boolean validLoc;
-        int a = 0;
-        int b = 0;
         for (int i = 0; i < 20; i++) {
-            validLoc = false;
-            while (!validLoc) {
-                //Get random x and y coords
-                a = rand.nextInt(AvailableSpawn.xCap - AvailableSpawn.xBase) + AvailableSpawn.xBase;
-                b = rand.nextInt(AvailableSpawn.yCap - AvailableSpawn.yBase) + AvailableSpawn.yBase;
-                //Check if valid
-                validLoc = checkGenPos(a, b);
-            }
+            int[] loc = getRandomLocation();
             //Add a ship at the random coords
-            ships.add(new EnemyShip(this, a, b, "college/Ships/unaligned_ship.png", -1));
+            ships.add(new EnemyShip(this, loc[0], loc[1], "college/Ships/unaligned_ship.png", -1));
         }
 
         //Random coins
         Coins = new ArrayList<>();
         for (int i = 0; i < 100; i++) {
-            validLoc = false;
-            while (!validLoc) {
-                //Get random x and y coords
-                a = rand.nextInt(AvailableSpawn.xCap - AvailableSpawn.xBase) + AvailableSpawn.xBase;
-                b = rand.nextInt(AvailableSpawn.yCap - AvailableSpawn.yBase) + AvailableSpawn.yBase;
-                validLoc = checkGenPos(a, b);
-            }
+            int[] loc = getRandomLocation();
             //Add a coins at the random coords
-            Coins.add(new Coin(this, a, b));
+            Coins.add(new Coin(this, loc[0], loc[1]));
         }
+
+        addPowerUps();
 
         //Setting stage
         stage = new Stage(new ScreenViewport());
 
         //Setting the college that can currently be attacked
         nextCollege();
+    }
+
+    /**
+     * Randomly generates x and y and checks if they are valid
+     * @return x, y
+     */
+    public int[] getRandomLocation() {
+        Boolean validLoc = false;
+        int x = 0,y = 0;
+        while (!validLoc) {
+            //Get random x and y coords
+            x = rand.nextInt(AvailableSpawn.xCap - AvailableSpawn.xBase) + AvailableSpawn.xBase;
+            y = rand.nextInt(AvailableSpawn.yCap - AvailableSpawn.yBase) + AvailableSpawn.yBase;
+            validLoc = checkGenPos(x, y);
+        }
+        return new int[]{x,y};
+    }
+
+    /**
+     * Randomly positions power ups around the sea
+     */
+    public void addPowerUps() {
+        //Random powerups
+        PowerUps = new ArrayList<>();
+        // Add Speedboosts
+        for (int i = 0; i < 100; i++) {
+            int[] loc = getRandomLocation();
+
+            //Add a powerup at the random coords
+            PowerUps.add(new AbsorptionHeart(this, loc[0], loc[1]));
+            PowerUps.add(new SpeedBoost(this, loc[0], loc[1]));
+            PowerUps.add(new FasterShooting(this, loc[0], loc[1]));
+        }
     }
 
     /**
@@ -347,6 +373,10 @@ public class GameScreen implements Screen {
         for (int i = 0; i < Coins.size(); i++) {
             Coins.get(i).update();
         }
+        //Updates powerups
+        for (int i = 0; i < PowerUps.size(); i++) {
+            PowerUps.get(i).update();
+        }
         //After a delay check if a college is destroyed. If not, if can fire
         if (stateTime > 1) {
             if (!colleges.get(1).destroyed) {
@@ -397,6 +427,10 @@ public class GameScreen implements Screen {
         //Renders coins
         for (int i = 0; i < Coins.size(); i++) {
             Coins.get(i).draw(game.batch);
+        }
+        //Renders powerups
+        for(int i = 0; i< PowerUps.size(); i++) {
+            PowerUps.get(i).draw(game.batch);
         }
 
         //Renders colleges
@@ -557,12 +591,21 @@ public class GameScreen implements Screen {
     }
 
     /**
-     * Updates acceleration by a given percentage. Accessed by skill tree
+     * Updates acceleration by a given percentage. Accessed by skill tree and power ups
      *
      * @param percentage percentage increase
      */
     public static void changeAcceleration(Float percentage) {
         accel = accel * (1 + (percentage / 100));
+    }
+
+    /**
+     * Sets acceleration to a given value
+     *
+     * @param value new acceleration value
+     */
+    public static void setAcceleration(Float value){
+        accel = value;
     }
 
     /**
@@ -572,6 +615,51 @@ public class GameScreen implements Screen {
      */
     public static void changeMaxSpeed(Float percentage) {
         maxSpeed = maxSpeed * (1 + (percentage / 100));
+    }
+
+    /**
+     * Sets max speed to a given value
+     *
+     * @param value new max speed value
+     */
+    public static void setMaxSpeed(Float value){
+        maxSpeed = value;
+    }
+
+    /**
+     * Resets game values to default, used on game restart
+     */
+    public static void resetValues(){
+        setMaxSpeed(4f);
+        setAcceleration(0.1f);
+        setShootingDelay(1f);
+    }
+
+    /**
+     * Fetches the current shooting delay
+     *
+     * @return shooting delay : returns the current shooting delay value
+     */
+    public static float getShootingDelay() {
+        return shootingDelay;
+    }
+
+    /**
+     * Sets shooting delay to a given value
+     *
+     * @param value new shooting delay value
+     */
+    public static void setShootingDelay(Float value){
+        shootingDelay = value;
+    }
+
+    /**
+     * Updates shooting delay by a given percentage. Accessed by power ups
+     *
+     * @param percentage percentage decrease
+     */
+    public static void changeShootingDelay(Float percentage){
+        shootingDelay = shootingDelay * (1 - (percentage/100));
     }
 
     /**
@@ -642,6 +730,7 @@ public class GameScreen implements Screen {
         stage.dispose();
     }
 
+
     public OrthogonalTiledMapRenderer getRenderer() {
         return renderer;
     }
@@ -656,5 +745,10 @@ public class GameScreen implements Screen {
 
     public AvailableSpawn getInvalidSpawn() {
         return invalidSpawn;
+    }
+  
+    public HashMap<Integer,College> getColleges(){
+        return colleges;
+
     }
 }

@@ -192,6 +192,8 @@ public class Hud implements Disposable {
         return coins;
     }
 
+    public static Integer getPoints() { return score;}
+
     /**
      * Disposes game data
      */
