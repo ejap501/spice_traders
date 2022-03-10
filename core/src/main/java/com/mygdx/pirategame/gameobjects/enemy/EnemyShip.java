@@ -2,6 +2,7 @@ package com.mygdx.pirategame.gameobjects.enemy;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
@@ -13,6 +14,9 @@ import com.mygdx.pirategame.Hud;
 import com.mygdx.pirategame.PirateGame;
 import com.mygdx.pirategame.pathfinding.Checkpoint;
 import com.mygdx.pirategame.pathfinding.PathFinder;
+import com.mygdx.pirategame.pathfinding.pathManager.PathManager;
+import com.mygdx.pirategame.pathfinding.pathManager.PatrolPath;
+import com.mygdx.pirategame.pathfinding.pathManager.RandomPath;
 import com.mygdx.pirategame.screen.GameScreen;
 
 import java.util.Arrays;
@@ -28,11 +32,15 @@ import java.util.Random;
  * @version 1.0
  */
 public class EnemyShip extends Enemy {
+
+    public static final int COLLISIONRADIUS = 55;
+
     private Texture enemyShip;
-    public Integer collegeID;
+    public CollegeMetadata collegeMeta;
     private final Sound destroy;
     private final Sound hit;
-    private final int COLLISIONRADIUS = 55;
+
+    private final PathManager pathManager;
 
     /**
      * used to delay patfinding when the ship collides with something
@@ -48,13 +56,13 @@ public class EnemyShip extends Enemy {
      * @param x          x coordinates of entity
      * @param y          y coordinates of entity
      * @param path       path of texture file
-     * @param assignment College ship is assigned to
+     * @param collegeMeta College ship is assigned to
      */
-    public EnemyShip(GameScreen screen, float x, float y, String path, Integer assignment) {
+    public EnemyShip(GameScreen screen, float x, float y, String path, CollegeMetadata collegeMeta) {
         super(screen, x, y);
         enemyShip = new Texture(path);
         //Assign college
-        collegeID = assignment;
+        this.collegeMeta = collegeMeta;
         //Set audios
         destroy = Gdx.audio.newSound(Gdx.files.internal("sfx_and_music/ship-explosion-2.wav"));
         hit = Gdx.audio.newSound(Gdx.files.internal("sfx_and_music/ship-hit.wav"));
@@ -64,6 +72,11 @@ public class EnemyShip extends Enemy {
         setOrigin(32 / PirateGame.PPM, COLLISIONRADIUS / PirateGame.PPM);
 
         damage = 20;
+        if (collegeMeta != null) {
+            this.pathManager = new PatrolPath(this, screen);
+        } else {
+            this.pathManager = new RandomPath(this, screen);
+        }
         // give a seconds speed instead of a portin of it, then limit to a portion of the speed
         generateNewPath();
     }
@@ -73,7 +86,7 @@ public class EnemyShip extends Enemy {
      */
     public void generateNewPath() {
 
-        Vector2 destination = generateDestination();
+        Vector2 destination = pathManager.generateDestination();
         int tilewidth = screen.getTileWidth();
         path = screen.getPathFinder().getPath((b2body.getPosition().x * PirateGame.PPM), (b2body.getPosition().y * PirateGame.PPM), destination.x, destination.y, COLLISIONRADIUS, COLLISIONRADIUS);
         if (path != null && path.size() > 1) {
@@ -84,35 +97,6 @@ public class EnemyShip extends Enemy {
 
     }
 
-    /**
-     * @return a random point on the map that the boat can travel too
-     */
-    private Vector2 generateDestination() {
-        Random rnd = new Random();
-
-        int tileWidth = (int)PirateGame.PPM;
-
-        while (true) {
-            int x = rnd.nextInt(2000) - 1000 + (int) (b2body.getPosition().x * tileWidth);
-            int y = rnd.nextInt(2000) - 1000 + (int) (b2body.getPosition().y * tileWidth);
-            if (x < 0) {
-                x = 0;
-            }
-            if (y < 0) {
-                y = 0;
-            }
-            if (x > screen.getTileMapWidth()) {
-                x = screen.getTileMapWidth();
-            }
-            if (y > screen.getTileMapHeight()) {
-                y = screen.getTileMapHeight();
-            }
-            if (screen.getPathFinder().isTraversable(x, y, COLLISIONRADIUS, COLLISIONRADIUS)) {
-                return new Vector2(x, y);
-            }
-        }
-
-    }
 
     /**
      * Updates the state of each object with delta time
@@ -156,9 +140,12 @@ public class EnemyShip extends Enemy {
             return;
         }
 
-        if(!inPlayerRange()){
+        if (!inPlayerRange()) {
             return;
         }
+
+        // updating the pathing manager
+        pathManager.update(dt);
 
         if (path == null || path.isEmpty()) {
             generateNewPath();
@@ -212,10 +199,18 @@ public class EnemyShip extends Enemy {
             // checking if pathfinding information should be displayed
             if (PathFinder.PATHFINDERDEBUG && path != null && !path.isEmpty()) {
                 batch.end();
+
+                Color dotColor;
+                if (pathManager instanceof PatrolPath) {
+                    dotColor = Color.ORANGE;
+                } else {
+                    dotColor = Color.GREEN;
+                }
+
                 for (int i = 0; i < path.size() - 1; i++) {
 
-                    DebugUtils.drawDebugLine(path.get(i).getVector2().scl(1 / PirateGame.PPM), path.get(i + 1).getVector2().scl(1 / PirateGame.PPM), batch.getProjectionMatrix());
-                    DebugUtils.drawDebugDot(path.get(i).getVector2().scl(1 / PirateGame.PPM), batch.getProjectionMatrix());
+                    DebugUtils.drawDebugLine(path.get(i).getVector2().scl(1 / PirateGame.PPM), path.get(i + 1).getVector2().scl(1 / PirateGame.PPM), batch.getProjectionMatrix(), Color.RED);
+                    DebugUtils.drawDebugDot(path.get(i).getVector2().scl(1 / PirateGame.PPM), batch.getProjectionMatrix(), dotColor);
                 }
                 batch.begin();
             }
@@ -278,7 +273,7 @@ public class EnemyShip extends Enemy {
      * @param path      Path of new texture
      */
     public void updateTexture(Integer alignment, String path) {
-        collegeID = alignment;
+        collegeMeta = CollegeMetadata.getCollegeMetaFromId(alignment);
         enemyShip = new Texture(path);
         setRegion(enemyShip);
     }
@@ -286,9 +281,21 @@ public class EnemyShip extends Enemy {
 
     /**
      * Checks if the ship should pathfind or just sit still (used to reduce needless load)
+     *
      * @return If the ship is in range of the player
      */
-    public boolean inPlayerRange(){
+    public boolean inPlayerRange() {
         return screen.getPlayerPos().dst(b2body.getPosition()) < 3000;
+    }
+
+    /**
+     * Used to check if the set location is traversable by a ship of this size
+     *
+     * @param x The x location of the proposed location
+     * @param y The y location of the proposed location
+     * @return If the ship can go there
+     */
+    public boolean isTraversable(float x, float y) {
+        return screen.getPathFinder().isTraversable(x, y, EnemyShip.COLLISIONRADIUS, EnemyShip.COLLISIONRADIUS);
     }
 }

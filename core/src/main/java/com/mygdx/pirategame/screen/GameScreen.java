@@ -24,6 +24,7 @@ import com.mygdx.pirategame.Hud;
 import com.mygdx.pirategame.PirateGame;
 import com.mygdx.pirategame.gameobjects.Player;
 import com.mygdx.pirategame.gameobjects.enemy.College;
+import com.mygdx.pirategame.gameobjects.enemy.CollegeMetadata;
 import com.mygdx.pirategame.gameobjects.enemy.EnemyShip;
 import com.mygdx.pirategame.gameobjects.entity.Coin;
 import com.mygdx.pirategame.pathfinding.PathFinder;
@@ -64,13 +65,13 @@ public class GameScreen implements Screen {
     private final Box2DDebugRenderer b2dr;
 
     private final Player player;
-    private static HashMap<Integer, College> colleges = new HashMap<>();
+    private static HashMap<CollegeMetadata, College> colleges = new HashMap<>();
     private static ArrayList<EnemyShip> ships = new ArrayList<>();
     private static ArrayList<Coin> Coins = new ArrayList<>();
 
     private static ArrayList<PowerUp> PowerUps = new ArrayList<>();
     private final AvailableSpawn invalidSpawn = new AvailableSpawn();
-    private Hud hud;
+    private final Hud hud;
 
 
     public static final int GAME_RUNNING = 0;
@@ -126,25 +127,25 @@ public class GameScreen implements Screen {
         colleges = new HashMap<>();
 
         // Alcuin college
-        colleges.put(0, new College(this, 0, 1900 / PirateGame.PPM, 2100 / PirateGame.PPM, 6, invalidSpawn));
+        colleges.put(CollegeMetadata.ALCUIN, new College(this, CollegeMetadata.ALCUIN, 6, invalidSpawn));
         // Anne Lister college
-        colleges.put(1, new College(this, 1, 6304 / PirateGame.PPM, 1199 / PirateGame.PPM, 8, invalidSpawn));
+        colleges.put(CollegeMetadata.ANNELISTER, new College(this, CollegeMetadata.ANNELISTER, 8, invalidSpawn));
         // Constantine college
-        colleges.put(2, new College(this, 2, 6240 / PirateGame.PPM, 6703 / PirateGame.PPM, 8, invalidSpawn));
+        colleges.put(CollegeMetadata.CONSTANTINE, new College(this, CollegeMetadata.CONSTANTINE, 8, invalidSpawn));
         // Goodricke college
-        colleges.put(3, new College(this, 3, 1760 / PirateGame.PPM, 6767 / PirateGame.PPM, 8, invalidSpawn));
+        colleges.put(CollegeMetadata.GOODRICKE, new College(this, CollegeMetadata.GOODRICKE, 8, invalidSpawn));
 
         ships = new ArrayList<>();
-        ships.addAll(colleges.get(0).fleet);
-        ships.addAll(colleges.get(1).fleet);
-        ships.addAll(colleges.get(2).fleet);
-        ships.addAll(colleges.get(3).fleet);
+
+        for (CollegeMetadata college : CollegeMetadata.values()) {
+            ships.addAll(getCollege(college).fleet);
+        }
 
         //Random ships
         for (int i = 0; i < 20; i++) {
             int[] loc = getRandomLocation();
             //Add a ship at the random coords
-            ships.add(new EnemyShip(this, loc[0], loc[1], "college/Ships/unaligned_ship.png", -1));
+            ships.add(new EnemyShip(this, loc[0], loc[1], "college/Ships/unaligned_ship.png", null));
         }
 
         //Random coins
@@ -166,18 +167,19 @@ public class GameScreen implements Screen {
 
     /**
      * Randomly generates x and y and checks if they are valid
+     *
      * @return x, y
      */
     public int[] getRandomLocation() {
         Boolean validLoc = false;
-        int x = 0,y = 0;
+        int x = 0, y = 0;
         while (!validLoc) {
             //Get random x and y coords
             x = rand.nextInt(AvailableSpawn.xCap - AvailableSpawn.xBase) + AvailableSpawn.xBase;
             y = rand.nextInt(AvailableSpawn.yCap - AvailableSpawn.yBase) + AvailableSpawn.yBase;
             validLoc = checkGenPos(x, y);
         }
-        return new int[]{x,y};
+        return new int[]{x, y};
     }
 
     /**
@@ -359,10 +361,10 @@ public class GameScreen implements Screen {
 
         // Update all players and entities
         player.update(dt);
-        colleges.get(0).update(dt);
-        colleges.get(1).update(dt);
-        colleges.get(2).update(dt);
-        colleges.get(3).update(dt);
+
+        for (CollegeMetadata college : CollegeMetadata.values()) {
+            getCollege(college).update(dt);
+        }
 
         //Update ships
         for (int i = 0; i < ships.size(); i++) {
@@ -379,14 +381,10 @@ public class GameScreen implements Screen {
         }
         //After a delay check if a college is destroyed. If not, if can fire
         if (stateTime > 1) {
-            if (!colleges.get(1).destroyed) {
-                colleges.get(1).fire();
-            }
-            if (!colleges.get(2).destroyed) {
-                colleges.get(2).fire();
-            }
-            if (!colleges.get(3).destroyed) {
-                colleges.get(3).fire();
+            for (CollegeMetadata college : CollegeMetadata.values()) {
+                if (!college.isPlayer() && !getCollege(college).destroyed) {
+                    getCollege(college).fire();
+                }
             }
             stateTime = 0;
         }
@@ -429,22 +427,22 @@ public class GameScreen implements Screen {
             Coins.get(i).draw(game.batch);
         }
         //Renders powerups
-        for(int i = 0; i< PowerUps.size(); i++) {
+        for (int i = 0; i < PowerUps.size(); i++) {
             PowerUps.get(i).draw(game.batch);
         }
 
         //Renders colleges
         player.draw(game.batch);
-        colleges.get(0).draw(game.batch);
-        colleges.get(1).draw(game.batch);
-        colleges.get(2).draw(game.batch);
-        colleges.get(3).draw(game.batch);
+        for (Map.Entry<CollegeMetadata, College> college : colleges.entrySet()) {
+            college.getValue().draw(game.batch);
+        }
 
         //Updates all ships
         for (int i = 0; i < ships.size(); i++) {
-            if (ships.get(i).collegeID != -1) {
+            // if the ship is in a college
+            if (ships.get(i).collegeMeta != null) {
                 //Flips a colleges allegiance if their college is destroyed
-                if (colleges.get(ships.get(i).collegeID).destroyed) {
+                if (getCollege(ships.get(i).collegeMeta).destroyed) {
 
                     ships.get(i).updateTexture(0, "college/Ships/alcuin_ship.png");
                 }
@@ -497,7 +495,7 @@ public class GameScreen implements Screen {
     /**
      * @return the width of a single tile on the tilemap
      */
-    public int getTileWidth(){
+    public int getTileWidth() {
         MapProperties prop = getMap().getProperties();
         int tilePixelWidth = prop.get("tilewidth", Integer.class);
 
@@ -529,9 +527,21 @@ public class GameScreen implements Screen {
      *
      * @param collegeID uses a collegeID as an index
      * @return college : returns the college fetched from colleges
+     * @deprecated use CollegeMetadata instead of collegeID
      */
+    @Deprecated
     public College getCollege(Integer collegeID) {
-        return colleges.get(collegeID);
+        return getCollege(CollegeMetadata.getCollegeMetaFromId(collegeID));
+    }
+
+    /**
+     * Returns the college from the colleges hashmap
+     *
+     * @param college uses the collegeMetadata to find the college
+     * @return returns the college fetched from colleges
+     */
+    public College getCollege(CollegeMetadata college) {
+        return colleges.get(college);
     }
 
     /**
@@ -561,12 +571,12 @@ public class GameScreen implements Screen {
      */
     public void gameOverCheck() {
         //Lose game if ship on 0 health or Alcuin is destroyed
-        if (Hud.getHealth() <= 0 || colleges.get(0).destroyed) {
+        if (Hud.getHealth() <= 0 || getCollege(CollegeMetadata.ALCUIN).destroyed) {
             game.changeScreen(PirateGame.DEATH);
             game.killGame();
         }
         //Win game if all colleges destroyed
-        else if (colleges.get(1).destroyed && colleges.get(2).destroyed && colleges.get(3).destroyed) {
+        else if (getCollege(CollegeMetadata.ANNELISTER).destroyed && getCollege(CollegeMetadata.CONSTANTINE).destroyed && getCollege(CollegeMetadata.GOODRICKE).destroyed) {
             game.changeScreen(PirateGame.VICTORY);
             game.killGame();
         }
@@ -604,7 +614,7 @@ public class GameScreen implements Screen {
      *
      * @param value new acceleration value
      */
-    public static void setAcceleration(Float value){
+    public static void setAcceleration(Float value) {
         accel = value;
     }
 
@@ -622,14 +632,14 @@ public class GameScreen implements Screen {
      *
      * @param value new max speed value
      */
-    public static void setMaxSpeed(Float value){
+    public static void setMaxSpeed(Float value) {
         maxSpeed = value;
     }
 
     /**
      * Resets game values to default, used on game restart
      */
-    public static void resetValues(){
+    public static void resetValues() {
         setMaxSpeed(4f);
         setAcceleration(0.1f);
         setShootingDelay(1f);
@@ -649,7 +659,7 @@ public class GameScreen implements Screen {
      *
      * @param value new shooting delay value
      */
-    public static void setShootingDelay(Float value){
+    public static void setShootingDelay(Float value) {
         shootingDelay = value;
     }
 
@@ -658,8 +668,8 @@ public class GameScreen implements Screen {
      *
      * @param percentage percentage decrease
      */
-    public static void changeShootingDelay(Float percentage){
-        shootingDelay = shootingDelay * (1 - (percentage/100));
+    public static void changeShootingDelay(Float percentage) {
+        shootingDelay = shootingDelay * (1 - (percentage / 100));
     }
 
     /**
@@ -672,9 +682,10 @@ public class GameScreen implements Screen {
         for (int i = 0; i < ships.size(); i++) {
             ships.get(i).changeDamageReceived(value);
         }
-        colleges.get(1).changeDamageReceived(value);
-        colleges.get(2).changeDamageReceived(value);
-        colleges.get(3).changeDamageReceived(value);
+
+        for(Map.Entry<CollegeMetadata, College> college : colleges.entrySet()){
+            college.getValue().changeDamageReceived(value);
+        }
 
     }
 
@@ -746,8 +757,8 @@ public class GameScreen implements Screen {
     public AvailableSpawn getInvalidSpawn() {
         return invalidSpawn;
     }
-  
-    public HashMap<Integer,College> getColleges(){
+
+    public HashMap<CollegeMetadata, College> getColleges() {
         return colleges;
 
     }
