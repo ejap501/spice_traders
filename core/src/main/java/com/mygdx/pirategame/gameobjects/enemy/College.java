@@ -200,6 +200,11 @@ public class College extends Enemy {
         }
     }
 
+    @Override
+    public void onEnemyShipContact() {
+        // nothing to do here
+    }
+
     /**
      * Fires cannonballs
      */
