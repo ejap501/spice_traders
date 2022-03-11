@@ -191,10 +191,27 @@ public class GameScreen implements Screen {
             int[] loc = getRandomLocation();
 
             //Add a powerup at the random coords
-            PowerUps.add(new AbsorptionHeart(this, loc[0], loc[1]));
-            PowerUps.add(new SpeedBoost(this, loc[0], loc[1]));
-            PowerUps.add(new FasterShooting(this, loc[0], loc[1]));
+            //PowerUps.add(new AbsorptionHeart(this, loc[0], loc[1]));
+            //PowerUps.add(new SpeedBoost(this, loc[0], loc[1]));
+            //PowerUps.add(new FasterShooting(this, loc[0], loc[1]));
+            PowerUps.add(new CoinMagnet(this, loc[0], loc[1]));
         }
+    }
+
+    /**
+     * Returns the player object
+     * @return player object
+     */
+    public Player getPlayer() {
+        return player;
+    }
+
+    /**
+     * Returns the array of coins in the level
+     * @return coin array
+     */
+    public ArrayList<Coin> getCoins() {
+        return Coins;
     }
 
     /**
