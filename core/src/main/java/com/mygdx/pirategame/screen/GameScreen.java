@@ -129,11 +129,6 @@ public class GameScreen implements Screen {
         tutorialTexture = new Texture("Tutorial.png");
         tutorials = new Sprite(tutorialTexture);
 
-        // space bar removes tutorial screen
-        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
-            tutorialTexture.dispose();
-        }
-
         // Setting up contact listener for collisions
         world.setContactListener(new WorldContactListener());
 
@@ -397,6 +392,11 @@ public class GameScreen implements Screen {
             getCollege(college).update(dt);
         }
 
+        // space bar removes tutorial screen
+        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+            tutorialTexture.dispose();
+        }
+        
         //Update ships
         for (int i = 0; i < ships.size(); i++) {
             ships.get(i).update(dt);
@@ -458,9 +458,6 @@ public class GameScreen implements Screen {
             Coins.get(i).draw(game.batch);
         }
 
-        // show tutorial screen
-        tutorials.draw(game.batch);
-
         // centers tutorial screen
         tutorials.setPosition(camera.position.x - (tutorials.getWidth() / 2), camera.position.y - (tutorials.getHeight() / 2));
 
@@ -495,9 +492,11 @@ public class GameScreen implements Screen {
         //Checks game over conditions
         gameOverCheck();
 
+        // show tutorial screen
+        tutorials.draw(game.batch);
         // scales the sprite depending on window size divided by a constant
         tutorials.setSize(camera.viewportWidth / 100f, camera.viewportHeight / 100f);
-        
+
     }
 
     /**
