@@ -11,7 +11,7 @@ public class PathFinder {
     /**
      * Used to determine if debug information about the pathfinder should be displayed
      */
-    public static final boolean PATHFINDERDEBUG = true;
+    public static final boolean PATHFINDERDEBUG = false;
 
     private final GameScreen gameScreen;
     private final float tileSize;
