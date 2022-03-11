@@ -33,26 +33,22 @@ public class College extends Enemy {
     private AvailableSpawn noSpawn;
     public ArrayList<EnemyShip> fleet = new ArrayList<>();
     private Sound cannonballHitSound;
-    private String[] collegeList = {"alcuin", "anne_lister", "constantine", "goodricke"};
-    private String college;
-    private Integer collegeID;
+    private CollegeMetadata collegeMeta;
     private String flag;
     private String ship;
 
     /**
      * @param screen Visual data
-     * @param collegeID To identify college, used for fleet assignment
-     * @param x College position on x-axis
-     * @param y College position on y-axis
+     * @param collegeMeta To identify college, used for fleet assignment
      * @param ship_no Number of college ships to produce
      * @param invalidSpawn Spawn data to check spawn validity when generating ships
      */
-    public College(GameScreen screen, Integer collegeID, float x, float y, int ship_no, AvailableSpawn invalidSpawn) {
-        super(screen, x, y);
+    public College(GameScreen screen, CollegeMetadata collegeMeta, int ship_no, AvailableSpawn invalidSpawn) {
+        super(screen, collegeMeta.getX(), collegeMeta.getY());
         this.screen = screen;
-        this.collegeID = collegeID;
+        this.collegeMeta = collegeMeta;
 
-        college = collegeList[collegeID];
+        String college = collegeMeta.getFilePath();
         flag = "college/Flags/" + college + "_flag.png";
         ship = "college/Ships/" + college + "_ship.png";
 
@@ -74,11 +70,11 @@ public class College extends Enemy {
             while (!spawnIsValid){
                 ranX = rand.nextInt(2000) - 1000;
                 ranY = rand.nextInt(2000) - 1000;
-                ranX = (int)Math.floor(x + (ranX / PirateGame.PPM));
-                ranY = (int)Math.floor(y + (ranY / PirateGame.PPM));
+                ranX = (int)Math.floor(collegeMeta.getX() + (ranX / PirateGame.PPM));
+                ranY = (int)Math.floor(collegeMeta.getY() + (ranY / PirateGame.PPM));
                 spawnIsValid = getCoord(ranX, ranY);
             }
-            fleet.add(new EnemyShip(screen, ranX, ranY, ship, collegeID));
+            fleet.add(new EnemyShip(screen, ranX, ranY, ship, collegeMeta));
         }
 
         // explosion sound effect
@@ -117,11 +113,11 @@ public class College extends Enemy {
             destroyed = true;
 
             //If it is the player ally college, end the game for the player
-            if (collegeID.equals(0)){
+            if (collegeMeta == CollegeMetadata.ALCUIN){
                 screen.gameOverCheck();
             }
-            //Award the player coins and points for destroying a college
-            if (!collegeID.equals(0)){
+            else {
+                //Award the player coins and points for destroying a college
                 Hud.changePoints(100);
                 Hud.changeCoins(rand.nextInt(10));
             }

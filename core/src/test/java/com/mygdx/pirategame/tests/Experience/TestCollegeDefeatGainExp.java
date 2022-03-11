@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.mygdx.pirategame.Hud;
 import com.mygdx.pirategame.PirateGameTest;
 import com.mygdx.pirategame.gameobjects.enemy.College;
+import com.mygdx.pirategame.gameobjects.enemy.CollegeMetadata;
 import com.mygdx.pirategame.screen.GameScreen;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -36,7 +37,7 @@ public class TestCollegeDefeatGainExp {
     public void testDefeat(){
         Integer originalPoints = Hud.getPoints();
         Integer newPoints = 0;
-        HashMap<Integer, College> colleges = Mockito.mock(GameScreen.class).getColleges();
+        HashMap<CollegeMetadata, College> colleges = Mockito.mock(GameScreen.class).getColleges();
         for (College collegeToTest : colleges.values()){
             collegeToTest.destroyed = true;
             newPoints = Hud.getPoints();

@@ -145,7 +145,7 @@ public class WorldContactListener implements ContactListener {
     @Override
     public void endContact(Contact contact) {
         // Displays contact message
-        Gdx.app.log("End Contact", "");
+        //Gdx.app.log("End Contact", "");
     }
 
     /**
