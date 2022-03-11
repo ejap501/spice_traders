@@ -5,6 +5,8 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
@@ -78,6 +80,9 @@ public class GameScreen implements Screen {
     public static final int GAME_PAUSED = 1;
     private static int gameStatus;
 
+    private Texture tutorialTexture;
+    private Sprite tutorials;
+
     private final PathFinder pathFinder;
 
     private Table pauseTable;
@@ -119,6 +124,15 @@ public class GameScreen implements Screen {
         pathFinder = new PathFinder(this, 64);
 
         new WorldCreator(this);
+
+        // stores tutorial texture
+        tutorialTexture = new Texture("Tutorial.png");
+        tutorials = new Sprite(tutorialTexture);
+
+        // space bar removes tutorial screen
+        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+            tutorialTexture.dispose();
+        }
 
         // Setting up contact listener for collisions
         world.setContactListener(new WorldContactListener());
@@ -451,6 +465,15 @@ public class GameScreen implements Screen {
         for (int i = 0; i < Coins.size(); i++) {
             Coins.get(i).draw(game.batch);
         }
+
+        // show tutorial screen
+        tutorials.draw(game.batch);
+
+        // centers tutorial screen
+        tutorials.setPosition(camera.position.x - (tutorials.getWidth() / 2), camera.position.y - (tutorials.getHeight() / 2));
+        // scales the sprite depending on window size divided by a constant
+        tutorials.setSize(camera.viewportWidth / 1.7f, camera.viewportHeight / 1.7f);
+
         //Renders powerups
         for (int i = 0; i < PowerUps.size(); i++) {
             PowerUps.get(i).draw(game.batch);
