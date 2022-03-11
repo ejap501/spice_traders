@@ -13,14 +13,11 @@ import java.util.Random;
  * Generates random paths for ships and randomly paths between them
  * Used for ships without an assigned college
  */
-public class RandomPath implements PathManager {
+public class RandomPath extends WaitingPath {
 
-    private final GameScreen screen;
-    private final EnemyShip ship;
 
     public RandomPath (EnemyShip ship, GameScreen screen) {
-        this.ship = ship;
-        this.screen = screen;
+        super(ship, screen);
     }
 
     @Override
@@ -58,6 +55,7 @@ public class RandomPath implements PathManager {
 
     @Override
     public void update(float dt) {
+        super.update(dt);
         // nothing to do here
     }
 }

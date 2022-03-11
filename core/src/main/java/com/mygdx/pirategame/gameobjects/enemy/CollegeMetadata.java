@@ -1,5 +1,6 @@
 package com.mygdx.pirategame.gameobjects.enemy;
 
+import com.badlogic.gdx.math.Vector2;
 import com.mygdx.pirategame.PirateGame;
 
 /**
@@ -72,6 +73,13 @@ public enum CollegeMetadata {
      */
     public float getY() {
         return y;
+    }
+
+    /**
+     * @return The college location as a position vector
+     */
+    public Vector2 getPosition(){
+        return new Vector2(x, y);
     }
 
     /**

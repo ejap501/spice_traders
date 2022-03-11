@@ -11,10 +11,8 @@ import java.util.Random;
 /**
  * This class is used to manage the pathing of a ship while it is not targeting a specific entity
  */
-public class PatrolPath implements PathManager {
+public class PatrolPath extends WaitingPath{
 
-    private final GameScreen screen;
-    private final EnemyShip ship;
 
     /**
      * Create a new PatrolPath, The ship must be assigned to a valid college else this will throw an error
@@ -23,8 +21,7 @@ public class PatrolPath implements PathManager {
      * @param screen The GameScreen managing the game
      */
     public PatrolPath(EnemyShip ship, GameScreen screen) {
-        this.ship = ship;
-        this.screen = screen;
+        super(ship, screen);
 
         if (ship.collegeMeta == null) {
             throw new IllegalArgumentException("Ship cannot patrol a college when it is not assigned to a valid college");
@@ -39,8 +36,8 @@ public class PatrolPath implements PathManager {
 
         while (true) {
             // generate random position for ship to go around the college
-            int x = rnd.nextInt(2000) - 1000 + (int) (ship.collegeMeta.getX() * tileWidth);
-            int y = rnd.nextInt(2000) - 1000 + (int) (ship.collegeMeta.getY() * tileWidth);
+            int x = rnd.nextInt(3000) - 1500 + (int) (ship.collegeMeta.getX() * tileWidth);
+            int y = rnd.nextInt(3000) - 1500 + (int) (ship.collegeMeta.getY() * tileWidth);
 
             // bounding the location
             if (x < 0) {
@@ -66,6 +63,6 @@ public class PatrolPath implements PathManager {
 
     @Override
     public void update(float dt) {
-
+        super.update(dt);
     }
 }

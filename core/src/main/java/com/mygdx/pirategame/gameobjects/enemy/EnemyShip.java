@@ -9,19 +9,21 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.utils.Array;
 import com.mygdx.pirategame.DebugUtils;
 import com.mygdx.pirategame.Hud;
 import com.mygdx.pirategame.PirateGame;
+import com.mygdx.pirategame.gameobjects.CollegeFire;
 import com.mygdx.pirategame.pathfinding.Checkpoint;
 import com.mygdx.pirategame.pathfinding.PathFinder;
+import com.mygdx.pirategame.pathfinding.pathManager.AttackPath;
 import com.mygdx.pirategame.pathfinding.pathManager.PathManager;
 import com.mygdx.pirategame.pathfinding.pathManager.PatrolPath;
 import com.mygdx.pirategame.pathfinding.pathManager.RandomPath;
 import com.mygdx.pirategame.screen.GameScreen;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 /**
  * Enemy Ship
@@ -39,8 +41,9 @@ public class EnemyShip extends Enemy {
     public CollegeMetadata collegeMeta;
     private final Sound destroy;
     private final Sound hit;
+    private Array<CollegeFire> cannonBalls;
 
-    private final PathManager pathManager;
+    private PathManager pathManager;
 
     /**
      * used to delay patfinding when the ship collides with something
@@ -52,10 +55,10 @@ public class EnemyShip extends Enemy {
     /**
      * Instantiates enemy ship
      *
-     * @param screen     Visual data
-     * @param x          x coordinates of entity
-     * @param y          y coordinates of entity
-     * @param path       path of texture file
+     * @param screen      Visual data
+     * @param x           x coordinates of entity
+     * @param y           y coordinates of entity
+     * @param path        path of texture file
      * @param collegeMeta College ship is assigned to
      */
     public EnemyShip(GameScreen screen, float x, float y, String path, CollegeMetadata collegeMeta) {
@@ -66,6 +69,8 @@ public class EnemyShip extends Enemy {
         //Set audios
         destroy = Gdx.audio.newSound(Gdx.files.internal("sfx_and_music/ship-explosion-2.wav"));
         hit = Gdx.audio.newSound(Gdx.files.internal("sfx_and_music/ship-hit.wav"));
+
+        cannonBalls = new Array<>();
         //Set the position and size of the college
         setBounds(0, 0, 64 / PirateGame.PPM, 110 / PirateGame.PPM);
         setRegion(enemyShip);
@@ -87,6 +92,10 @@ public class EnemyShip extends Enemy {
     public void generateNewPath() {
 
         Vector2 destination = pathManager.generateDestination();
+        if (destination == null) {
+            // destination will be regenerated next update
+            return;
+        }
         int tilewidth = screen.getTileWidth();
         path = screen.getPathFinder().getPath((b2body.getPosition().x * PirateGame.PPM), (b2body.getPosition().y * PirateGame.PPM), destination.x, destination.y, COLLISIONRADIUS, COLLISIONRADIUS);
         if (path != null && path.size() > 1) {
@@ -97,7 +106,6 @@ public class EnemyShip extends Enemy {
 
     }
 
-
     /**
      * Updates the state of each object with delta time
      * Checks for ship destruction
@@ -105,6 +113,13 @@ public class EnemyShip extends Enemy {
      * @param dt Delta time (elapsed time since last game tick)
      */
     public void update(float dt) {
+
+        //Update cannon balls
+        for(CollegeFire ball : cannonBalls) {
+            ball.update(dt);
+            if(ball.isDestroyed())
+                cannonBalls.removeValue(ball, true);
+        }
         //If ship is set to destroy and isnt, destroy it
         if (destroyed) {
             return;
@@ -192,6 +207,9 @@ public class EnemyShip extends Enemy {
      * @param batch The batch of visual data of the ship
      */
     public void draw(Batch batch) {
+        for(CollegeFire ball : cannonBalls)
+            ball.draw(batch);
+
         if (!destroyed) {
             super.draw(batch);
             //Render health bar
@@ -200,9 +218,12 @@ public class EnemyShip extends Enemy {
             if (PathFinder.PATHFINDERDEBUG && path != null && !path.isEmpty()) {
                 batch.end();
 
+                // setting the color for the debug output (so the current type of pathing can be identified)
                 Color dotColor;
                 if (pathManager instanceof PatrolPath) {
                     dotColor = Color.ORANGE;
+                } else if (pathManager instanceof AttackPath) {
+                    dotColor = Color.RED;
                 } else {
                     dotColor = Color.GREEN;
                 }
@@ -285,7 +306,7 @@ public class EnemyShip extends Enemy {
      * @return If the ship is in range of the player
      */
     public boolean inPlayerRange() {
-        return screen.getPlayerPos().dst(b2body.getPosition()) < 3000;
+        return screen.getPlayerPos().dst(b2body.getPosition()) < 30;
     }
 
     /**
@@ -297,5 +318,19 @@ public class EnemyShip extends Enemy {
      */
     public boolean isTraversable(float x, float y) {
         return screen.getPathFinder().isTraversable(x, y, EnemyShip.COLLISIONRADIUS, EnemyShip.COLLISIONRADIUS);
+    }
+
+    public void setPathManager(PathManager pathManager) {
+        this.pathManager = pathManager;
+        // dumping old path
+        path = new ArrayList<>();
+        generateNewPath();
+    }
+
+    /**
+     * Fires cannonballs
+     */
+    public void fire() {
+        cannonBalls.add(new CollegeFire(screen, b2body.getPosition().x, b2body.getPosition().y));
     }
 }
