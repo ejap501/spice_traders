@@ -128,6 +128,9 @@ public class GameScreen implements Screen {
         // stores tutorial texture
         tutorialTexture = new Texture("Tutorial.png");
         tutorials = new Sprite(tutorialTexture);
+        
+        // centers tutorial screen
+        tutorials.setPosition(camera.position.x - (tutorials.getWidth() / 2), camera.position.y - (tutorials.getHeight() / 2));
 
         // Setting up contact listener for collisions
         world.setContactListener(new WorldContactListener());
@@ -404,7 +407,7 @@ public class GameScreen implements Screen {
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
             tutorialTexture.dispose();
         }
-        
+
         //Update ships
         for (int i = 0; i < ships.size(); i++) {
             ships.get(i).update(dt);
@@ -466,9 +469,10 @@ public class GameScreen implements Screen {
             Coins.get(i).draw(game.batch);
         }
 
-        // centers tutorial screen
-        tutorials.setPosition(camera.position.x - (tutorials.getWidth() / 2), camera.position.y - (tutorials.getHeight() / 2));
-
+        // show tutorial screen
+        tutorials.draw(game.batch);
+        // scales the sprite depending on window size divided by a constant
+        tutorials.setSize(camera.viewportWidth / 100f, camera.viewportHeight / 100f);
 
         //Renders powerups
         for (int i = 0; i < PowerUps.size(); i++) {
@@ -499,11 +503,6 @@ public class GameScreen implements Screen {
         stage.draw();
         //Checks game over conditions
         gameOverCheck();
-
-        // show tutorial screen
-        tutorials.draw(game.batch);
-        // scales the sprite depending on window size divided by a constant
-        tutorials.setSize(camera.viewportWidth / 100f, camera.viewportHeight / 100f);
 
     }
 
