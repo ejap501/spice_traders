@@ -55,6 +55,7 @@ public class PirateGame extends Game {
 	public final static int HELP = 4;
 	public final static int VICTORY = 5;
 
+
 	/**
 	 * Creates the main body of the game.
 	 * Establises the batch for the whole game as well as sets the first screen
