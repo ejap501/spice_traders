@@ -17,6 +17,8 @@ public abstract class Entity extends Sprite {
     protected World world;
     protected GameScreen screen;
     public Body b2body;
+    public boolean setToDestroyed = false;
+    public boolean destroyed = false;
 
     /**
      * Instantiates an entity
@@ -34,12 +36,12 @@ public abstract class Entity extends Sprite {
     }
 
     /**
-     * Defines an entity
+     * Defines the properties of an entity
      */
     protected abstract void defineEntity();
 
     /**
-     * Defines contact
+     * Defines contact with other objects, The only entity that is able to do so is the player ship
      */
     public abstract void entityContact();
 }

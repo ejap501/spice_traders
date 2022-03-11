@@ -52,6 +52,8 @@ public abstract class Enemy extends Sprite {
      * Defines contact
      */
     public abstract void onContact();
+
+    public abstract void onEnemyShipContact();
     public abstract void update(float dt);
 
     /**

@@ -22,6 +22,7 @@ public class WorldContactListener implements ContactListener {
 
     /**
      * The start of the collision. Tells the game what should happen when the contact begins
+     *
      * @param contact The object that contains information about the collision
      */
     @Override
@@ -33,9 +34,41 @@ public class WorldContactListener implements ContactListener {
         int cDef = fixA.getFilterData().categoryBits | fixB.getFilterData().categoryBits;
 
         // Fixes contact to an entity
-        switch (cDef){
+        switch (cDef) {
             case PirateGame.COIN_BIT | PirateGame.PLAYER_BIT:
-                if(fixA.getFilterData().categoryBits == PirateGame.COIN_BIT) {
+                if (fixA.getFilterData().categoryBits == PirateGame.COIN_BIT) {
+                    ((Entity) fixA.getUserData()).entityContact();
+                } else {
+                    ((Entity) fixB.getUserData()).entityContact();
+                }
+                break;
+                // TODO: ABSORPTION_HEART_BIT collides twice ??????
+            case PirateGame.ABSORPTION_HEART_BIT | PirateGame.PLAYER_BIT:
+                if(fixA.getFilterData().categoryBits == PirateGame.ABSORPTION_HEART_BIT) {
+                    ((Entity) fixA.getUserData()).entityContact();
+                }
+                else {
+                    ((Entity) fixB.getUserData()).entityContact();
+                }
+                break;
+            case PirateGame.SPEED_BOOST_BIT | PirateGame.PLAYER_BIT:
+                if(fixA.getFilterData().categoryBits == PirateGame.SPEED_BOOST_BIT) {
+                    ((Entity) fixA.getUserData()).entityContact();
+                }
+                else {
+                    ((Entity) fixB.getUserData()).entityContact();
+                }
+                break;
+            case PirateGame.FASTER_SHOOTING_BIT | PirateGame.PLAYER_BIT:
+                if(fixA.getFilterData().categoryBits == PirateGame.FASTER_SHOOTING_BIT) {
+                    ((Entity) fixA.getUserData()).entityContact();
+                }
+                else {
+                    ((Entity) fixB.getUserData()).entityContact();
+                }
+                break;
+            case PirateGame.COIN_MAGNET_BIT | PirateGame.PLAYER_BIT:
+                if(fixA.getFilterData().categoryBits == PirateGame.COIN_MAGNET_BIT) {
                     ((Entity) fixA.getUserData()).entityContact();
                 }
                 else {
@@ -43,34 +76,31 @@ public class WorldContactListener implements ContactListener {
                 }
                 break;
             case PirateGame.DEFAULT_BIT | PirateGame.PLAYER_BIT:
-                if(fixA.getFilterData().categoryBits == PirateGame.DEFAULT_BIT) {
+                if (fixA.getFilterData().categoryBits == PirateGame.DEFAULT_BIT) {
                     if (fixA.getUserData() != null && InteractiveTileObject.class.isAssignableFrom(fixA.getUserData().getClass())) {
                         ((InteractiveTileObject) fixA.getUserData()).onContact();
                         ((Player) fixB.getUserData()).playBreakSound();
                     }
-                }
-                else {
+                } else {
                     if (fixB.getUserData() != null && InteractiveTileObject.class.isAssignableFrom(fixB.getUserData().getClass())) {
                         ((InteractiveTileObject) fixB.getUserData()).onContact();
                     }
                 }
                 break;
             case PirateGame.ENEMY_BIT | PirateGame.PLAYER_BIT:
-                if(fixA.getFilterData().categoryBits == PirateGame.ENEMY_BIT) {
+                if (fixA.getFilterData().categoryBits == PirateGame.ENEMY_BIT) {
                     ((Enemy) fixA.getUserData()).onContact();
-                }
-                else {
+                } else {
                     ((Enemy) fixB.getUserData()).onContact();
                 }
                 break;
             case PirateGame.COLLEGE_BIT | PirateGame.CANNON_BIT:
-                if(fixA.getFilterData().categoryBits == PirateGame.COLLEGE_BIT) {
+                if (fixA.getFilterData().categoryBits == PirateGame.COLLEGE_BIT) {
                     if (fixA.getUserData() != null && InteractiveTileObject.class.isAssignableFrom(fixA.getUserData().getClass())) {
                         ((InteractiveTileObject) fixA.getUserData()).onContact();
                         ((CannonFire) fixB.getUserData()).setToDestroy();
                     }
-                }
-                else {
+                } else {
                     if (fixB.getUserData() != null && InteractiveTileObject.class.isAssignableFrom(fixB.getUserData().getClass())) {
                         ((InteractiveTileObject) fixB.getUserData()).onContact();
                         ((CannonFire) fixA.getUserData()).setToDestroy();
@@ -78,45 +108,51 @@ public class WorldContactListener implements ContactListener {
                 }
                 break;
             case PirateGame.ENEMY_BIT | PirateGame.CANNON_BIT:
-                if(fixA.getFilterData().categoryBits == PirateGame.ENEMY_BIT) {
+                if (fixA.getFilterData().categoryBits == PirateGame.ENEMY_BIT) {
                     ((Enemy) fixA.getUserData()).onContact();
                     ((CannonFire) fixB.getUserData()).setToDestroy();
-                }
-                else {
+                } else {
                     ((Enemy) fixB.getUserData()).onContact();
                     ((CannonFire) fixA.getUserData()).setToDestroy();
                 }
                 break;
             // Player collision with college cannonball
-            case PirateGame.COLLEGEFIRE_BIT | PirateGame.PLAYER_BIT:
-                if(fixA.getFilterData().categoryBits == PirateGame.COLLEGEFIRE_BIT) {
+            case PirateGame.COLLEGE_FIRE_BIT | PirateGame.PLAYER_BIT:
+                if (fixA.getFilterData().categoryBits == PirateGame.COLLEGE_FIRE_BIT) {
                     Hud.changeHealth(-15);
                     ((CollegeFire) fixA.getUserData()).setToDestroy();
-                }
-                else {
+                } else {
                     Hud.changeHealth(-15);
                     ((CollegeFire) fixB.getUserData()).setToDestroy();
                     ((Player) fixA.getUserData()).playCannonballHitSound();
 
                 }
                 break;
+            // enemy collides with enemy
+            case PirateGame.ENEMY_BIT | PirateGame.ENEMY_BIT:
+                // notifying a single ship so it can pause
+                ((Enemy) fixB.getUserData()).onEnemyShipContact();
+                break;
+
         }
     }
 
     /**
      * Run when contact is ended. Nearly empty since nothing special needs to happen when a contact is ended
+     *
      * @param contact The object that contains information about the collision
      */
     @Override
     public void endContact(Contact contact) {
         // Displays contact message
-        Gdx.app.log("End Contact", "");
+        //Gdx.app.log("End Contact", "");
     }
 
     /**
      * (Not Used)
      * Can be called before beginContact to pre emptively solve it
-     * @param contact The object that contains information about the collision
+     *
+     * @param contact     The object that contains information about the collision
      * @param oldManifold Predicted impulse based on old data
      */
     @Override
@@ -127,6 +163,7 @@ public class WorldContactListener implements ContactListener {
     /**
      * (Not Used)
      * Can be called before beginContact to post emptively solve it
+     *
      * @param contact The object that contains information about the collision
      * @param impulse The signal recieved
      */

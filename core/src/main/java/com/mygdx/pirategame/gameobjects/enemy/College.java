@@ -13,7 +13,6 @@ import com.mygdx.pirategame.PirateGame;
 import com.mygdx.pirategame.gameobjects.CollegeFire;
 import com.mygdx.pirategame.screen.GameScreen;
 import com.mygdx.pirategame.world.AvailableSpawn;
-
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -30,28 +29,30 @@ import java.util.Random;
 public class College extends Enemy {
     private Texture enemyCollege;
     public Random rand = new Random();
-    private String currentCollege;
     private Array<CollegeFire> cannonBalls;
     private AvailableSpawn noSpawn;
     public ArrayList<EnemyShip> fleet = new ArrayList<>();
     private Sound cannonballHitSound;
+    private CollegeMetadata collegeMeta;
+    private String flag;
+    private String ship;
 
     /**
-     *
      * @param screen Visual data
-     * @param college College name i.e. "Alcuin" used for fleet assignment
-     * @param x College position on x-axis
-     * @param y College position on y-axis
-     * @param flag College flag sprite (image name)
-     * @param ship College ship sprite (image name)
+     * @param collegeMeta To identify college, used for fleet assignment
      * @param ship_no Number of college ships to produce
      * @param invalidSpawn Spawn data to check spawn validity when generating ships
      */
-    public College(GameScreen screen, String college, float x, float y, String flag, String ship, int ship_no, AvailableSpawn invalidSpawn) {
-        super(screen, x, y);
+    public College(GameScreen screen, CollegeMetadata collegeMeta, int ship_no, AvailableSpawn invalidSpawn) {
+        super(screen, collegeMeta.getX(), collegeMeta.getY());
         this.screen = screen;
+        this.collegeMeta = collegeMeta;
+
+        String college = collegeMeta.getFilePath();
+        flag = "college/Flags/" + college + "_flag.png";
+        ship = "college/Ships/" + college + "_ship.png";
+
         noSpawn = invalidSpawn;
-        currentCollege = flag;
         enemyCollege = new Texture(flag);
         //Set the position and size of the college
         setBounds(0,0,64 / PirateGame.PPM, 110 / PirateGame.PPM);
@@ -69,11 +70,11 @@ public class College extends Enemy {
             while (!spawnIsValid){
                 ranX = rand.nextInt(2000) - 1000;
                 ranY = rand.nextInt(2000) - 1000;
-                ranX = (int)Math.floor(x + (ranX / PirateGame.PPM));
-                ranY = (int)Math.floor(y + (ranY / PirateGame.PPM));
+                ranX = (int)Math.floor(collegeMeta.getX() + (ranX / PirateGame.PPM));
+                ranY = (int)Math.floor(collegeMeta.getY() + (ranY / PirateGame.PPM));
                 spawnIsValid = getCoord(ranX, ranY);
             }
-            fleet.add(new EnemyShip(screen, ranX, ranY, ship, college));
+            fleet.add(new EnemyShip(screen, ranX, ranY, ship, collegeMeta));
         }
 
         // explosion sound effect
@@ -106,17 +107,17 @@ public class College extends Enemy {
      * @param dt Delta time (elapsed time since last game tick)
      */
     public void update(float dt) {
-        //If college is set to destroy and isnt, destroy it
+        //If college is set to destroy and isn't, destroy it
         if(setToDestroy && !destroyed) {
             world.destroyBody(b2body);
             destroyed = true;
 
             //If it is the player ally college, end the game for the player
-            if (currentCollege.equals("alcuin_flag.png")){
+            if (collegeMeta == CollegeMetadata.ALCUIN){
                 screen.gameOverCheck();
             }
-            //Award the player coins and points for destroying a college
-            if (!currentCollege.equals("alcuin_flag.png")){
+            else {
+                //Award the player coins and points for destroying a college
                 Hud.changePoints(100);
                 Hud.changeCoins(rand.nextInt(10));
             }
@@ -170,7 +171,7 @@ public class College extends Enemy {
         CircleShape shape = new CircleShape();
         shape.setRadius(55 / PirateGame.PPM);
         // setting BIT identifier
-        fdef.filter.categoryBits = PirateGame.COLLEGESENSOR_BIT;
+        fdef.filter.categoryBits = PirateGame.COLLEGE_SENSOR_BIT;
         // determining what this BIT can collide with
         fdef.filter.maskBits = PirateGame.PLAYER_BIT;
         fdef.shape = shape;
@@ -193,6 +194,11 @@ public class College extends Enemy {
         if (screen.game.getPreferences().isEffectsEnabled()) {
             cannonballHitSound.play(screen.game.getPreferences().getEffectsVolume());
         }
+    }
+
+    @Override
+    public void onEnemyShipContact() {
+        // nothing to do here
     }
 
     /**
