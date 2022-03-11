@@ -31,6 +31,9 @@ public class FasterShooting extends PowerUp {
         setRegion(fasterShooting);
         //Sets origin of the speed boost
         setOrigin(24 / PirateGame.PPM,24 / PirateGame.PPM);
+
+        // Set duration of power up
+        duration = 20;
     }
 
     /**
@@ -42,15 +45,27 @@ public class FasterShooting extends PowerUp {
             world.destroyBody(b2body);
             destroyed = true;
         }
-        //Update position of coin
+        // Update position of coin
         else if(!destroyed) {
             setPosition(b2body.getPosition().x - getWidth() / 2f, b2body.getPosition().y - getHeight() / 2f);
+        }
+        // Ability lasts for a specified duration
+        if (timer > duration) {
+            endPowerUp();
+            timer = 0;
+        }
+        else if (active) {
+            timer += Gdx.graphics.getDeltaTime();
         }
     }
 
     @Override
     public void endPowerUp() {
+        // Reset the speed of shooting by resetting shooting delay
+        GameScreen.setShootingDelay(1f);
 
+        active = false;
+        Gdx.app.log("fasterShooting", "ended");
     }
 
     /**
