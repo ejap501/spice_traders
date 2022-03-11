@@ -5,12 +5,12 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.mygdx.pirategame.Hud;
 import com.mygdx.pirategame.PirateGame;
 import com.mygdx.pirategame.screen.GameScreen;
 
 public class CoinMagnet extends PowerUp {
     private Texture coinMagnet;
+    private boolean toggleCoinMagnet = false;
 
     /**
      * x
@@ -32,6 +32,9 @@ public class CoinMagnet extends PowerUp {
         setRegion(coinMagnet);
         //Sets origin of the speed boost
         setOrigin(24 / PirateGame.PPM,24 / PirateGame.PPM);
+
+        // set duration of power up
+        duration = 10;
     }
 
     /**
@@ -66,8 +69,9 @@ public class CoinMagnet extends PowerUp {
     @Override
     public void entityContact() {
         if (!destroyed) {
-            // Heal player
-            Hud.changeHealth(10);
+            toggleCoinMagnet = true;
+            active = true;
+
             // Set to destroy
             setToDestroyed = true;
             Gdx.app.log("coinmagnet", "collision");
@@ -89,10 +93,32 @@ public class CoinMagnet extends PowerUp {
         else if(!destroyed) {
             setPosition(b2body.getPosition().x - getWidth() / 2f, b2body.getPosition().y - getHeight() / 2f);
         }
+        if (toggleCoinMagnet) {
+            toggleCoinMagnet();
+            toggleCoinMagnet = false;
+        }
+        // ability lasts for a specified duration
+        if (timer > duration) {
+            endPowerUp();
+            timer = 0;
+        }
+        else if (active) {
+            timer += Gdx.graphics.getDeltaTime();
+        }
+    }
+
+    /**
+     * Enables/disables the coin magnet power up
+     */
+    private void toggleCoinMagnet() {
+        // collect coins in a larger radius around player
+        for (Coin coin : screen.getCoins()) coin.toggleCoinMagnet();
     }
 
     @Override
     public void endPowerUp() {
-
+        toggleCoinMagnet();
+        active = false;
+        Gdx.app.log("coinmagnet", "ended");
     }
 }
