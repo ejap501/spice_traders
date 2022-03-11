@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
@@ -16,6 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -66,6 +68,9 @@ public class GameScreen implements Screen {
     private AvailableSpawn invalidSpawn = new AvailableSpawn();
     private Hud hud;
 
+    private Texture tutorialTexture;
+    private Sprite tutorials;
+
     public static final int GAME_RUNNING = 0;
     public static final int GAME_PAUSED = 1;
     private static int gameStatus;
@@ -102,6 +107,15 @@ public class GameScreen implements Screen {
         map = maploader.load("map/map.tmx");
         renderer = new OrthogonalTiledMapRenderer(map, 1 / PirateGame.PPM);
         new WorldCreator(this);
+
+        // stores tutorial texture
+        tutorialTexture = new Texture("Tutorial.png");
+        tutorials = new Sprite(tutorialTexture);
+
+        // space bar removes tutorial screen
+        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+            tutorialTexture.dispose();
+        }
 
         // Setting up contact listener for collisions
         world.setContactListener(new WorldContactListener());
@@ -385,6 +399,13 @@ public class GameScreen implements Screen {
         for(int i=0;i<Coins.size();i++) {
             Coins.get(i).draw(game.batch);
         }
+        // show tutorial screen
+        tutorials.draw(game.batch);
+
+        // centers tutorial screen
+        tutorials.setPosition(camera.position.x - (tutorials.getWidth() / 2), camera.position.y - (tutorials.getHeight() / 2));
+        // scales the sprite depending on window size divided by a constant
+        tutorials.setSize(camera.viewportWidth / 1.7f, camera.viewportHeight / 1.7f);
 
         //Renders colleges
         player.draw(game.batch);
