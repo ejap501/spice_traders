@@ -31,26 +31,43 @@ public class SpeedBoost extends PowerUp {
         setRegion(speedBoost);
         //Sets origin of the speed boost
         setOrigin(24 / PirateGame.PPM,24 / PirateGame.PPM);
+
+        // Set duration of power up
+        duration = 20;
     }
 
     /**
      * Updates the speed boost state. If needed, deletes the speed boost if picked up
      */
+    @Override
     public void update() {
-        //If coin is set to destroy and isnt, destroy it
+        //If power up is set to destroy and isnt, destroy it
         if(setToDestroyed && !destroyed) {
             world.destroyBody(b2body);
             destroyed = true;
         }
-        //Update position of coin
+        //Update power up of coin
         else if(!destroyed) {
             setPosition(b2body.getPosition().x - getWidth() / 2f, b2body.getPosition().y - getHeight() / 2f);
+        }
+        // Ability lasts for a specified duration
+        if (timer > duration) {
+            endPowerUp();
+            timer = 0;
+        }
+        else if (active) {
+            timer += Gdx.graphics.getDeltaTime();
         }
     }
 
     @Override
     public void endPowerUp() {
+        // Reset speed and acceleration variables (by percentage)
+        GameScreen.setMaxSpeed(4f);
+        GameScreen.setAcceleration(0.1f);
 
+        active = false;
+        Gdx.app.log("speedBoost", "ended");
     }
 
     /**
@@ -85,9 +102,10 @@ public class SpeedBoost extends PowerUp {
     @Override
     public void entityContact() {
         if (!destroyed) {
+            active = true;
             // Increase speed and acceleration variables (by percentage)
-            GameScreen.changeMaxSpeed((float) 5);
-            GameScreen.changeAcceleration((float) 10);
+            GameScreen.changeMaxSpeed((float) 10);
+            GameScreen.changeAcceleration((float) 15);
 
             // Set to destroy
             setToDestroyed = true;

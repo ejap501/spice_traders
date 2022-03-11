@@ -49,7 +49,7 @@ import java.util.*;
 public class GameScreen implements Screen {
     private static float maxSpeed = 4f;
     private static float accel = 0.1f;
-    private static float shootingDelay = 1f;
+    private static float shootingDelay = 0.5f;
     private float stateTime;
 
     public static PirateGame game;
@@ -189,14 +189,22 @@ public class GameScreen implements Screen {
         //Random powerups
         PowerUps = new ArrayList<>();
         // Add Speedboosts
+
         for (int i = 0; i < 100; i++) {
+            //Add a powerup at the random coords
             int[] loc = getRandomLocation();
 
-            //Add a powerup at the random coords
-            //PowerUps.add(new AbsorptionHeart(this, loc[0], loc[1]));
-            //PowerUps.add(new SpeedBoost(this, loc[0], loc[1]));
-            //PowerUps.add(new FasterShooting(this, loc[0], loc[1]));
-            PowerUps.add(new CoinMagnet(this, loc[0], loc[1]));
+            int select = i % 4;
+            // Iterates through to add each power up
+            if (select == 0) {
+                PowerUps.add(new AbsorptionHeart(this, loc[0], loc[1]));
+            }else if (select == 1) {
+                PowerUps.add(new SpeedBoost(this, loc[0], loc[1]));
+            }else if (select == 2) {
+                PowerUps.add(new FasterShooting(this, loc[0], loc[1]));
+            } else {
+                PowerUps.add(new CoinMagnet(this, loc[0], loc[1]));
+            }
         }
     }
 
