@@ -471,8 +471,7 @@ public class GameScreen implements Screen {
 
         // centers tutorial screen
         tutorials.setPosition(camera.position.x - (tutorials.getWidth() / 2), camera.position.y - (tutorials.getHeight() / 2));
-        // scales the sprite depending on window size divided by a constant
-        tutorials.setSize(camera.viewportWidth / 1.7f, camera.viewportHeight / 1.7f);
+
 
         //Renders powerups
         for (int i = 0; i < PowerUps.size(); i++) {
@@ -503,6 +502,10 @@ public class GameScreen implements Screen {
         stage.draw();
         //Checks game over conditions
         gameOverCheck();
+
+        // scales the sprite depending on window size divided by a constant
+        tutorials.setSize(camera.viewportWidth / 100f, camera.viewportHeight / 100f);
+        
     }
 
     /**
