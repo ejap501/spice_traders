@@ -463,9 +463,6 @@ public class GameScreen implements Screen {
             Coins.get(i).draw(game.batch);
         }
 
-        // show tutorial screen
-        tutorials.draw(game.batch);
-
         //Renders powerups
         for (int i = 0; i < PowerUps.size(); i++) {
             PowerUps.get(i).draw(game.batch);
@@ -489,6 +486,10 @@ public class GameScreen implements Screen {
             }
             ships.get(i).draw(game.batch);
         }
+
+        // show tutorial screen
+        tutorials.draw(game.batch);
+        
         game.batch.end();
         Hud.stage.draw();
         stage.act();
