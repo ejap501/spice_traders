@@ -70,7 +70,7 @@ public class CannonFire extends Sprite {
         angle = Math.atan2(targetY - sourceY, targetX - sourceX);
 
         //set cannonBall dimensions for the texture
-        this.texture = new Texture("cannonBall.png");
+        this.texture = new Texture("entity/cannonball.png");
         setRegion(texture);
         setBounds(x, y, 10 / PirateGame.PPM, 10 / PirateGame.PPM);
         //set collision bounds

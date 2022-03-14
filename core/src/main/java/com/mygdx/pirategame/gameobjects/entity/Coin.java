@@ -36,7 +36,7 @@ public class Coin extends Entity {
     public Coin(GameScreen screen, float x, float y) {
         super(screen, x, y);
         //Set coin image
-        coin = new Texture("coin.png");
+        coin = new Texture("entity/coin.png");
         //Set the position and size of the coin
         setBounds(0,0,48 / PirateGame.PPM, 48 / PirateGame.PPM);
         //Set the texture

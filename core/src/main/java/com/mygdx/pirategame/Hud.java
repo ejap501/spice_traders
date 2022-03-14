@@ -55,7 +55,7 @@ public class Hud implements Disposable {
         //Set images
         hp = new Texture("hp.png");
         boxBackground = new Texture("hudBG.png");
-        coinPic = new Texture("coin.png");
+        coinPic = new Texture("entity/coin.png");
 
         hpImg = new Image(hp);
         box = new Image(boxBackground);

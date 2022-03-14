@@ -24,7 +24,7 @@ public class FasterShooting extends PowerUp {
         super(screen, x, y);
 
         // Set speed boost image
-        fasterShooting = new Texture("cannonBall.png"); // CHANGE
+        fasterShooting = new Texture("entity/gun.png");
         //Set the position and size of the speed boost
         setBounds(0,0,48 / PirateGame.PPM, 48 / PirateGame.PPM);
         //Set the texture
