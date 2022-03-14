@@ -87,7 +87,7 @@ public class fileExistance {
     @Test
     public void coin() {
         assertTrue("This test will pass if coin.png exists", Gdx.files
-                .internal("../core/assets/coin.png").exists());
+                .internal("../core/assets/entity/coin.png").exists());
     }
 
     /**
@@ -98,7 +98,7 @@ public class fileExistance {
     @Test
     public void cannonBall() {
         assertTrue("This test will pass if cannonBall.png exists", Gdx.files
-                .internal("../core/assets/cannonBall.png").exists());
+                .internal("../core/assets/entity/cannonball.png").exists());
     }
 
     //assets in /skin/

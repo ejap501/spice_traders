@@ -39,7 +39,7 @@ public class CollegeFire extends Sprite {
         this.world = screen.getWorld();
         playerPos = screen.getCenteredPlayerPos();
 
-        cannonBall = new Texture("cannonBall.png");
+        cannonBall = new Texture("entity/cannonball.png");
         //Set the position and size of the ball
         setRegion(cannonBall);
         setBounds(x, y, 10 / PirateGame.PPM, 10 / PirateGame.PPM);

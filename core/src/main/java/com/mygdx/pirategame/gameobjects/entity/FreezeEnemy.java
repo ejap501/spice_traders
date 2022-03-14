@@ -5,11 +5,15 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.mygdx.pirategame.Hud;
 import com.mygdx.pirategame.PirateGame;
 import com.mygdx.pirategame.screen.GameScreen;
 
-public class SpeedBoost extends PowerUp {
-    private Texture speedBoost;
+/**
+ * Heals the player when picked up
+ */
+public class FreezeEnemy extends PowerUp {
+    private Texture freezeEnemy;
 
     /**
      * x
@@ -20,54 +24,37 @@ public class SpeedBoost extends PowerUp {
      * @param x      x position of entity
      * @param y      y position of entity
      */
-    public SpeedBoost(GameScreen screen, float x, float y) {
+    public FreezeEnemy(GameScreen screen, float x, float y) {
         super(screen, x, y);
 
         // Set speed boost image
-        speedBoost = new Texture("entity/bolt.png");
+        freezeEnemy = new Texture("entity/snowflake.png");
         //Set the position and size of the speed boost
         setBounds(0,0,48 / PirateGame.PPM, 48 / PirateGame.PPM);
         //Set the texture
-        setRegion(speedBoost);
+        setRegion(freezeEnemy);
         //Sets origin of the speed boost
         setOrigin(24 / PirateGame.PPM,24 / PirateGame.PPM);
-
-        // Set duration of power up
-        duration = 20;
     }
 
     /**
-     * Updates the speed boost state. If needed, deletes the speed boost if picked up
+     * Updates the absorption heart state. If needed, deletes the absorption heart if picked up
      */
-    @Override
     public void update() {
-        //If power up is set to destroy and isnt, destroy it
+        //If coin is set to destroy and isnt, destroy it
         if(setToDestroyed && !destroyed) {
             world.destroyBody(b2body);
             destroyed = true;
         }
-        //Update power up of coin
+        //Update position of power up
         else if(!destroyed) {
             setPosition(b2body.getPosition().x - getWidth() / 2f, b2body.getPosition().y - getHeight() / 2f);
-        }
-        // Ability lasts for a specified duration
-        if (timer > duration) {
-            endPowerUp();
-            timer = 0;
-        }
-        else if (active) {
-            timer += Gdx.graphics.getDeltaTime();
         }
     }
 
     @Override
     public void endPowerUp() {
-        // Reset speed and acceleration variables (by percentage)
-        GameScreen.setMaxSpeed(4f);
-        GameScreen.setAcceleration(0.1f);
 
-        active = false;
-        Gdx.app.log("speedBoost", "ended");
     }
 
     /**
@@ -87,7 +74,7 @@ public class SpeedBoost extends PowerUp {
         shape.setRadius(24 / PirateGame.PPM);
 
         // Setting BIT identifier
-        fdef.filter.categoryBits = PirateGame.SPEED_BOOST_BIT;
+        fdef.filter.categoryBits = PirateGame.ABSORPTION_HEART_BIT;
 
         // Determining what this BIT can collide with
         fdef.filter.maskBits = PirateGame.DEFAULT_BIT | PirateGame.PLAYER_BIT | PirateGame.ENEMY_BIT;
@@ -96,20 +83,15 @@ public class SpeedBoost extends PowerUp {
         b2body.createFixture(fdef).setUserData(this);
     }
 
-    /**
-     * What happens when an entity collides with the speed boost, only the player ship can
-     */
     @Override
     public void entityContact() {
         if (!destroyed) {
-            active = true;
-            // Increase speed and acceleration variables (by percentage)
-            GameScreen.changeMaxSpeed((float) 10);
-            GameScreen.changeAcceleration((float) 15);
+            // Stop enemy movement
+
 
             // Set to destroy
             setToDestroyed = true;
-            Gdx.app.log("speedBoost", "collision");
+            Gdx.app.log("freezeEnemy", "collision");
             // Play pickup sound
             if (screen.game.getPreferences().isEffectsEnabled()) {
                 getSound().play(screen.game.getPreferences().getEffectsVolume());

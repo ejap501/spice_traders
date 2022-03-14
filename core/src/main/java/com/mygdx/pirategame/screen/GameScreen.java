@@ -203,16 +203,18 @@ public class GameScreen implements Screen {
             //Add a powerup at the random coords
             int[] loc = getRandomLocation();
 
-            int select = i % 4;
+            int select = i % 5;
             // Iterates through to add each power up
             if (select == 0) {
                 PowerUps.add(new AbsorptionHeart(this, loc[0], loc[1]));
-            }else if (select == 1) {
+            } else if (select == 1) {
                 PowerUps.add(new SpeedBoost(this, loc[0], loc[1]));
-            }else if (select == 2) {
+            } else if (select == 2) {
                 PowerUps.add(new FasterShooting(this, loc[0], loc[1]));
-            } else {
+            } else if (select == 3) {
                 PowerUps.add(new CoinMagnet(this, loc[0], loc[1]));
+            } else {
+                PowerUps.add(new FreezeEnemy(this, loc[0], loc[1]));
             }
         }
     }

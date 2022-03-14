@@ -28,7 +28,7 @@ public class AbsorptionHeart extends PowerUp {
         super(screen, x, y);
 
         // Set speed boost image
-        absorptionHeart = new Texture("cannonBall.png"); // CHANGE
+        absorptionHeart = new Texture("entity/heart.png");
         //Set the position and size of the speed boost
         setBounds(0,0,48 / PirateGame.PPM, 48 / PirateGame.PPM);
         //Set the texture
