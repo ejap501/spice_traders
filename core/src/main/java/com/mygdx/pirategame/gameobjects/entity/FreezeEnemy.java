@@ -7,6 +7,8 @@ import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.mygdx.pirategame.Hud;
 import com.mygdx.pirategame.PirateGame;
+import com.mygdx.pirategame.gameobjects.enemy.Enemy;
+import com.mygdx.pirategame.gameobjects.enemy.EnemyShip;
 import com.mygdx.pirategame.screen.GameScreen;
 
 /**
@@ -35,6 +37,9 @@ public class FreezeEnemy extends PowerUp {
         setRegion(freezeEnemy);
         //Sets origin of the speed boost
         setOrigin(24 / PirateGame.PPM,24 / PirateGame.PPM);
+
+        // Set duration of power up
+        duration = 10;
     }
 
     /**
@@ -50,11 +55,21 @@ public class FreezeEnemy extends PowerUp {
         else if(!destroyed) {
             setPosition(b2body.getPosition().x - getWidth() / 2f, b2body.getPosition().y - getHeight() / 2f);
         }
+        // Ability lasts for a specified duration
+        if (timer > duration) {
+            endPowerUp();
+            timer = 0;
+        }
+        else if (active) {
+            timer += Gdx.graphics.getDeltaTime();
+        }
     }
 
     @Override
     public void endPowerUp() {
-
+        // Start enemy movement
+        EnemyShip.movement = true;
+        EnemyShip.fire = false;
     }
 
     /**
@@ -87,7 +102,8 @@ public class FreezeEnemy extends PowerUp {
     public void entityContact() {
         if (!destroyed) {
             // Stop enemy movement
-
+            EnemyShip.movement = false;
+            EnemyShip.fire = false;
 
             // Set to destroy
             setToDestroyed = true;

@@ -641,11 +641,13 @@ public class GameScreen implements Screen {
         if (Hud.getHealth() <= 0 || getCollege(CollegeMetadata.ALCUIN).destroyed) {
             game.changeScreen(PirateGame.DEATH);
             game.killGame();
+            game.resetValues();
         }
         //Win game if all colleges destroyed
         else if (getCollege(CollegeMetadata.ANNELISTER).destroyed && getCollege(CollegeMetadata.CONSTANTINE).destroyed && getCollege(CollegeMetadata.GOODRICKE).destroyed) {
             game.changeScreen(PirateGame.VICTORY);
             game.killGame();
+            game.resetValues();
         }
     }
 
@@ -703,14 +705,7 @@ public class GameScreen implements Screen {
         maxSpeed = value;
     }
 
-    /**
-     * Resets game values to default, used on game restart
-     */
-    public static void resetValues() {
-        setMaxSpeed(4f);
-        setAcceleration(0.1f);
-        setShootingDelay(1f);
-    }
+
 
     /**
      * Fetches the current shooting delay
