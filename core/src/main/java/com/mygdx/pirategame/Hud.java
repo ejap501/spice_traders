@@ -17,19 +17,19 @@ import com.mygdx.pirategame.screen.SkillTreeScreen;
  * Hud
  * Produces a hud for the player
  *
- *@author Ethan Alabaster, Sam Pearson
- *@version 1.0
+ * @author Ethan Alabaster, Sam Pearson
+ * @version 1.0
  */
 public class Hud implements Disposable {
     public static Stage stage;
-    private Viewport viewport;
+    private final Viewport viewport;
 
     private float timeCount;
     private static Integer score;
     private static Integer health;
-    private Texture hp;
-    private Texture boxBackground;
-    private Texture coinPic;
+    private final Texture hp;
+    private final Texture boxBackground;
+    private final Texture coinPic;
 
     private static Label scoreLabel;
     private static Label healthLabel;
@@ -37,9 +37,9 @@ public class Hud implements Disposable {
     private static Label pointsText;
     private static Integer coins;
     private static Integer coinMulti;
-    private Image hpImg;
-    private Image box;
-    private Image coin;
+    private final Image hpImg;
+    private final Image box;
+    private final Image coin;
 
     /**
      * Retrieves information and displays it in the hud
@@ -104,9 +104,9 @@ public class Hud implements Disposable {
      */
     public void update(float dt) {
         timeCount += dt;
-        if(timeCount >= 1) {
+        if (timeCount >= 1) {
             //Regen health every second
-            if(health != 100) {
+            if (health != 100) {
                 health += 1;
                 healthLabel.setText(String.format("%02d", health));
             }
@@ -155,6 +155,15 @@ public class Hud implements Disposable {
     }
 
     /**
+     * Set the nubmer of points
+     * @param value The number of points
+     */
+    public static void setPoints(int value) {
+        score = value;
+        scoreLabel.setText(String.format("%03d", score));
+    }
+
+    /**
      * Changes health by value factor
      *
      * @param value Factor of coin increase
@@ -164,12 +173,20 @@ public class Hud implements Disposable {
     }
 
     /**
+     * Set the number of coins
+     * @param value The number of coins
+     */
+    public static void setCoins (int value){
+        coins = value;
+    }
+
+    /**
      * Changes the camera size, Scales the hud to match the camera
      *
-     * @param width the width of the viewable area
+     * @param width  the width of the viewable area
      * @param height the height of the viewable area
      */
-    public static void resize(int width, int height){
+    public static void resize(int width, int height) {
         stage.getViewport().update(width, height, true);
     }
 
@@ -178,7 +195,7 @@ public class Hud implements Disposable {
      *
      * @return health : returns health value
      */
-    public static Integer getHealth(){
+    public static Integer getHealth() {
         return health;
     }
 
@@ -188,11 +205,13 @@ public class Hud implements Disposable {
      *
      * @return health : returns coins value
      */
-    public static Integer getCoins(){
+    public static Integer getCoins() {
         return coins;
     }
 
-    public static Integer getPoints() { return score;}
+    public static Integer getPoints() {
+        return score;
+    }
 
     /**
      * Disposes game data

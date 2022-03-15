@@ -33,6 +33,17 @@ public class SkillTreeScreen implements Screen {
     //To store whether buttons are enabled or disabled
     private static final List<Integer> states = new ArrayList<Integer>();
 
+    /**
+     * adding default states
+     */
+    static {
+        //0 = enabled, 1 = disabled
+        states.add(1);
+        states.add(1);
+        states.add(1);
+        states.add(1);
+    }
+
     private static TextButton movement1;
     private TextButton damage1;
     private TextButton GoldMulti1;
@@ -47,12 +58,6 @@ public class SkillTreeScreen implements Screen {
     public SkillTreeScreen(PirateGame pirateGame){
         parent = pirateGame;
         stage = new Stage(new ScreenViewport());
-
-        //0 = enabled, 1 = disabled
-        states.add(1);
-        states.add(1);
-        states.add(1);
-        states.add(1);
     }
     /**
      * What should be displayed on the skill tree screen
@@ -196,7 +201,6 @@ public class SkillTreeScreen implements Screen {
     public void resize(int width, int height) {
         stage.getViewport().update(width, height, true);
     }
-
 
     /**
      * (Not Used)
