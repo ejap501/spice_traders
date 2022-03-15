@@ -53,13 +53,16 @@ project(":desktop") {
 
 project(":core") {
     apply plugin: "java-library"
-
+    test {
+        maxParallelForks = Runtime.runtime.availableProcessors().intdiv(2) ?: 1
+        forkEvery = 1
+    }
 
     dependencies {
         api "com.badlogicgames.gdx:gdx:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
 
-        testImplementation "junit:junit:4.+"
+        testImplementation 'junit:junit:4.+'
         testImplementation "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
         testImplementation "com.badlogicgames.gdx:gdx:$gdxVersion"
         testImplementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
@@ -75,6 +78,10 @@ project(":test") {
 
     sourceSets.test.java.srcDirs = ["src/"]
 
+    test {
+        maxParallelForks = Runtime.runtime.availableProcessors().intdiv(2) ?: 1
+        forkEvery = 1
+    }
 
     dependencies {
         implementation  project(":desktop")
@@ -83,9 +90,7 @@ project(":test") {
         api "com.badlogicgames.gdx:gdx:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
 
-        testImplementation  "org.junit.jupiter:junit-jupiter-api:5.7.1"
-        testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.7.1"
-        testImplementation "org.junit.jupiter:junit-jupiter-params:5.7.1"
+        testImplementation 'junit:junit:4.+'
         testImplementation "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
         testImplementation "com.badlogicgames.gdx:gdx:$gdxVersion"
         testImplementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
