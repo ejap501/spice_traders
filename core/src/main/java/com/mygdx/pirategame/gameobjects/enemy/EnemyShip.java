@@ -36,6 +36,9 @@ import java.util.List;
 public class EnemyShip extends Enemy {
 
     public static final int COLLISIONRADIUS = 55;
+    public static boolean movement = true;
+    public static boolean fire = true;
+    // TODO: Stop cannonballs using 'fire'
 
     private Texture enemyShip;
     public CollegeMetadata collegeMeta;
@@ -46,7 +49,7 @@ public class EnemyShip extends Enemy {
     private PathManager pathManager;
 
     /**
-     * used to delay patfinding when the ship collides with something
+     * used to delay pathfinding when the ship collides with something
      */
     private int updateDelay = 0;
 
@@ -82,7 +85,7 @@ public class EnemyShip extends Enemy {
         } else {
             this.pathManager = new RandomPath(this, screen);
         }
-        // give a seconds speed instead of a portin of it, then limit to a portion of the speed
+        // give a seconds speed instead of a portion of it, then limit to a portion of the speed
         generateNewPath();
     }
 
@@ -113,18 +116,17 @@ public class EnemyShip extends Enemy {
      * @param dt Delta time (elapsed time since last game tick)
      */
     public void update(float dt) {
-
         //Update cannon balls
         for(CollegeFire ball : cannonBalls) {
             ball.update(dt);
             if(ball.isDestroyed())
                 cannonBalls.removeValue(ball, true);
         }
-        //If ship is set to destroy and isnt, destroy it
+
+        //If ship is set to destroy and isn't, destroy it
         if (destroyed) {
             return;
         }
-
 
         if (setToDestroy) {
             //Play death noise
@@ -176,7 +178,12 @@ public class EnemyShip extends Enemy {
             }
         }
 
-        final float speed = 100f * dt;
+        final float speed;
+        if (movement) {
+            speed = 100f * dt;
+        } else {
+            speed = 0;
+        }
         Vector2 v = travelToCheckpoint(speed, cp);
         b2body.setLinearVelocity(v);
 
