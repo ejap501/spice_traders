@@ -29,7 +29,6 @@ public class CollegeTest {
      */
     @Test
     public void testPointsOnDestroy() {
-
         // mocking the hud
         MockClass.mockHudStatic();
         College college = new College(MockClass.mockGameScreen(), CollegeMetadata.ANNELISTER, 0, null);
