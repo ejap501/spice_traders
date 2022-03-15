@@ -49,6 +49,12 @@ import java.util.*;
  * @version 1.0
  */
 public class GameScreen implements Screen {
+
+    /**
+     * Tracks if physics debugging tools should be enabled at runtime
+     */
+    public final static boolean PHYSICSDEBUG = false;
+
     private static float maxSpeed = 4f;
     private static float accel = 0.1f;
     private static float shootingDelay = 0.5f;
@@ -80,8 +86,8 @@ public class GameScreen implements Screen {
     public static final int GAME_PAUSED = 1;
     private static int gameStatus;
 
-    private Texture tutorialTexture;
-    private Sprite tutorials;
+    private final Texture tutorialTexture;
+    private final Sprite tutorials;
 
     private final PathFinder pathFinder;
 
@@ -114,7 +120,11 @@ public class GameScreen implements Screen {
 
         // Initialising box2d physics
         world = new World(new Vector2(0, 0), true);
-        b2dr = new Box2DDebugRenderer();
+        if (PHYSICSDEBUG) {
+            b2dr = new Box2DDebugRenderer();
+        } else {
+            b2dr = null;
+        }
         player = new Player(this);
 
         // making the Tiled tmx file render as a map
@@ -221,6 +231,7 @@ public class GameScreen implements Screen {
 
     /**
      * Returns the player object
+     *
      * @return player object
      */
     public Player getPlayer() {
@@ -229,6 +240,7 @@ public class GameScreen implements Screen {
 
     /**
      * Returns the array of coins in the level
+     *
      * @return coin array
      */
     public ArrayList<Coin> getCoins() {
@@ -462,8 +474,10 @@ public class GameScreen implements Screen {
         Gdx.gl.glClearColor(46 / 255f, 204 / 255f, 113 / 255f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         renderer.render();
-        // b2dr is the hitbox shapes, can be commented out to hide
-        //b2dr.render(world, camera.combined);
+        if(PHYSICSDEBUG) {
+            // b2dr is the hitbox shapes, can be commented out to hide
+            b2dr.render(world, camera.combined);
+        }
 
         game.batch.setProjectionMatrix(camera.combined);
         game.batch.begin();
@@ -500,7 +514,7 @@ public class GameScreen implements Screen {
 
         // show tutorial screen
         tutorials.draw(game.batch);
-        
+
         game.batch.end();
         Hud.stage.draw();
         stage.act();
@@ -736,7 +750,7 @@ public class GameScreen implements Screen {
             ships.get(i).changeDamageReceived(value);
         }
 
-        for(Map.Entry<CollegeMetadata, College> college : colleges.entrySet()){
+        for (Map.Entry<CollegeMetadata, College> college : colleges.entrySet()) {
             college.getValue().changeDamageReceived(value);
         }
 
@@ -789,9 +803,11 @@ public class GameScreen implements Screen {
         map.dispose();
         renderer.dispose();
         world.dispose();
-        b2dr.dispose();
         hud.dispose();
         stage.dispose();
+        if(PHYSICSDEBUG) {
+            b2dr.dispose();
+        }
     }
 
 

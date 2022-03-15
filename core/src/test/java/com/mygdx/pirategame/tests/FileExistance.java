@@ -11,7 +11,7 @@ import static org.junit.Assert.assertTrue;
  * This class is used to target the class pirategame with file assertion tests
  */
 @RunWith(PirateGameTest.class)
-public class fileExistance {
+public class FileExistance {
 
     /**
      * mapbase.txt is an asset file
@@ -98,7 +98,7 @@ public class fileExistance {
     @Test
     public void cannonBall() {
         assertTrue("This test will pass if cannonBall.png exists", Gdx.files
-                .internal("../core/assets/entity/cannonball.png").exists());
+                .internal("../core/assets/entity/cannonBall.png").exists());
     }
 
     //assets in /skin/
