@@ -404,6 +404,7 @@ public class GameScreen implements Screen {
 
         // space bar removes tutorial screen
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+            tutorials.setAlpha(0);
             tutorialTexture.dispose();
         }
 
