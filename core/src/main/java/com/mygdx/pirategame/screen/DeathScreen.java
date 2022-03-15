@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.mygdx.pirategame.Hud;
 import com.mygdx.pirategame.PirateGame;
 
 /**
@@ -45,21 +46,43 @@ public class DeathScreen implements Screen {
         Skin skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
         Gdx.input.setInputProcessor(stage);
 
-        // Create tables for the text and button
-        Table table = new Table();
-        table.center();
-        table.setFillParent(true);
+        // Table for "you died" text and points scored
+        Table textTable = new Table();
+        textTable.center();
+        textTable.setFillParent(true);
 
-        Table table2 = new Table();
-        table2.center();
-        table2.setFillParent(true);
+        // Table for buttons
+        Table buttonsTable = new Table();
+        buttonsTable.center();
+        buttonsTable.setFillParent(true);
+
 
         Label deathMsg = new Label("YOU  DIED", new Label.LabelStyle(new BitmapFont(), Color.RED));
         deathMsg.setFontScale(4f);
-        table.add(deathMsg).center();
-        stage.addActor(table);
+        textTable.add(deathMsg).center();
+        textTable.row().pad(10, 0, 10, 0);
 
-        //Creat button
+        Integer points = Hud.getPoints();
+        Label pointsMsg = new Label("You scored " + points.toString() + " points!", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+        pointsMsg.setFontScale(3f);
+        textTable.add(pointsMsg).center();
+
+        stage.addActor(textTable);
+
+        TextButton replayButton = new TextButton("Replay", skin);
+
+        replayButton.addListener(new ChangeListener() {
+             @Override
+             public void changed(ChangeEvent event, Actor actor) {
+                parent.changeScreen(PirateGame.GAME);
+                parent.killEndScreen();
+             }
+        });
+
+        buttonsTable.add(replayButton).fillX().uniformX();
+        buttonsTable.row().pad(10, 0, 10, 0);
+
+        //Create back button
         TextButton backButton = new TextButton("Return To Menu", skin);
 
         //Return to main menu and kill screen
@@ -78,10 +101,10 @@ public class DeathScreen implements Screen {
             }
         });
 
-        table2.add(backButton).fillX().uniformX();
-        table2.bottom();
+        buttonsTable.add(backButton).fillX().uniformX();
+        buttonsTable.bottom();
 
-        stage.addActor(table2);
+        stage.addActor(buttonsTable);
 
     }
 
