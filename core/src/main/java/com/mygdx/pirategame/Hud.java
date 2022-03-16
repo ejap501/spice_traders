@@ -148,19 +148,6 @@ public class Hud implements Disposable {
         absorptionHeartLabel = new Label(String.format("%03f", absorptionHeart), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
         fasterShootingLabel = new Label(String.format("%03f", fasterShooting), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
         freezeEnemyLabel = new Label(String.format("%03f", freezeEnemy), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
-        /*
-
-
-
-
-
-
-
-
-
-        table4.removeActor(freezeEnemyLabel);
-
-         */
 
         stage.addActor(table5);
         stage.addActor(table4);
@@ -174,16 +161,17 @@ public class Hud implements Disposable {
     public void update(float dt) {
         timeCount += dt;
         if (timeCount >= 1) {
-            //Regen health every second
+            // Regen health every second
             if (health != 100) {
                 health += 1;
                 healthLabel.setText(String.format("%02d", health));
             }
-            //Gain point every second
+            // Gain point every second
             score += 1;
             scoreLabel.setText(String.format("%03d", score));
             timeCount = 0;
 
+            // Checks if each power up has been collected and adds it to display
             if (coinMagnet > 0) {
                 table4.add(coinMagnetLabel).padBottom(25).top().right().padRight(40);
                 table4.row();
@@ -239,7 +227,6 @@ public class Hud implements Disposable {
                 table4.removeActor(freezeEnemyLabel);
                 table5.removeActor(iceImg);
             }
-
 
             //Check if a points' boundary is met
             SkillTreeScreen.pointsCheck(score);
