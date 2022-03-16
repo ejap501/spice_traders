@@ -14,6 +14,9 @@ import com.mygdx.pirategame.screen.GameScreen;
  */
 public class AbsorptionHeart extends PowerUp {
     private Texture absorptionHeart;
+    private float timer = 0;
+    private float duration;
+    private float timeLeft;
 
     /**
      * x
@@ -35,6 +38,8 @@ public class AbsorptionHeart extends PowerUp {
         setRegion(absorptionHeart);
         //Sets origin of the speed boost
         setOrigin(24 / PirateGame.PPM,24 / PirateGame.PPM);
+
+        duration = 10;
     }
 
     /**
@@ -49,6 +54,18 @@ public class AbsorptionHeart extends PowerUp {
         //Update position of power up
         else if(!destroyed) {
             setPosition(b2body.getPosition().x - getWidth() / 2f, b2body.getPosition().y - getHeight() / 2f);
+        }
+        // Ability lasts for a specified duration
+        if (timer > duration) {
+            endPowerUp();
+            timer = 0;
+            timeLeft = 0;
+        }
+        else if (active) {
+            timer += Gdx.graphics.getDeltaTime();
+            timeLeft -= Gdx.graphics.getDeltaTime();
+            Hud.setAbsorptionHeartTimer(timeLeft);
+            System.out.println(timeLeft);
         }
     }
 
@@ -86,6 +103,8 @@ public class AbsorptionHeart extends PowerUp {
     @Override
     public void entityContact() {
         if (!destroyed) {
+            active = true;
+            timeLeft += (duration / 2);
             // Heal player
             Hud.changeHealth(10);
 

@@ -5,12 +5,16 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.mygdx.pirategame.Hud;
 import com.mygdx.pirategame.PirateGame;
 import com.mygdx.pirategame.screen.GameScreen;
 
 public class CoinMagnet extends PowerUp {
     private Texture coinMagnet;
     private boolean toggleCoinMagnet = false;
+    private float timer = 0;
+    private float duration;
+    private float timeLeft;
 
     /**
      * x
@@ -71,6 +75,7 @@ public class CoinMagnet extends PowerUp {
         if (!destroyed) {
             toggleCoinMagnet = true;
             active = true;
+            timeLeft += (duration / 2);
 
             // Set to destroy
             setToDestroyed = true;
@@ -97,13 +102,17 @@ public class CoinMagnet extends PowerUp {
             toggleCoinMagnet();
             toggleCoinMagnet = false;
         }
-        // ability lasts for a specified duration
+        // Ability lasts for a specified duration
         if (timer > duration) {
             endPowerUp();
             timer = 0;
+            timeLeft = 0;
         }
         else if (active) {
             timer += Gdx.graphics.getDeltaTime();
+            timeLeft -= Gdx.graphics.getDeltaTime();
+            Hud.setCoinMagnetTimer(timeLeft);
+            System.out.println(timeLeft);
         }
     }
 

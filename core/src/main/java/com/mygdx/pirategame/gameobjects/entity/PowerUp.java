@@ -8,9 +8,6 @@ import com.mygdx.pirategame.screen.GameScreen;
 public abstract class PowerUp extends Entity {
     private Sound pickupSound;
     protected boolean active = false;
-    protected float timer = 0;
-    protected float duration;
-
 
     /**
      * x
