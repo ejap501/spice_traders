@@ -16,6 +16,9 @@ import com.mygdx.pirategame.screen.GameScreen;
  */
 public class FreezeEnemy extends PowerUp {
     private Texture freezeEnemy;
+    private float timer = 0;
+    private float duration;
+    private float timeLeft;
 
     /**
      * x
@@ -30,7 +33,7 @@ public class FreezeEnemy extends PowerUp {
         super(screen, x, y);
 
         // Set speed boost image
-        freezeEnemy = new Texture("entity/snowflake.png");
+        freezeEnemy = new Texture("entity/ice.png");
         //Set the position and size of the speed boost
         setBounds(0,0,48 / PirateGame.PPM, 48 / PirateGame.PPM);
         //Set the texture
@@ -59,9 +62,13 @@ public class FreezeEnemy extends PowerUp {
         if (timer > duration) {
             endPowerUp();
             timer = 0;
+            timeLeft = 0;
         }
         else if (active) {
             timer += Gdx.graphics.getDeltaTime();
+            timeLeft -= Gdx.graphics.getDeltaTime();
+            Hud.setFreezeEnemyTimer(timeLeft);
+            System.out.println(timeLeft);
         }
     }
 
@@ -101,6 +108,8 @@ public class FreezeEnemy extends PowerUp {
     @Override
     public void entityContact() {
         if (!destroyed) {
+            active = true;
+            timeLeft += (duration / 2);
             // Stop enemy movement
             EnemyShip.movement = false;
             EnemyShip.fire = false;

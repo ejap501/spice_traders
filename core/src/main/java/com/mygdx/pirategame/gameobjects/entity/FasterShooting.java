@@ -5,11 +5,15 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.mygdx.pirategame.Hud;
 import com.mygdx.pirategame.PirateGame;
 import com.mygdx.pirategame.screen.GameScreen;
 
 public class FasterShooting extends PowerUp {
     private Texture fasterShooting;
+    private float timer = 0;
+    private float duration;
+    private float timeLeft;
 
     /**
      * x
@@ -54,9 +58,13 @@ public class FasterShooting extends PowerUp {
         if (timer > duration) {
             endPowerUp();
             timer = 0;
+            timeLeft = 0;
         }
         else if (active) {
             timer += Gdx.graphics.getDeltaTime();
+            timeLeft -= Gdx.graphics.getDeltaTime();
+            Hud.setFasterShootingTimer(timeLeft);
+            System.out.println(timeLeft);
         }
     }
 
@@ -102,6 +110,8 @@ public class FasterShooting extends PowerUp {
     @Override
     public void entityContact() {
         if (!destroyed) {
+            active = true;
+            timeLeft += (duration / 2);
             // Increase speed of shooting by decreasing shooting delay
             GameScreen.changeShootingDelay((float) 10);
 

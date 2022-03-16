@@ -5,11 +5,15 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.mygdx.pirategame.Hud;
 import com.mygdx.pirategame.PirateGame;
 import com.mygdx.pirategame.screen.GameScreen;
 
 public class SpeedBoost extends PowerUp {
     private Texture speedBoost;
+    private float timer = 0;
+    private float duration;
+    private float timeLeft;
 
     /**
      * x
@@ -33,7 +37,7 @@ public class SpeedBoost extends PowerUp {
         setOrigin(24 / PirateGame.PPM,24 / PirateGame.PPM);
 
         // Set duration of power up
-        duration = 20;
+        duration = 10;
     }
 
     /**
@@ -41,7 +45,7 @@ public class SpeedBoost extends PowerUp {
      */
     @Override
     public void update() {
-        //If power up is set to destroy and isnt, destroy it
+        //If power up is set to destroy and isn't, destroy it
         if(setToDestroyed && !destroyed) {
             world.destroyBody(b2body);
             destroyed = true;
@@ -54,15 +58,19 @@ public class SpeedBoost extends PowerUp {
         if (timer > duration) {
             endPowerUp();
             timer = 0;
+            timeLeft = 0;
         }
         else if (active) {
             timer += Gdx.graphics.getDeltaTime();
+            timeLeft -= Gdx.graphics.getDeltaTime();
+            Hud.setSpeedBoostTimer(timeLeft);
+            System.out.println(timeLeft);
         }
     }
 
     @Override
     public void endPowerUp() {
-        // Reset speed and acceleration variables (by percentage)
+        // Reset speed and acceleration variables
         GameScreen.setMaxSpeed(4f);
         GameScreen.setAcceleration(0.1f);
 
@@ -103,6 +111,7 @@ public class SpeedBoost extends PowerUp {
     public void entityContact() {
         if (!destroyed) {
             active = true;
+            timeLeft += (duration / 2);
             // Increase speed and acceleration variables (by percentage)
             GameScreen.changeMaxSpeed((float) 10);
             GameScreen.changeAcceleration((float) 15);
