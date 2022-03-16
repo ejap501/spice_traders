@@ -1,6 +1,13 @@
 sourceCompatibility = 1.7
+dependencies {
+    implementation 'com.badlogicgames.gdx:gdx-backend-headless:1.10.0'
+    implementation 'junit:junit:4.11'
+    implementation 'org.mockito:mockito-all:1.10.7'
+}
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
-sourceSets.main.java.srcDirs = [ "src/" ]
+sourceSets.main.java.srcDirs = [ "src/main/java" ]
+sourceSets.test.java.srcDirs = [ "src/test/java" ]
+sourceSets.test.resources.srcDirs = ["../core/assets"]
 
 eclipse.project.name = appName + "-core"
