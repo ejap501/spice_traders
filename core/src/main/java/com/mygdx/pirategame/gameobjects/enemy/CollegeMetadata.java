@@ -8,7 +8,7 @@ import com.mygdx.pirategame.PirateGame;
  */
 public enum CollegeMetadata {
 
-    ALCUIN(0, "alcuin", 1900 / PirateGame.PPM, 2100 / PirateGame.PPM),
+    ALCUIN(0, "alcuin", 1900 / PirateGame.PPM, 2100 / PirateGame.PPM, 1030 / PirateGame.PPM, 650 / PirateGame.PPM),
     ANNELISTER(1, "anne_lister", 6304 / PirateGame.PPM, 1199 / PirateGame.PPM),
     CONSTANTINE(2, "constantine", 6240 / PirateGame.PPM, 6703 / PirateGame.PPM),
     GOODRICKE(3, "goodricke", 1760 / PirateGame.PPM, 6767 / PirateGame.PPM);
@@ -79,6 +79,14 @@ public enum CollegeMetadata {
      * @return The college location as a position vector
      */
     public Vector2 getPosition(){
+        return new Vector2(x, y);
+    }
+
+    /**
+     * @return The college location as a position vector
+     */
+    public Vector2 getCentrePosition(){
+        centre
         return new Vector2(x, y);
     }
 

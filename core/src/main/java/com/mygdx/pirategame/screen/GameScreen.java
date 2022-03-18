@@ -12,6 +12,7 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -392,6 +393,21 @@ public class GameScreen implements Screen {
                 table.setVisible(false);
                 pauseTable.setVisible(true);
                 pause();
+            }
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
+            Body body = getPlayer().b2body;
+            Vector2 position = body.getPosition();
+            for (Map.Entry<CollegeMetadata, College> college : colleges.entrySet()) {
+                if (college.getValue().getMetaData().isPlayer()) {
+                    float distance = position.dst(college.getValue().getMetaData().getPosition());
+                    System.out.println(distance);
+                    // 1030, 650 alcuin
+                    // 1260, 3800 goodricke
+                    // 8900, 5500 constantine
+                    // 8000, 1700 anne lister
+
+                }
             }
         }
     }

@@ -133,7 +133,6 @@ public class WorldContactListener implements ContactListener {
                 // notifying a single ship so it can pause
                 ((Enemy) fixB.getUserData()).onEnemyShipContact();
                 break;
-
         }
     }
 
