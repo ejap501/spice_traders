@@ -62,7 +62,7 @@ public class GameScreen implements Screen {
 
     public static PirateGame game;
     private final OrthographicCamera camera;
-    private final FitViewport viewport;
+    public final FitViewport viewport;
     private final Stage stage;
 
     private final TmxMapLoader maploader;
@@ -99,6 +99,8 @@ public class GameScreen implements Screen {
     private Integer attackingCollege;
     private final List<Integer> collegesLeft = new LinkedList<Integer>(Arrays.asList(1, 2, 3));
     private final Random collegeRand = new Random();
+
+    private GoldShop goldShop;
 
     /**
      * Initialises the Game Screen,
@@ -207,7 +209,6 @@ public class GameScreen implements Screen {
     public void addPowerUps() {
         //Random powerups
         PowerUps = new ArrayList<>();
-        // Add Speedboosts
 
         for (int i = 0; i < 100; i++) {
             //Add a powerup at the random coords
@@ -348,7 +349,8 @@ public class GameScreen implements Screen {
      * @param dt Delta time (elapsed time since last game tick)
      */
     public void handleInput(float dt) {
-        if (gameStatus == GAME_RUNNING) {
+        // Disable movement and firing if in the gold shop
+        if (gameStatus == GAME_RUNNING && goldShop == null) {
             // Left physics impulse on 'A'
             if (Gdx.input.isKeyPressed(Input.Keys.A) || Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
                 player.b2body.applyLinearImpulse(new Vector2(-accel, 0), player.b2body.getWorldCenter(), true);
@@ -418,6 +420,16 @@ public class GameScreen implements Screen {
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
             tutorials.setAlpha(0);
             tutorialTexture.dispose();
+        }
+
+        if (Gdx.input.isKeyPressed(Input.Keys.H) && goldShop == null) {
+            goldShop = new GoldShop(GameScreen.game, camera, this);
+            goldShop.show();
+        }
+
+        // Clears gold shop instance
+        if (goldShop != null && !goldShop.display) {
+            goldShop = null;
         }
 
         // centers tutorial screen
@@ -512,6 +524,11 @@ public class GameScreen implements Screen {
             ships.get(i).draw(game.batch);
         }
 
+        // draw the gold shop if it is open
+        if (goldShop != null && goldShop.display) {
+            goldShop.render(Gdx.graphics.getDeltaTime());
+        }
+
         // show tutorial screen
         tutorials.draw(game.batch);
 
@@ -521,7 +538,6 @@ public class GameScreen implements Screen {
         stage.draw();
         //Checks game over conditions
         gameOverCheck();
-
     }
 
     /**
