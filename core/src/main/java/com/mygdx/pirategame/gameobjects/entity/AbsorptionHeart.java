@@ -14,9 +14,6 @@ import com.mygdx.pirategame.screen.GameScreen;
  */
 public class AbsorptionHeart extends PowerUp {
     private Texture absorptionHeart;
-    private float timer = 0;
-    private float duration;
-    private float timeLeft;
 
     /**
      * x
@@ -39,7 +36,7 @@ public class AbsorptionHeart extends PowerUp {
         //Sets origin of the speed boost
         setOrigin(24 / PirateGame.PPM,24 / PirateGame.PPM);
 
-        duration = 10;
+        duration = 20;
     }
 
     /**

@@ -143,11 +143,11 @@ public class Hud implements Disposable {
         table5.bottom().right();
         table5.setFillParent(true);
 
-        coinMagnetLabel = new Label(String.format("%03f", coinMagnet), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
-        speedBoostLabel = new Label(String.format("%03d", (Math.round(speedBoost))), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
-        absorptionHeartLabel = new Label(String.format("%03f", absorptionHeart), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
-        fasterShootingLabel = new Label(String.format("%03f", fasterShooting), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
-        freezeEnemyLabel = new Label(String.format("%03f", freezeEnemy), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+        coinMagnetLabel = new Label(String.format("%03f", coinMagnet), new Label.LabelStyle(new BitmapFont(), Color.YELLOW));
+        speedBoostLabel = new Label(String.format("%03d", (Math.round(speedBoost))), new Label.LabelStyle(new BitmapFont(), Color.YELLOW));
+        absorptionHeartLabel = new Label(String.format("%03f", absorptionHeart), new Label.LabelStyle(new BitmapFont(), Color.YELLOW));
+        fasterShootingLabel = new Label(String.format("%03f", fasterShooting), new Label.LabelStyle(new BitmapFont(), Color.YELLOW));
+        freezeEnemyLabel = new Label(String.format("%03f", freezeEnemy), new Label.LabelStyle(new BitmapFont(), Color.YELLOW));
 
         stage.addActor(table5);
         stage.addActor(table4);

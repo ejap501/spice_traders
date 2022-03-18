@@ -12,9 +12,6 @@ import com.mygdx.pirategame.screen.GameScreen;
 public class CoinMagnet extends PowerUp {
     private Texture coinMagnet;
     private boolean toggleCoinMagnet = false;
-    private float timer = 0;
-    private float duration;
-    private float timeLeft;
 
     /**
      * x
@@ -72,6 +69,7 @@ public class CoinMagnet extends PowerUp {
      */
     @Override
     public void entityContact() {
+        // TODO: When collecting two of the power up, they cancel out
         if (!destroyed) {
             toggleCoinMagnet = true;
             active = true;
@@ -79,7 +77,7 @@ public class CoinMagnet extends PowerUp {
 
             // Set to destroy
             setToDestroyed = true;
-            Gdx.app.log("coinmagnet", "collision");
+            Gdx.app.log("coinMagnet", "collision");
             // Play pickup sound
             if (screen.game.getPreferences().isEffectsEnabled()) {
                 getSound().play(screen.game.getPreferences().getEffectsVolume());
@@ -89,7 +87,7 @@ public class CoinMagnet extends PowerUp {
 
     @Override
     public void update() {
-        //If coin is set to destroy and isnt, destroy it
+        //If coin is set to destroy and isn't, destroy it
         if(setToDestroyed && !destroyed) {
             world.destroyBody(b2body);
             destroyed = true;
@@ -128,6 +126,6 @@ public class CoinMagnet extends PowerUp {
     public void endPowerUp() {
         toggleCoinMagnet();
         active = false;
-        Gdx.app.log("coinmagnet", "ended");
+        Gdx.app.log("coinMagnet", "ended");
     }
 }

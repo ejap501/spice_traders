@@ -11,9 +11,6 @@ import com.mygdx.pirategame.screen.GameScreen;
 
 public class FasterShooting extends PowerUp {
     private Texture fasterShooting;
-    private float timer = 0;
-    private float duration;
-    private float timeLeft;
 
     /**
      * x
