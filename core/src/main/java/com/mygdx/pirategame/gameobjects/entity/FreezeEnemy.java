@@ -16,9 +16,6 @@ import com.mygdx.pirategame.screen.GameScreen;
  */
 public class FreezeEnemy extends PowerUp {
     private Texture freezeEnemy;
-    private float timer = 0;
-    private float duration;
-    private float timeLeft;
 
     /**
      * x
@@ -42,7 +39,7 @@ public class FreezeEnemy extends PowerUp {
         setOrigin(24 / PirateGame.PPM,24 / PirateGame.PPM);
 
         // Set duration of power up
-        duration = 10;
+        duration = 20;
     }
 
     /**

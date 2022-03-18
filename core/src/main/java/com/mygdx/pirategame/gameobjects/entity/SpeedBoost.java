@@ -11,9 +11,6 @@ import com.mygdx.pirategame.screen.GameScreen;
 
 public class SpeedBoost extends PowerUp {
     private Texture speedBoost;
-    private float timer = 0;
-    private float duration;
-    private float timeLeft;
 
     /**
      * x
@@ -37,7 +34,7 @@ public class SpeedBoost extends PowerUp {
         setOrigin(24 / PirateGame.PPM,24 / PirateGame.PPM);
 
         // Set duration of power up
-        duration = 10;
+        duration = 20;
     }
 
     /**
