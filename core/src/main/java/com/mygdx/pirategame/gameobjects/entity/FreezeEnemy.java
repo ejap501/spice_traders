@@ -65,7 +65,6 @@ public class FreezeEnemy extends PowerUp {
             timer += Gdx.graphics.getDeltaTime();
             timeLeft -= Gdx.graphics.getDeltaTime();
             Hud.setFreezeEnemyTimer(timeLeft);
-            System.out.println(timeLeft);
         }
     }
 

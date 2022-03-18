@@ -61,7 +61,6 @@ public class SpeedBoost extends PowerUp {
             timer += Gdx.graphics.getDeltaTime();
             timeLeft -= Gdx.graphics.getDeltaTime();
             Hud.setSpeedBoostTimer(timeLeft);
-            System.out.println(timeLeft);
         }
     }
 

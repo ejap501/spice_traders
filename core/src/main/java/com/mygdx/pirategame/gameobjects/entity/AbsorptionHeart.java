@@ -62,7 +62,6 @@ public class AbsorptionHeart extends PowerUp {
             timer += Gdx.graphics.getDeltaTime();
             timeLeft -= Gdx.graphics.getDeltaTime();
             Hud.setAbsorptionHeartTimer(timeLeft);
-            System.out.println(timeLeft);
         }
     }
 

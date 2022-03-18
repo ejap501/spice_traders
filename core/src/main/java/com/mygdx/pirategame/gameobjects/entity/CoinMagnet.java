@@ -110,7 +110,6 @@ public class CoinMagnet extends PowerUp {
             timer += Gdx.graphics.getDeltaTime();
             timeLeft -= Gdx.graphics.getDeltaTime();
             Hud.setCoinMagnetTimer(timeLeft);
-            System.out.println(timeLeft);
         }
     }
 
