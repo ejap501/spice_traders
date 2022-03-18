@@ -61,15 +61,13 @@ public class FasterShooting extends PowerUp {
             timer += Gdx.graphics.getDeltaTime();
             timeLeft -= Gdx.graphics.getDeltaTime();
             Hud.setFasterShootingTimer(timeLeft);
-            System.out.println(timeLeft);
         }
     }
 
     @Override
     public void endPowerUp() {
         // Reset the speed of shooting by resetting shooting delay
-        GameScreen.setShootingDelay(1f);
-        // TODO : Adjust to better speed values
+        GameScreen.setShootingDelay(0.5f);
 
         active = false;
         Gdx.app.log("fasterShooting", "ended");
@@ -110,7 +108,7 @@ public class FasterShooting extends PowerUp {
             active = true;
             timeLeft += (duration / 2);
             // Increase speed of shooting by decreasing shooting delay
-            GameScreen.changeShootingDelay((float) 10);
+            GameScreen.changeShootingDelay((float) 30);
 
             // Set to destroy
             setToDestroyed = true;
