@@ -1,6 +1,5 @@
 package com.mygdx.pirategame.world;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.physics.box2d.*;
 import com.mygdx.pirategame.Hud;
 import com.mygdx.pirategame.PirateGame;
