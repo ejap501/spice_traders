@@ -60,7 +60,7 @@ public class PirateGame extends Game {
 
 	/**
 	 * Creates the main body of the game.
-	 * Establises the batch for the whole game as well as sets the first screen
+	 * Establishes the batch for the whole game as well as sets the first screen
 	 * Also sets up audio interface
 	 */
 	@Override

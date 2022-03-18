@@ -62,7 +62,7 @@ public enum CollegeMetadata {
     }
 
     /**
-     * @return The X locaiton of the college
+     * @return The X location of the college
      */
     public float getX() {
         return x;
