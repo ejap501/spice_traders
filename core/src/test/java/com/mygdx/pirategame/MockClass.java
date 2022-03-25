@@ -35,6 +35,7 @@ public class MockClass {
     public static GameScreen mockGameScreen() {
         // creating required variables, and mocking return values
         GameScreen screen = Mockito.mock(GameScreen.class);
+        
         Mockito.when(screen.getWorld()).thenReturn(new World(new Vector2(0, 0), true));
 
         return screen;
