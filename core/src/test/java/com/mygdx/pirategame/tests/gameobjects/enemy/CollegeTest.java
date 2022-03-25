@@ -7,6 +7,7 @@ import com.mygdx.pirategame.MockClass;
 import com.mygdx.pirategame.PirateGameTest;
 import com.mygdx.pirategame.gameobjects.enemy.College;
 import com.mygdx.pirategame.gameobjects.enemy.CollegeMetadata;
+import com.mygdx.pirategame.tests.FakeGL20;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,7 +22,7 @@ public class CollegeTest {
     public static void init() {
         // Use Mockito to mock the OpenGL methods since we are running headlessly
         Gdx.gl20 = Mockito.mock(GL20.class);
-        Gdx.gl = Gdx.gl20;
+        Gdx.gl = new FakeGL20();
     }
 
     /**
