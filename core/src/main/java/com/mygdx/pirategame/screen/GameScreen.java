@@ -3,12 +3,10 @@ package com.mygdx.pirategame.screen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
@@ -785,7 +783,6 @@ public class GameScreen implements Screen {
      * @param value damage dealt
      */
     public static void changeDamage(int value) {
-
         for (int i = 0; i < ships.size(); i++) {
             ships.get(i).changeDamageReceived(value);
         }
