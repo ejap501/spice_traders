@@ -12,6 +12,7 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -396,6 +397,20 @@ public class GameScreen implements Screen {
                 pause();
             }
         }
+
+        Body body = getPlayer().b2body;
+        Vector2 position = body.getPosition();
+        for (Map.Entry<CollegeMetadata, College> college : colleges.entrySet()) {
+            if (college.getValue().getMetaData().isPlayer()) {
+                float distance = position.dst(college.getValue().getMetaData().getCentrePosition());
+                if (distance < college.getValue().getMetaData().getDistance()) {
+                    System.out.println(distance);
+                    if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
+                        System.out.println("close");
+                    }
+                }
+            }
+        }
     }
 
     /**
@@ -510,6 +525,18 @@ public class GameScreen implements Screen {
         for (Map.Entry<CollegeMetadata, College> college : colleges.entrySet()) {
             college.getValue().draw(game.batch);
         }
+        /*
+        // Set image
+        Texture point = new Texture("entity/cannonball.png");
+        Sprite circle = new Sprite(point);
+
+        circle.setPosition(6200 / PirateGame.PPM, 1100 / PirateGame.PPM);
+        // scales the sprite depending on window size divided by a constant
+        circle.setSize(100 / PirateGame.PPM, 100 / PirateGame.PPM);
+
+        circle.draw(game.batch);
+
+         */
 
         //Updates all ships
         for (int i = 0; i < ships.size(); i++) {
@@ -756,7 +783,6 @@ public class GameScreen implements Screen {
      * @param value damage dealt
      */
     public static void changeDamage(int value) {
-
         for (int i = 0; i < ships.size(); i++) {
             ships.get(i).changeDamageReceived(value);
         }
