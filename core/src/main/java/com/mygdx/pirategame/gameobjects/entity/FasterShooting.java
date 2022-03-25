@@ -68,6 +68,7 @@ public class FasterShooting extends PowerUp {
     public void endPowerUp() {
         // Reset the speed of shooting by resetting shooting delay
         GameScreen.setShootingDelay(0.5f);
+        // TODO : Adjust to better speed values
 
         active = false;
         Gdx.app.log("fasterShooting", "ended");
