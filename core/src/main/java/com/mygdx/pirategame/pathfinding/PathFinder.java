@@ -60,7 +60,7 @@ public class PathFinder {
         PathNode solutionNode = null;
         while (!open.isEmpty()) {
             count++;
-            if (count > 1000) {
+            if (count > 300) {
                 break;
             }
             PathNode currentNode = open.poll();
@@ -120,31 +120,26 @@ public class PathFinder {
 
         float hw = width;
         float hh = height;
-        Vector2[] vlst = new Vector2[8];
-        vlst[0] = new Vector2(xb - hw, yb - hh);
-        vlst[1] = new Vector2(xb + hw, yb - hh);
-        vlst[2] = new Vector2(xb - hw, yb + hh);
-        vlst[3] = new Vector2(xb + hw, yb + hh);
-        vlst[4] = new Vector2(xb, yb + hh);
-        vlst[5] = new Vector2(xb, yb - hh);
-        vlst[6] = new Vector2(xb + hw, yb);
-        vlst[7] = new Vector2(xb - hw, yb);
-        for (Vector2 v : vlst) {
-            int x = (int) (v.x / tileSize);
-            int y = (int) (v.y / tileSize);
-            TiledMapTileLayer islands = (TiledMapTileLayer) gameScreen.getMap().getLayers().get("islands");
-            if (isColliding(islands, x, y)) {
-                return false;
+        for (int xw = 0; xw < width; xw += 5) {
+            for (int yh = 0; yh < width; yh += 5) {
+                Vector2 v = new Vector2(xb - width / 2 + xw, yb - height / 2 + yh);
+                int x = (int) (v.x / tileSize);
+                int y = (int) (v.y / tileSize);
+                TiledMapTileLayer islands = (TiledMapTileLayer) gameScreen.getMap().getLayers().get("islands");
+                if (isColliding(islands, x, y)) {
+                    return false;
+                }
+
+
+                TiledMapTileLayer rocks = (TiledMapTileLayer) gameScreen.getMap().getLayers().get("rocks + leaves");
+
+                if (isColliding(rocks, x, y)) {
+                    return false;
+                }
+
             }
-
-
-            TiledMapTileLayer rocks = (TiledMapTileLayer) gameScreen.getMap().getLayers().get("rocks + leaves");
-
-            if (isColliding(rocks, x, y)) {
-                return false;
-            }
-
         }
+
 
         return true;
     }
