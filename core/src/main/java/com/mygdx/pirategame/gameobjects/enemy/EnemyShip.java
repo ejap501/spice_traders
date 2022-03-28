@@ -30,12 +30,13 @@ import java.util.List;
  * Generates enemy ship data
  * Instantiates an enemy ship
  *
- * @author Ethan Alabaster, Sam Pearson, Edward Poulter
+ * @author Ethan Alabaster, Sam Pearson, Edward Poulter, James McNair
  * @version 1.0
  */
 public class EnemyShip extends Enemy {
 
     public static final int COLLISIONRADIUS = 55;
+    public static final int COLLISIONOFFSET = 15;
     public static boolean movement = true;
     public static boolean fire = true;
     // TODO: Stop cannonballs using 'fire'
@@ -85,8 +86,7 @@ public class EnemyShip extends Enemy {
         } else {
             this.pathManager = new RandomPath(this, screen);
         }
-        // give a seconds speed instead of a portion of it, then limit to a portion of the speed
-        generateNewPath();
+
     }
 
     /**
@@ -100,7 +100,7 @@ public class EnemyShip extends Enemy {
             return;
         }
         int tilewidth = screen.getTileWidth();
-        path = screen.getPathFinder().getPath((b2body.getPosition().x * PirateGame.PPM), (b2body.getPosition().y * PirateGame.PPM), destination.x, destination.y, COLLISIONRADIUS, COLLISIONRADIUS);
+        path = screen.getPathFinder().getPath((b2body.getPosition().x * PirateGame.PPM), (b2body.getPosition().y * PirateGame.PPM), destination.x, destination.y, COLLISIONRADIUS + COLLISIONOFFSET, COLLISIONRADIUS + COLLISIONOFFSET);
         if (path != null && path.size() > 1) {
             // removing the start node from the path as ship is already at it
             path.remove(0);
@@ -292,6 +292,7 @@ public class EnemyShip extends Enemy {
     @Override
     public void onEnemyShipContact() {
         updateDelay = 50;
+        generateNewPath();
     }
 
     /**
@@ -324,7 +325,7 @@ public class EnemyShip extends Enemy {
      * @return If the ship can go there
      */
     public boolean isTraversable(float x, float y) {
-        return screen.getPathFinder().isTraversable(x, y, EnemyShip.COLLISIONRADIUS, EnemyShip.COLLISIONRADIUS);
+        return screen.getPathFinder().isTraversable(x, y, EnemyShip.COLLISIONRADIUS + EnemyShip.COLLISIONOFFSET, EnemyShip.COLLISIONRADIUS + EnemyShip.COLLISIONOFFSET);
     }
 
     public void setPathManager(PathManager pathManager) {
