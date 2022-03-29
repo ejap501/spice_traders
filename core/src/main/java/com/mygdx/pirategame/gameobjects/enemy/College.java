@@ -197,7 +197,7 @@ public class College extends Enemy {
     }
 
     @Override
-    public void onEnemyShipContact() {
+    public void onContactOther() {
         // nothing to do here
     }
 

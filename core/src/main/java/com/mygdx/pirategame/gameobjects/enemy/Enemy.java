@@ -53,7 +53,7 @@ public abstract class Enemy extends Sprite {
      */
     public abstract void onContact();
 
-    public abstract void onEnemyShipContact();
+    public abstract void onContactOther();
     public abstract void update(float dt);
 
     /**

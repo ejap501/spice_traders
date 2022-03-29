@@ -130,7 +130,7 @@ public class WorldContactListener implements ContactListener {
             // enemy collides with enemy
             case PirateGame.ENEMY_BIT | PirateGame.ENEMY_BIT:
                 // notifying a single ship so it can pause
-                ((Enemy) fixB.getUserData()).onEnemyShipContact();
+                ((Enemy) fixB.getUserData()).onContactOther();
                 break;
         }
     }
