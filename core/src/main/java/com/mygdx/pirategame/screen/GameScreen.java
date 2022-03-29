@@ -29,6 +29,7 @@ import com.mygdx.pirategame.gameobjects.Player;
 import com.mygdx.pirategame.gameobjects.enemy.College;
 import com.mygdx.pirategame.gameobjects.enemy.CollegeMetadata;
 import com.mygdx.pirategame.gameobjects.enemy.EnemyShip;
+import com.mygdx.pirategame.gameobjects.enemy.SeaMonster;
 import com.mygdx.pirategame.gameobjects.entity.Coin;
 import com.mygdx.pirategame.pathfinding.PathFinder;
 
@@ -76,6 +77,7 @@ public class GameScreen implements Screen {
     private final Player player;
     private static HashMap<CollegeMetadata, College> colleges = new HashMap<>();
     private static ArrayList<EnemyShip> ships = new ArrayList<>();
+    private static ArrayList<SeaMonster> monsters = new ArrayList<>();
     private static ArrayList<Coin> Coins = new ArrayList<>();
 
     private static ArrayList<PowerUp> PowerUps = new ArrayList<>();
@@ -158,6 +160,7 @@ public class GameScreen implements Screen {
         colleges.put(CollegeMetadata.GOODRICKE, new College(this, CollegeMetadata.GOODRICKE, 8, invalidSpawn));
 
         ships = new ArrayList<>();
+        monsters = new ArrayList<>();
 
         for (CollegeMetadata college : CollegeMetadata.values()) {
             ships.addAll(getCollege(college).fleet);
@@ -169,6 +172,15 @@ public class GameScreen implements Screen {
             //Add a ship at the random coords
             ships.add(new EnemyShip(this, loc[0], loc[1], "college/Ships/unaligned_ship.png", null));
         }
+
+
+        monsters.add(new SeaMonster(this, 30, 50));
+        //Random sea monsters
+        /*for (int i = 0; i < 20; i++) {
+            int[] loc = getRandomLocation();
+            //Add a ship at the random coords
+            monsters.add(new SeaMonster(this, loc[0], loc[1]));
+        }*/
 
         //Random coins
         Coins = new ArrayList<>();
@@ -404,13 +416,13 @@ public class GameScreen implements Screen {
             if (college.getValue().getMetaData().isPlayer()) {
                 float distance = position.dst(college.getValue().getMetaData().getCentrePosition());
                 if (distance < college.getValue().getMetaData().getDistance()) {
-                    System.out.println(distance);
                     if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
                         System.out.println("close");
                     }
                 }
             }
         }
+        System.out.println(String.format("%f, %f", player.getX(), player.getY()));
     }
 
     /**
@@ -455,6 +467,11 @@ public class GameScreen implements Screen {
         //Update ships
         for (int i = 0; i < ships.size(); i++) {
             ships.get(i).update(dt);
+        }
+
+        //Update ships
+        for (int i = 0; i < monsters.size(); i++) {
+            monsters.get(i).update(dt);
         }
 
         //Updates coin
@@ -549,6 +566,11 @@ public class GameScreen implements Screen {
                 }
             }
             ships.get(i).draw(game.batch);
+        }
+
+        //Update ships
+        for (int i = 0; i < monsters.size(); i++) {
+            monsters.get(i).draw(game.batch);
         }
 
         // draw the gold shop if it is open

@@ -290,7 +290,7 @@ public class EnemyShip extends Enemy {
     }
 
     @Override
-    public void onEnemyShipContact() {
+    public void onContactOther() {
         updateDelay = 50;
         generateNewPath();
     }

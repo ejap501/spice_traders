@@ -1,7 +1,9 @@
 package com.mygdx.pirategame.pathfinding.pathManager;
 
 import com.badlogic.gdx.math.Vector2;
+import com.mygdx.pirategame.gameobjects.enemy.Enemy;
 import com.mygdx.pirategame.gameobjects.enemy.EnemyShip;
+import com.mygdx.pirategame.gameobjects.enemy.SeaMonster;
 import com.mygdx.pirategame.screen.GameScreen;
 
 /**
@@ -10,7 +12,8 @@ import com.mygdx.pirategame.screen.GameScreen;
  */
 public abstract class WaitingPath implements PathManager {
 
-    protected final EnemyShip ship;
+    protected EnemyShip ship = null;
+    protected SeaMonster seaMonster = null;
     protected final GameScreen screen;
 
     /**
@@ -23,12 +26,25 @@ public abstract class WaitingPath implements PathManager {
         this.screen = screen;
     }
 
+    public WaitingPath(SeaMonster seaMonster, GameScreen screen) {
+        this.seaMonster = seaMonster;
+        this.screen = screen;
+    }
+
     @Override
     public void update(float dt) {
         // if the ship is in range of the player
-        if ((ship.collegeMeta == null || !ship.collegeMeta.isPlayer()) && ship.b2body.getPosition().dst(screen.getPlayerPos()) < 3) {
-            ship.setPathManager(new AttackPath(this, ship, screen));
+        if (ship != null) {
+            if ((ship.collegeMeta == null || !ship.collegeMeta.isPlayer()) && ship.b2body.getPosition().dst(screen.getPlayerPos()) < 3) {
+                ship.setPathManager(new AttackPath(this, ship, screen));
+            }
         }
+        else {
+            if (seaMonster.b2body.getPosition().dst(screen.getPlayerPos()) < 3) {
+                seaMonster.setPathManager(new AttackPath(this, seaMonster, screen));
+            }
+        }
+
 
     }
 
