@@ -3,9 +3,11 @@ package com.mygdx.pirategame.screen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -17,6 +19,7 @@ import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -77,14 +80,16 @@ public class GameScreen implements Screen {
     private static HashMap<CollegeMetadata, College> colleges = new HashMap<>();
     private static ArrayList<EnemyShip> ships = new ArrayList<>();
     private static ArrayList<Coin> Coins = new ArrayList<>();
-
     private static ArrayList<PowerUp> PowerUps = new ArrayList<>();
+    private static ArrayList<Tornado> Tornados = new ArrayList<>();
+
     private final AvailableSpawn invalidSpawn = new AvailableSpawn();
     private final Hud hud;
 
 
     public static final int GAME_RUNNING = 0;
     public static final int GAME_PAUSED = 1;
+    public static final int GOLD_SHOP = 2;
     private static int gameStatus;
 
     private final Texture tutorialTexture;
@@ -102,6 +107,8 @@ public class GameScreen implements Screen {
     private final Random collegeRand = new Random();
 
     private GoldShop goldShop;
+    BitmapFont font;
+    private static Label shopLabel;
 
     /**
      * Initialises the Game Screen,
@@ -178,13 +185,19 @@ public class GameScreen implements Screen {
             Coins.add(new Coin(this, loc[0], loc[1]));
         }
 
+        //Random power ups
         addPowerUps();
+
+        //Random tornado
+        Tornados = new ArrayList<>();
+        for (int i = 0; i < 1; i++) {
+            int[] loc = getRandomLocation();
+            //Add a coins at the random coords
+            Tornados.add(new Tornado(this, loc[0], loc[1]));
+        }
 
         //Setting stage
         stage = new Stage(new ScreenViewport());
-
-        //Setting the college that can currently be attacked
-        nextCollege();
     }
 
     /**
@@ -339,6 +352,8 @@ public class GameScreen implements Screen {
                 Gdx.app.exit();
             }
         });
+
+        font = new BitmapFont();
     }
 
     /**
@@ -387,30 +402,52 @@ public class GameScreen implements Screen {
             }
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-            if (gameStatus == GAME_PAUSED) {
-                resume();
-                table.setVisible(true);
-                pauseTable.setVisible(false);
-            } else {
-                table.setVisible(false);
-                pauseTable.setVisible(true);
-                pause();
+            if (gameStatus != GOLD_SHOP) {
+                if (gameStatus == GAME_PAUSED) {
+                    resume();
+                    table.setVisible(true);
+                    pauseTable.setVisible(false);
+                } else {
+                    table.setVisible(false);
+                    pauseTable.setVisible(true);
+                    pause();
+                }
             }
         }
 
         Body body = getPlayer().b2body;
         Vector2 position = body.getPosition();
+        shopLabel = new Label("Press \"E\" to enter the Gold Shop", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+        Table table1 = new Table(); // Shop text
+        table1.add(shopLabel).padTop(20).top();
+        table1.top();
+        table1.setFillParent(true);
         for (Map.Entry<CollegeMetadata, College> college : colleges.entrySet()) {
             if (college.getValue().getMetaData().isPlayer()) {
                 float distance = position.dst(college.getValue().getMetaData().getCentrePosition());
                 if (distance < college.getValue().getMetaData().getDistance()) {
-                    System.out.println(distance);
+                    //System.out.println(distance);
+                    shopLabel.setVisible(true);
+                    System.out.println("on");
                     if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
-                        System.out.println("close");
+                        if (gameStatus == GOLD_SHOP) {
+                            closeShop();
+                        } else if (gameStatus == GAME_RUNNING) {
+                            openShop();
+                        }
                     }
+                    else if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+                        if (gameStatus == GOLD_SHOP) {
+                            closeShop();
+                        }
+                    }
+                } else {
+                    System.out.println("off");
+                    shopLabel.setVisible(false);
                 }
             }
         }
+        stage.addActor(table1);
     }
 
     /**
@@ -435,11 +472,6 @@ public class GameScreen implements Screen {
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
             tutorials.setAlpha(0);
             tutorialTexture.dispose();
-        }
-
-        if (Gdx.input.isKeyPressed(Input.Keys.H) && goldShop == null) {
-            goldShop = new GoldShop(GameScreen.game, camera, this);
-            goldShop.show();
         }
 
         // Clears gold shop instance
@@ -518,6 +550,11 @@ public class GameScreen implements Screen {
         //Renders powerups
         for (int i = 0; i < PowerUps.size(); i++) {
             PowerUps.get(i).draw(game.batch);
+        }
+
+        //Renders tornados
+        for (int i = 0; i < Tornados.size(); i++) {
+            Tornados.get(i).draw(game.batch);
         }
 
         //Renders colleges
@@ -820,6 +857,48 @@ public class GameScreen implements Screen {
      */
     @Override
     public void resume() {
+        gameStatus = GAME_RUNNING;
+    }
+
+    /**
+     * Handles gold shop open/close
+     */
+    private void shop() {
+        goldShop = new GoldShop(GameScreen.game, camera, this);
+        if (gameStatus == GOLD_SHOP) {
+            goldShop.dispose();
+            resume();
+            table.setVisible(true);
+            //pauseTable.setVisible(false);
+        } else {
+            goldShop.show();
+            pause();
+            table.setVisible(false);
+            //pauseTable.setVisible(true);
+        }
+    }
+
+    /**
+     * Opens gold shop
+     */
+    private void openShop() {
+        goldShop = new GoldShop(GameScreen.game, camera, this);
+        goldShop.show();
+        pause();
+        table.setVisible(false);
+
+        gameStatus = GOLD_SHOP;
+    }
+
+    /**
+     * Opens gold shop
+     */
+    public void closeShop() {
+        goldShop = new GoldShop(GameScreen.game, camera, this);
+        goldShop.dispose();
+        resume();
+        table.setVisible(true);
+
         gameStatus = GAME_RUNNING;
     }
 

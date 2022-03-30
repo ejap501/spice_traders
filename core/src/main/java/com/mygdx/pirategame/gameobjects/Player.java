@@ -6,9 +6,11 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.pirategame.PirateGame;
+import com.mygdx.pirategame.gameobjects.entity.Entity;
 import com.mygdx.pirategame.screen.GameScreen;
 
 /**
@@ -71,6 +73,35 @@ public class Player extends Sprite {
                 cannonBalls.removeValue(ball, true);
         }
 
+        if (Entity.inTornadoRange) {
+            // move player towards tornado if in range
+
+            // position of target
+            float targetX = 0;
+            float targetY = 0;
+            // position of player
+            float sourceX = b2body.getPosition().x;
+            float sourceY = b2body.getPosition().y;
+
+            // If the tornado is close to the player, move away from it
+            double distance = Math.sqrt(Math.pow(targetX - b2body.getWorldCenter().x, 2) + Math.pow(targetY - b2body.getWorldCenter().y, 2));
+            if (distance < 1) {
+                Entity.tornadoActive = false;
+                Entity.tornadoContact();
+
+            }
+            // Uses a triangle to calculate the new trajectory
+            double newAngle = Math.atan2(targetY - sourceY, targetX - sourceX);
+            float velocity = 0.1f;
+            float velX = (float) (Math.cos(newAngle) * velocity);
+            float velY = (float) (Math.sin(newAngle) * velocity);
+
+            // move the sprite then the collider
+            setPosition(sourceX + velX, sourceY + velY);
+            Vector2 newPos = new Vector2(sourceX, sourceY).add(new Vector2(velX, velY));
+            b2body.setTransform(newPos, 0);
+        }
+
         // Add delay timer between shots
         timeFired += dt;
     }
@@ -121,7 +152,7 @@ public class Player extends Sprite {
                 | PirateGame.ABSORPTION_HEART_BIT | PirateGame.FASTER_SHOOTING_BIT
                 | PirateGame.FREEZE_ENEMY_BIT | PirateGame.ENEMY_BIT
                 | PirateGame.COLLEGE_BIT | PirateGame.COLLEGE_SENSOR_BIT
-                | PirateGame.COLLEGE_FIRE_BIT;
+                | PirateGame.COLLEGE_FIRE_BIT | PirateGame.TORNADO_BIT;
         fdef.shape = shape;
         b2body.createFixture(fdef).setUserData(this);
     }

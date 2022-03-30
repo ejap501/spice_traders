@@ -20,6 +20,9 @@ public abstract class Entity extends Sprite {
     public boolean setToDestroyed = false;
     public boolean destroyed = false;
 
+    public static boolean tornadoActive = false;
+    public static boolean inTornadoRange = false;
+
     /**
      * Instantiates an entity
      * Sets position in world
@@ -43,5 +46,12 @@ public abstract class Entity extends Sprite {
     /**
      * Defines contact with other objects, The only entity that is able to do so is the player ship
      */
-    public abstract void entityContact();
+    public void entityContact() {
+    }
+
+    public static void tornadoContact() {
+        if (tornadoActive) {
+            inTornadoRange = true;
+        }
+    }
 }
