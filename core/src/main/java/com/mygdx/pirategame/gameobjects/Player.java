@@ -1,5 +1,6 @@
 package com.mygdx.pirategame.gameobjects;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -11,6 +12,7 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.pirategame.PirateGame;
 import com.mygdx.pirategame.gameobjects.entity.Entity;
+import com.mygdx.pirategame.gameobjects.entity.Tornado;
 import com.mygdx.pirategame.screen.GameScreen;
 
 /**
@@ -26,6 +28,8 @@ public class Player extends Sprite {
     private Sound breakSound, cannonballHitSound;
     private Array<CannonFire> cannonBalls;
     private float timeFired = 0;
+
+    public static boolean inTornadoRange = false;
 
     /**
      * Instantiates a new Player. Constructor only called once per game
@@ -73,21 +77,27 @@ public class Player extends Sprite {
                 cannonBalls.removeValue(ball, true);
         }
 
-        if (Entity.inTornadoRange) {
+        if (inTornadoRange) {
+            System.out.println("close");
             // move player towards tornado if in range
 
-            // position of target
+            // position of target to move towards
             float targetX = 0;
             float targetY = 0;
+
             // position of player
             float sourceX = b2body.getPosition().x;
             float sourceY = b2body.getPosition().y;
 
             // If the tornado is close to the player, move away from it
             double distance = Math.sqrt(Math.pow(targetX - b2body.getWorldCenter().x, 2) + Math.pow(targetY - b2body.getWorldCenter().y, 2));
-            if (distance < 1) {
-                Entity.tornadoActive = false;
-                Entity.tornadoContact();
+
+            double tornadoDistance = GameScreen.getNearestTornado().getDistance();
+
+            if (tornadoDistance > 8) {
+                System.out.println("far");
+                Player.inTornadoRange = false;
+                //Entity.tornadoContact();
 
             }
             // Uses a triangle to calculate the new trajectory
