@@ -90,7 +90,7 @@ public class GameScreen implements Screen {
     public static final int GAME_RUNNING = 0;
     public static final int GAME_PAUSED = 1;
     public static final int GOLD_SHOP = 2;
-    private static int gameStatus;
+    public static int gameStatus;
 
     private final Texture tutorialTexture;
     private final Sprite tutorials;
@@ -190,7 +190,7 @@ public class GameScreen implements Screen {
 
         //Random tornado
         Tornados = new ArrayList<>();
-        for (int i = 0; i < 1; i++) {
+        for (int i = 0; i < 5; i++) {
             int[] loc = getRandomLocation();
             //Add a coins at the random coords
             Tornados.add(new Tornado(this, loc[0], loc[1]));
@@ -428,7 +428,7 @@ public class GameScreen implements Screen {
                 if (distance < college.getValue().getMetaData().getDistance()) {
                     //System.out.println(distance);
                     shopLabel.setVisible(true);
-                    System.out.println("on");
+                    //System.out.println("on");
                     if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
                         if (gameStatus == GOLD_SHOP) {
                             closeShop();
@@ -442,7 +442,7 @@ public class GameScreen implements Screen {
                         }
                     }
                 } else {
-                    System.out.println("off");
+                    //System.out.println("off");
                     shopLabel.setVisible(false);
                 }
             }
@@ -497,6 +497,12 @@ public class GameScreen implements Screen {
         for (int i = 0; i < PowerUps.size(); i++) {
             PowerUps.get(i).update();
         }
+
+        //Updates tornados
+        for (int i = 0; i < Tornados.size(); i++) {
+            Tornados.get(i).update();
+        }
+
         //After a delay check if a college is destroyed. If not, if can fire
         if (stateTime > 1) {
             for (CollegeMetadata college : CollegeMetadata.values()) {
@@ -861,31 +867,13 @@ public class GameScreen implements Screen {
     }
 
     /**
-     * Handles gold shop open/close
-     */
-    private void shop() {
-        goldShop = new GoldShop(GameScreen.game, camera, this);
-        if (gameStatus == GOLD_SHOP) {
-            goldShop.dispose();
-            resume();
-            table.setVisible(true);
-            //pauseTable.setVisible(false);
-        } else {
-            goldShop.show();
-            pause();
-            table.setVisible(false);
-            //pauseTable.setVisible(true);
-        }
-    }
-
-    /**
      * Opens gold shop
      */
     private void openShop() {
         goldShop = new GoldShop(GameScreen.game, camera, this);
         goldShop.show();
         pause();
-        table.setVisible(false);
+        //table.setVisible(false);
 
         gameStatus = GOLD_SHOP;
     }
@@ -893,13 +881,31 @@ public class GameScreen implements Screen {
     /**
      * Opens gold shop
      */
-    public void closeShop() {
+    private void closeShop() {
         goldShop = new GoldShop(GameScreen.game, camera, this);
         goldShop.dispose();
         resume();
-        table.setVisible(true);
+        //table.setVisible(true);
 
         gameStatus = GAME_RUNNING;
+    }
+
+    /**
+     * Finds the nearest Tornado to the Player
+     *
+     * @return The nearest Tornado
+     */
+    public static Tornado getNearestTornado() {
+        int nearest = 0;
+        double nearestDistance = 100000;
+        for (int i = 0; i < Tornados.size(); i++) {
+            double currentDistance = Tornados.get(i).getDistance();
+            if (currentDistance < nearestDistance) {
+                nearest = i;
+                nearestDistance = currentDistance;
+            }
+        }
+        return Tornados.get(nearest);
     }
 
     /**

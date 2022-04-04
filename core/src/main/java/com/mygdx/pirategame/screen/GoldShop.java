@@ -19,6 +19,8 @@ import com.mygdx.pirategame.PirateGame;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.mygdx.pirategame.screen.GameScreen.GAME_RUNNING;
+
 public class GoldShop implements Screen {
 
     private final PirateGame parent;
@@ -120,6 +122,7 @@ public class GoldShop implements Screen {
             public void changed(ChangeEvent event, Actor actor) {
                 display = false; // Stop the shop from being rendered
                 dispose();
+                GameScreen.gameStatus = GAME_RUNNING;
             }
         });
 

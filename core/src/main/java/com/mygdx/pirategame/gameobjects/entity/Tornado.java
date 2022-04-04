@@ -24,6 +24,7 @@ public class Tornado extends Entity {
     private Sound tornadoSound;
     private Player player;
     public Body b2bodyTornado;
+    public static boolean active = false;
 
     /**
      * Instantiates a new Tornado.
@@ -51,10 +52,18 @@ public class Tornado extends Entity {
     }
 
     /**
-     * Updates the tornado state. If needed, deletes the coin if picked up.
+     * Updates the tornado state.
      */
     public void update() {
+        /*
+        if (distance > 10) {
+            //Player.inTornadoRange = false;
+        } else {
+            System.out.println(distance);
+            Player.inTornadoRange = true;
+        }
 
+         */
     }
 
     /**
@@ -74,7 +83,8 @@ public class Tornado extends Entity {
         //Sets collision boundaries
         FixtureDef fixtureDef = new FixtureDef();
         CircleShape shape = new CircleShape();
-        shape.setRadius(24 / PirateGame.PPM);
+        shape.setRadius(150 / PirateGame.PPM);
+
         // setting BIT identifier
         fixtureDef.filter.categoryBits = PirateGame.TORNADO_BIT;
         // determining what this BIT can collide with
@@ -95,9 +105,31 @@ public class Tornado extends Entity {
      */
     @Override
     public void entityContact() {
-        if (tornadoActive) {
-            inTornadoRange = true;
+        System.out.println("near");
+        Player.inTornadoRange = true;
+        /*
+        if (active) {
+            //inTornadoRange = true;
+            Player.inTornadoRange = true;
+            System.out.println("active");
         }
+
+         */
+    }
+
+    /**
+     * Calculates the distance from the player to the tornado
+     *
+     * @return The distance from the player to the tornado
+     */
+    public double getDistance() {
+        // Position of player
+        float playerX = player.b2body.getPosition().x;
+        float playerY = player.b2body.getPosition().y;
+
+        // Calculate distance from player to tornado
+        double distance = Math.sqrt(Math.pow(playerX - b2body.getWorldCenter().x, 2) + Math.pow(playerY - b2body.getWorldCenter().y, 2));
+        return distance;
     }
 
     /**

@@ -20,9 +20,6 @@ public abstract class Entity extends Sprite {
     public boolean setToDestroyed = false;
     public boolean destroyed = false;
 
-    public static boolean tornadoActive = false;
-    public static boolean inTornadoRange = false;
-
     /**
      * Instantiates an entity
      * Sets position in world
@@ -48,10 +45,12 @@ public abstract class Entity extends Sprite {
      */
     public void entityContact() {
     }
-
+    /*
     public static void tornadoContact() {
         if (tornadoActive) {
             inTornadoRange = true;
         }
     }
+
+     */
 }
