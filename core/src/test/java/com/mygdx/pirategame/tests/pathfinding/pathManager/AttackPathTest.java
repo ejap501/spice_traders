@@ -1,10 +1,5 @@
 package com.mygdx.pirategame.tests.pathfinding.pathManager;
 
-import java.util.Random;
-
-import com.mygdx.pirategame.pathfinding.pathManager.AttackPath;
-import com.mygdx.pirategame.pathfinding.pathManager.PatrolPath;
-import net.bytebuddy.pool.TypePool;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -20,10 +15,14 @@ import com.mygdx.pirategame.PirateGameTest;
 import com.mygdx.pirategame.gameobjects.enemy.CollegeMetadata;
 import com.mygdx.pirategame.gameobjects.enemy.EnemyShip;
 import com.mygdx.pirategame.pathfinding.PathFinder;
+import com.mygdx.pirategame.pathfinding.pathManager.AttackPath;
 import com.mygdx.pirategame.pathfinding.pathManager.RandomPath;
 import com.mygdx.pirategame.screen.GameScreen;
 import com.mygdx.pirategame.tests.FakeGL20;
 
+/**
+ * Testing the attackPath class
+ */
 @RunWith(PirateGameTest.class)
 public class AttackPathTest {
 
@@ -50,8 +49,6 @@ public class AttackPathTest {
     @Test
     public void testPatrolPathGeneration() {
         // running the test 20 times to account for randomness
-        int ranX, ranY;
-        Random rand = new Random();
         for (int i = 0; i < 20; i++) {
 
             String college = CollegeMetadata.ALCUIN.getFilePath();

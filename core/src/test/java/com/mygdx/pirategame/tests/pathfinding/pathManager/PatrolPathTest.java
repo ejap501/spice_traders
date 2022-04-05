@@ -1,9 +1,5 @@
 package com.mygdx.pirategame.tests.pathfinding.pathManager;
 
-import java.util.Random;
-
-import com.mygdx.pirategame.pathfinding.pathManager.PatrolPath;
-import net.bytebuddy.pool.TypePool;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -19,10 +15,13 @@ import com.mygdx.pirategame.PirateGameTest;
 import com.mygdx.pirategame.gameobjects.enemy.CollegeMetadata;
 import com.mygdx.pirategame.gameobjects.enemy.EnemyShip;
 import com.mygdx.pirategame.pathfinding.PathFinder;
-import com.mygdx.pirategame.pathfinding.pathManager.RandomPath;
+import com.mygdx.pirategame.pathfinding.pathManager.PatrolPath;
 import com.mygdx.pirategame.screen.GameScreen;
 import com.mygdx.pirategame.tests.FakeGL20;
 
+/**
+ * testing the patrolPath class
+ */
 @RunWith(PirateGameTest.class)
 public class PatrolPathTest {
 
@@ -64,7 +63,7 @@ public class PatrolPathTest {
         EnemyShip ship = new EnemyShip(mockedGameScreen, 13 * 64 / PirateGame.PPM, 11 * 64 / PirateGame.PPM, shipPath,
                 null);
 
-        PatrolPath path = new PatrolPath(ship, mockedGameScreen);
+        new PatrolPath(ship, mockedGameScreen);
     }
 
     /**
@@ -73,8 +72,6 @@ public class PatrolPathTest {
     @Test
     public void testPatrolPathGeneration() {
         // running the test 20 times to account for randomness
-        int ranX, ranY;
-        Random rand = new Random();
         for (int i = 0; i < 20; i++) {
 
             String college = CollegeMetadata.ALCUIN.getFilePath();
