@@ -102,7 +102,6 @@ public class PathFinder {
             checkpoints.add(nextNode.parent.checkpoint);
             nextNode = nextNode.parent;
         }
-
         Collections.reverse(checkpoints);
         return checkpoints;
     }
@@ -126,14 +125,10 @@ public class PathFinder {
                 int x = (int) (v.x / tileSize);
                 int y = (int) (v.y / tileSize);
                 TiledMapTileLayer islands = (TiledMapTileLayer) gameScreen.getMap().getLayers().get("islands");
-                if (isColliding(islands, x, y)) {
-                    return false;
-                }
-
 
                 TiledMapTileLayer rocks = (TiledMapTileLayer) gameScreen.getMap().getLayers().get("rocks + leaves");
 
-                if (isColliding(rocks, x, y)) {
+                if (isColliding(rocks, x, y) || isColliding(islands, x, y)) {
                     return false;
                 }
 
@@ -235,15 +230,5 @@ public class PathFinder {
             return checkpoint.equals(pathNode.checkpoint);
         }
 
-        @Override
-        public String toString() {
-            return "PathNode{" +
-                    "fx=" + fx +
-                    ", gx=" + gx +
-                    ", checkpoint=" + checkpoint +
-                    ", dest=" + dest +
-                    ", parent=" + parent +
-                    '}';
-        }
     }
 }

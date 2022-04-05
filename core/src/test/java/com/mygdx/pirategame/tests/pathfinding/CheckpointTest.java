@@ -2,6 +2,9 @@ package com.mygdx.pirategame.tests.pathfinding;
 
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.pirategame.pathfinding.Checkpoint;
+
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -51,9 +54,12 @@ public class CheckpointTest {
     public void testCheckpointComparison() {
 
         Checkpoint cp = new Checkpoint(1f, 1f, 1f);
-
+        
         // testing invalid type
         Assert.assertFalse(cp.equals("hi"));
+        
+        // testing null type
+        Assert.assertFalse(cp.equals(null));
 
         // testing different checkpoint
         Assert.assertFalse(cp.equals(new Checkpoint(2f, 1f, 1f)));
@@ -61,6 +67,8 @@ public class CheckpointTest {
         // testing equivalent checkpoint
         Assert.assertTrue(cp.equals(new Checkpoint(1f, 1f, 1f)));
 
+        // testing same object
+        assertTrue(cp.equals(cp));
     }
 
     /**
