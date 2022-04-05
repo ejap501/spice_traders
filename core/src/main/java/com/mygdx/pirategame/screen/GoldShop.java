@@ -117,7 +117,7 @@ public class GoldShop implements Screen {
         }
 
         // Item price labels
-        final Label unlock100 = new Label("100 gold",skin);
+        final Label unlock100 = new Label("50 gold",skin);
         final Label unlock200 = new Label("200 gold",skin);
         final Label unlock300 = new Label("300 gold",skin);
         final Label unlock400 = new Label("400 gold",skin);
@@ -179,7 +179,7 @@ public class GoldShop implements Screen {
      * Method which handles purchase of better cannon
      */
     public void purchaseBetterCannon(){
-        int betterCannonPrice = 20;
+        int betterCannonPrice = 50;
 
         // Check player has enough coins
         if (Hud.getCoins() >= betterCannonPrice){
