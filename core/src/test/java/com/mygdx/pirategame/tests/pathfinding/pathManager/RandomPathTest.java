@@ -1,7 +1,5 @@
 package com.mygdx.pirategame.tests.pathfinding.pathManager;
 
-import java.util.Random;
-
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -21,6 +19,9 @@ import com.mygdx.pirategame.pathfinding.pathManager.RandomPath;
 import com.mygdx.pirategame.screen.GameScreen;
 import com.mygdx.pirategame.tests.FakeGL20;
 
+/**
+ * testing the randomPath class
+ */
 @RunWith(PirateGameTest.class)
 public class RandomPathTest {
 
@@ -61,8 +62,6 @@ public class RandomPathTest {
 	@Test
 	public void testRandomPathGeneration() {
 		// running the test 20 times to account for randomness
-		int ranX, ranY; 
-		Random rand = new Random();
 		for (int i = 0; i < 20; i++) {
 			
 			String college = CollegeMetadata.ALCUIN.getFilePath();
