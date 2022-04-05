@@ -2,6 +2,7 @@ package com.mygdx.pirategame.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -14,12 +15,17 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.mygdx.pirategame.Hud;
 import com.mygdx.pirategame.PirateGame;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
+
 import static com.mygdx.pirategame.screen.GameScreen.GAME_RUNNING;
+import static com.badlogic.gdx.math.MathUtils.ceil;
+
 
 public class GoldShop implements Screen {
 
@@ -30,6 +36,7 @@ public class GoldShop implements Screen {
     public boolean display = false;
     private OrthographicCamera camera;
     private GameScreen gameScreen;
+    private Sound purchaseSound;
 
     //To store whether buttons are enabled or disabled
     private static final List<Integer> states = new ArrayList<Integer>();
@@ -39,7 +46,7 @@ public class GoldShop implements Screen {
      */
     static {
         //0 = enabled, 1 = disabled
-        states.add(1);
+        states.add(0);
         states.add(1);
         states.add(1);
         states.add(1);
@@ -51,10 +58,14 @@ public class GoldShop implements Screen {
     private TextButton item4;
 
     public GoldShop(PirateGame pirateGame, OrthographicCamera camera, GameScreen gameScreen) {
-        parent = pirateGame;
+        this.parent = pirateGame;
         this.camera = camera;
         this.gameScreen = gameScreen;
         stage = new Stage(new ScreenViewport());
+
+        // Coins handling sound effect https://mixkit.co/free-sound-effects/money/
+        purchaseSound = Gdx.audio.newSound(Gdx.files.internal("sfx_and_music/coin-purchase.wav"));
+
     }
 
     /**
@@ -83,7 +94,7 @@ public class GoldShop implements Screen {
 
 
         //create skill tree buttons
-        item1 = new TextButton("????????????", skin);
+        item1 = new TextButton("Cannon ball speed + 20%", skin);
 
         //Sets enabled or disabled
         if (states.get(0) == 1){
@@ -121,8 +132,18 @@ public class GoldShop implements Screen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 display = false; // Stop the shop from being rendered
+
                 dispose();
                 GameScreen.gameStatus = GAME_RUNNING;
+                gameScreen.closeShop();
+            }
+        });
+
+        item1.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                // Purchase better cannon
+                purchaseBetterCannon();
             }
         });
 
@@ -144,6 +165,42 @@ public class GoldShop implements Screen {
         table.row().pad(10, 0, 10, 0);
         table.add(closeButton).width(stage.getCamera().viewportWidth / 5f).height(stage.getCamera().viewportHeight / 9f);
         table.top();
+    }
+
+    /**
+     * Plays sound when player purchases from the shop
+     */
+    public void playPurchaseSound(){
+        if (parent.getPreferences().isEffectsEnabled()) {
+            purchaseSound.play(parent.getPreferences().getEffectsVolume());
+        }
+    }
+
+    /**
+     * Method which handles purchase of better cannon
+     */
+    public void purchaseBetterCannon(){
+        int betterCannonPrice = 20;
+
+        // Check player has enough coins
+        if (Hud.getCoins() >= betterCannonPrice){
+            int currentVelocity = gameScreen.getPlayer().getCannonVelocity();
+            // Limit max velocity of cannon to 12, as players can
+            // purchase this powerup multiple times
+            if (currentVelocity * 1.2f <= 12) {
+                Hud.setCoins(Hud.getCoins() - betterCannonPrice);
+                gameScreen.getHud().update(0);
+                int newVelocity = ceil(currentVelocity * 1.2f);
+                gameScreen.getPlayer().setCannonVelocity(newVelocity);
+                playPurchaseSound();
+                JOptionPane.showMessageDialog(null, "Your cannon now fires 20% faster!", "Success", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(null, "Cannot purchase again: you have maximised this powerup", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "You do not have enough coins to purchase this powerup", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+
     }
 
     /**

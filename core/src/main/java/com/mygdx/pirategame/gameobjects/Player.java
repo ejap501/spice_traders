@@ -28,6 +28,7 @@ public class Player extends Sprite {
     private Sound breakSound, cannonballHitSound;
     private Array<CannonFire> cannonBalls;
     private float timeFired = 0;
+    private int cannonVelocity = 5;
 
     public static boolean inTornadoRange = false;
 
@@ -176,9 +177,25 @@ public class Player extends Sprite {
     public void fire(OrthographicCamera camera) {
         // Fires cannon if specified delay time has passed
         if (timeFired > GameScreen.getShootingDelay()) {
-            cannonBalls.add(new CannonFire(screen, b2body, camera, 5));
+            cannonBalls.add(new CannonFire(screen, b2body, camera, cannonVelocity));
             timeFired = 0;
         }
+    }
+
+    /**
+     * Set velocity of cannon balls
+     * @param velocity The speed of the cannon ball when it is fired
+     */
+    public void setCannonVelocity(int velocity){
+        this.cannonVelocity = velocity;
+    }
+
+    /**
+     * Get velocity of cannon balls
+     * @return the speed of the cannon ball when it is fired
+     */
+    public int getCannonVelocity(){
+        return this.cannonVelocity;
     }
 
     /**
