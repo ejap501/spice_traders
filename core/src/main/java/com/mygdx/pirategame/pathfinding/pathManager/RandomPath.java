@@ -1,13 +1,11 @@
 package com.mygdx.pirategame.pathfinding.pathManager;
 
-import com.badlogic.gdx.math.Path;
+import java.util.Random;
+
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.pirategame.PirateGame;
-import com.mygdx.pirategame.gameobjects.enemy.Enemy;
 import com.mygdx.pirategame.gameobjects.enemy.EnemyShip;
 import com.mygdx.pirategame.screen.GameScreen;
-
-import java.util.Random;
 
 /**
  * Generates random paths for ships and randomly paths between them
@@ -25,12 +23,10 @@ public class RandomPath extends WaitingPath {
         Random rnd = new Random();
 
         int tileWidth = (int) PirateGame.PPM;
-
         while (true) {
             // generate random position for ship to go
             int x = rnd.nextInt(2000) - 1000 + (int) (ship.b2body.getPosition().x * tileWidth);
             int y = rnd.nextInt(2000) - 1000 + (int) (ship.b2body.getPosition().y * tileWidth);
-
             // bounding the location
             if (x < 0) {
                 x = 0;

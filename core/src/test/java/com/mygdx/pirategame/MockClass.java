@@ -2,9 +2,12 @@ package com.mygdx.pirategame;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.mygdx.pirategame.pathfinding.PathFinder;
 import com.mygdx.pirategame.screen.GameScreen;
 import org.mockito.Mockito;
 import org.mockito.internal.util.reflection.Whitebox;
@@ -37,6 +40,24 @@ public class MockClass {
         GameScreen screen = Mockito.mock(GameScreen.class);
         
         Mockito.when(screen.getWorld()).thenReturn(new World(new Vector2(0, 0), true));
+
+        // mocking the map
+        TmxMapLoader mapLoader = new TmxMapLoader();
+        Mockito.when(screen.getMap()).thenReturn(mapLoader.load("map/map.tmx"));
+        Mockito.when(screen.getTileMapWidth()).thenReturn(128 * 64);
+        Mockito.when(screen.getTileMapHeight()).thenReturn(128 * 64);
+        Mockito.when(screen.getTileWidth()).thenReturn(64);
+
+        // mocking the path finder
+        Mockito.when(screen.getPathFinder()).thenReturn(new PathFinder(screen, 64));
+
+        return screen;
+    }
+
+    public static GameScreen mockGameScreenWithPlayer() {
+        GameScreen screen = mockGameScreen();
+
+        Mockito.when(screen.getPlayerPos()).thenReturn(new Vector2(13*64 / PirateGame.PPM, 11*64 / PirateGame.PPM));
 
         return screen;
     }
