@@ -63,6 +63,7 @@ public class GameScreen implements Screen {
     private static float accel = 0.1f;
     private static float shootingDelay = 0.5f;
     private float stateTime;
+    private float timeTornado;
 
     public static PirateGame game;
     private final OrthographicCamera camera;
@@ -107,7 +108,6 @@ public class GameScreen implements Screen {
     private final Random collegeRand = new Random();
 
     private GoldShop goldShop;
-    BitmapFont font;
     private static Label shopLabel;
 
     /**
@@ -188,13 +188,15 @@ public class GameScreen implements Screen {
         //Random power ups
         addPowerUps();
 
+        /*
         //Random tornado
         Tornados = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
             int[] loc = getRandomLocation();
-            //Add a coins at the random coords
+            //Add a tornado at the random coords
             Tornados.add(new Tornado(this, loc[0], loc[1]));
         }
+        */
 
         //Setting stage
         stage = new Stage(new ScreenViewport());
@@ -352,8 +354,6 @@ public class GameScreen implements Screen {
                 Gdx.app.exit();
             }
         });
-
-        font = new BitmapFont();
     }
 
     /**
@@ -434,12 +434,10 @@ public class GameScreen implements Screen {
                             closeShop();
                         } else if (gameStatus == GAME_RUNNING) {
                             openShop();
-
                         }
                     } else if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
                         if (gameStatus == GOLD_SHOP) {
                             closeShop();
-
                         }
                     }
                 } else {
@@ -501,7 +499,7 @@ public class GameScreen implements Screen {
 
         //Updates tornados
         for (int i = 0; i < Tornados.size(); i++) {
-            Tornados.get(i).update();
+            Tornados.get(i).update(dt);
         }
 
         //After a delay check if a college is destroyed. If not, if can fire
@@ -512,6 +510,18 @@ public class GameScreen implements Screen {
                 }
             }
             stateTime = 0;
+        }
+
+        timeTornado += dt;
+        // Once it has been 60 seconds, release a tornado
+        if (timeTornado > 60) {
+            // Release a tornado
+            int[] loc = getRandomLocation();
+            // Add a tornado at the random location
+            Tornados.add(new Tornado(this, loc[0], loc[1]));
+            System.out.println("Tornado Released");
+            // Reset timer to 0, every 60 seconds a tornado is released
+            timeTornado = 0;
         }
 
         hud.update(dt);
