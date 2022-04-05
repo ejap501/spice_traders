@@ -25,6 +25,7 @@ public class Tornado extends Entity {
     private Player player;
     public Body b2bodyTornado;
     public static boolean active = false;
+    private float timer;
 
     /**
      * Instantiates a new Tornado.
@@ -54,7 +55,12 @@ public class Tornado extends Entity {
     /**
      * Updates the tornado state.
      */
-    public void update() {
+    public void update(float dt) {
+        timer += dt;
+        // Once tornado has existed for a certain amount of time it is removed
+        if (timer > 40) {
+            setToDestroyed = true;
+        }
         /*
         if (distance > 10) {
             //Player.inTornadoRange = false;
@@ -83,7 +89,7 @@ public class Tornado extends Entity {
         //Sets collision boundaries
         FixtureDef fixtureDef = new FixtureDef();
         CircleShape shape = new CircleShape();
-        shape.setRadius(150 / PirateGame.PPM);
+        shape.setRadius(30 / PirateGame.PPM);
 
         // setting BIT identifier
         fixtureDef.filter.categoryBits = PirateGame.TORNADO_BIT;
@@ -95,7 +101,7 @@ public class Tornado extends Entity {
 
         // Create fixture for larger collision box whilst coin magnet is active
         // Disabled until coin magnet power up is collected
-        fixtureDef.shape.setRadius(450 / PirateGame.PPM);
+        fixtureDef.shape.setRadius(250 / PirateGame.PPM);
         b2bodyTornado.createFixture(fixtureDef).setUserData(this);
         //b2bodyTornado.setActive(false);
     }
@@ -105,7 +111,7 @@ public class Tornado extends Entity {
      */
     @Override
     public void entityContact() {
-        System.out.println("near");
+        //System.out.println("near");
         Player.inTornadoRange = true;
         /*
         if (active) {

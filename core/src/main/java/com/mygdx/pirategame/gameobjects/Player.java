@@ -53,8 +53,7 @@ public class Player extends Sprite {
         breakSound = Gdx.audio.newSound(Gdx.files.internal("sfx_and_music/wood-bump.mp3"));
         // Sound effect for cannonball hit
         cannonballHitSound = Gdx.audio.newSound(Gdx.files.internal("sfx_and_music/ship-hit.wav"));
-
-
+        
         // Sets cannonball array
         cannonBalls = new Array<>();
     }
@@ -96,7 +95,7 @@ public class Player extends Sprite {
             double tornadoDistance = GameScreen.getNearestTornado().getDistance();
 
             if (tornadoDistance > 8) {
-                System.out.println("far");
+                //System.out.println("far");
                 Player.inTornadoRange = false;
                 //Entity.tornadoContact();
 

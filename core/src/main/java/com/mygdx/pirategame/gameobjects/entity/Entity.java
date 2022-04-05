@@ -45,12 +45,4 @@ public abstract class Entity extends Sprite {
      */
     public void entityContact() {
     }
-    /*
-    public static void tornadoContact() {
-        if (tornadoActive) {
-            inTornadoRange = true;
-        }
-    }
-
-     */
 }
