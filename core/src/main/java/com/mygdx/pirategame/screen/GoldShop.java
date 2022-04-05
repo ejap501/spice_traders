@@ -132,7 +132,6 @@ public class GoldShop implements Screen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 display = false; // Stop the shop from being rendered
-
                 dispose();
                 GameScreen.gameStatus = GAME_RUNNING;
                 gameScreen.closeShop();

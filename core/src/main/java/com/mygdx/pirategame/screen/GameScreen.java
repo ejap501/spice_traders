@@ -871,15 +871,13 @@ public class GameScreen implements Screen {
     /**
      * Opens gold shop
      */
-    private void openShop() {
+    public void openShop() {
 
-        gameStatus = GOLD_SHOP;
 
         goldShop = new GoldShop(GameScreen.game, camera, this);
         goldShop.show();
-        pause();
         //table.setVisible(false);
-
+        gameStatus = GOLD_SHOP;
 
     }
 
@@ -887,7 +885,7 @@ public class GameScreen implements Screen {
      * Closes gold shop
      */
 
-    private void closeShop() {
+    public void closeShop() {
         goldShop = new GoldShop(GameScreen.game, camera, this);
         goldShop.dispose();
         resume();
