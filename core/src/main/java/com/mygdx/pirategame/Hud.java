@@ -162,11 +162,7 @@ public class Hud implements Disposable {
         timeCount += dt;
         coinLabel.setText(String.format("%03d", coins));
         if (timeCount >= 1) {
-            // Regen health every second
-            if (health != 100) {
-                health += 1;
-                healthLabel.setText(String.format("%02d", health));
-            }
+
             // Gain point every second
             score += 1;
             scoreLabel.setText(String.format("%03d", score));
