@@ -428,21 +428,23 @@ public class GameScreen implements Screen {
                 if (distance < college.getValue().getMetaData().getDistance()) {
                     //System.out.println(distance);
                     shopLabel.setVisible(true);
-                    System.out.println("on");
+                    System.out.println("in range point shop");
                     if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
                         if (gameStatus == GOLD_SHOP) {
                             closeShop();
                         } else if (gameStatus == GAME_RUNNING) {
                             openShop();
+
                         }
-                    }
-                    else if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+                    } else if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
                         if (gameStatus == GOLD_SHOP) {
                             closeShop();
+
                         }
                     }
                 } else {
-                    System.out.println("off");
+                    System.out.println("not in range of point shop");
+                    System.out.println(gameStatus);
                     shopLabel.setVisible(false);
                 }
             }
@@ -589,7 +591,8 @@ public class GameScreen implements Screen {
         }
 
         // draw the gold shop if it is open
-        if (goldShop != null && goldShop.display) {
+        if (goldShop != null && gameStatus == GOLD_SHOP) {
+
             goldShop.render(Gdx.graphics.getDeltaTime());
         }
 
@@ -849,7 +852,7 @@ public class GameScreen implements Screen {
      */
     @Override
     public void pause() {
-        gameStatus = GAME_PAUSED;
+        this.gameStatus = GAME_PAUSED;
     }
 
     /**
@@ -857,7 +860,7 @@ public class GameScreen implements Screen {
      */
     @Override
     public void resume() {
-        gameStatus = GAME_RUNNING;
+        this.gameStatus = GAME_RUNNING;
     }
 
     /**
@@ -882,24 +885,25 @@ public class GameScreen implements Screen {
      * Opens gold shop
      */
     private void openShop() {
-        goldShop = new GoldShop(GameScreen.game, camera, this);
-        goldShop.show();
-        pause();
-        table.setVisible(false);
 
         gameStatus = GOLD_SHOP;
+
+        goldShop = new GoldShop(GameScreen.game, camera, this);
+        goldShop.show();
+        goldShop.display = true;
+        table.setVisible(false);
+
     }
 
     /**
-     * Opens gold shop
+     * Closes gold shop
      */
     public void closeShop() {
-        goldShop = new GoldShop(GameScreen.game, camera, this);
         goldShop.dispose();
-        resume();
+        goldShop.display = false;
         table.setVisible(true);
+        resume();
 
-        gameStatus = GAME_RUNNING;
     }
 
     /**
@@ -946,5 +950,13 @@ public class GameScreen implements Screen {
     public HashMap<CollegeMetadata, College> getColleges() {
         return colleges;
 
+    }
+
+    /**
+     * Get Hud object
+     * @return Hud object which handles scores, coins etc.
+     */
+    public Hud getHud(){
+        return hud;
     }
 }
