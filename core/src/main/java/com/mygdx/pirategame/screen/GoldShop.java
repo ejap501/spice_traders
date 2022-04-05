@@ -22,7 +22,10 @@ import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
+
+import static com.mygdx.pirategame.screen.GameScreen.GAME_RUNNING;
 import static com.badlogic.gdx.math.MathUtils.ceil;
+
 
 public class GoldShop implements Screen {
 
@@ -129,6 +132,9 @@ public class GoldShop implements Screen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 display = false; // Stop the shop from being rendered
+
+                dispose();
+                GameScreen.gameStatus = GAME_RUNNING;
                 gameScreen.closeShop();
             }
         });
