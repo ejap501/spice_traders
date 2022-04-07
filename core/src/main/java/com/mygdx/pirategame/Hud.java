@@ -233,6 +233,15 @@ public class Hud implements Disposable {
     }
 
     /**
+     * Update label which displays number of coins
+     * Called from GoldShop, when something has been purchased, to show new balance
+     */
+    public static void updateCoins(){
+        coinLabel.setText(String.format("%03d", coins));
+    }
+
+
+    /**
      * Returns value of timer for coin magnet power up
      *
      * @return coinMagnet : returns timer value

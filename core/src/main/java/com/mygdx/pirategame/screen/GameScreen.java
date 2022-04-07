@@ -990,6 +990,10 @@ public class GameScreen implements Screen {
 
     }
 
+    public ArrayList<EnemyShip> getEnemyShips(){
+        return ships;
+    }
+
     /**
      * Get Hud object
      * @return Hud object which handles scores, coins etc.
