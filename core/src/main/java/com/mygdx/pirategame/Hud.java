@@ -160,16 +160,15 @@ public class Hud implements Disposable {
      */
     public void update(float dt) {
         timeCount += dt;
+        coinLabel.setText(String.format("%03d", coins));
         if (timeCount >= 1) {
-            // Regen health every second
-            if (health != 100) {
-                health += 1;
-                healthLabel.setText(String.format("%02d", health));
-            }
+
             // Gain point every second
             score += 1;
             scoreLabel.setText(String.format("%03d", score));
             timeCount = 0;
+
+
 
             // Checks if each power up has been collected and adds it to display
             if (coinMagnet > 0) {
@@ -232,6 +231,15 @@ public class Hud implements Disposable {
             SkillTreeScreen.pointsCheck(score);
         }
     }
+
+    /**
+     * Update label which displays number of coins
+     * Called from GoldShop, when something has been purchased, to show new balance
+     */
+    public static void updateCoins(){
+        coinLabel.setText(String.format("%03d", coins));
+    }
+
 
     /**
      * Returns value of timer for coin magnet power up

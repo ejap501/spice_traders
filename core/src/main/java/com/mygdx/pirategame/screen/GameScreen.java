@@ -3,9 +3,11 @@ package com.mygdx.pirategame.screen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -17,6 +19,7 @@ import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -61,6 +64,7 @@ public class GameScreen implements Screen {
     private static float accel = 0.1f;
     private static float shootingDelay = 0.5f;
     private float stateTime;
+    private float timeTornado;
 
     public static PirateGame game;
     private final OrthographicCamera camera;
@@ -79,15 +83,16 @@ public class GameScreen implements Screen {
     private static ArrayList<EnemyShip> ships = new ArrayList<>();
     private static ArrayList<SeaMonster> monsters = new ArrayList<>();
     private static ArrayList<Coin> Coins = new ArrayList<>();
-
     private static ArrayList<PowerUp> PowerUps = new ArrayList<>();
+    private static ArrayList<Tornado> Tornados = new ArrayList<>();
+
     private final AvailableSpawn invalidSpawn = new AvailableSpawn();
     private final Hud hud;
 
-
     public static final int GAME_RUNNING = 0;
     public static final int GAME_PAUSED = 1;
-    private static int gameStatus;
+    public static final int GOLD_SHOP = 2;
+    public static int gameStatus;
 
     private final Texture tutorialTexture;
     private final Sprite tutorials;
@@ -104,6 +109,7 @@ public class GameScreen implements Screen {
     private final Random collegeRand = new Random();
 
     private GoldShop goldShop;
+    private static Label shopLabel;
 
     /**
      * Initialises the Game Screen,
@@ -173,14 +179,12 @@ public class GameScreen implements Screen {
             ships.add(new EnemyShip(this, loc[0], loc[1], "college/Ships/unaligned_ship.png", null));
         }
 
-
-        monsters.add(new SeaMonster(this, 30, 50));
         //Random sea monsters
-        /*for (int i = 0; i < 20; i++) {
+        for (int i = 0; i < 7; i++) {
             int[] loc = getRandomLocation();
-            //Add a ship at the random coords
+            //Add a sea monster at the random coords
             monsters.add(new SeaMonster(this, loc[0], loc[1]));
-        }*/
+        }
 
         //Random coins
         Coins = new ArrayList<>();
@@ -190,13 +194,21 @@ public class GameScreen implements Screen {
             Coins.add(new Coin(this, loc[0], loc[1]));
         }
 
+        //Random power ups
         addPowerUps();
+
+        /*
+        //Random tornado
+        Tornados = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
+            int[] loc = getRandomLocation();
+            //Add a tornado at the random coords
+            Tornados.add(new Tornado(this, loc[0], loc[1]));
+        }
+        */
 
         //Setting stage
         stage = new Stage(new ScreenViewport());
-
-        //Setting the college that can currently be attacked
-        nextCollege();
     }
 
     /**
@@ -399,30 +411,51 @@ public class GameScreen implements Screen {
             }
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-            if (gameStatus == GAME_PAUSED) {
-                resume();
-                table.setVisible(true);
-                pauseTable.setVisible(false);
-            } else {
-                table.setVisible(false);
-                pauseTable.setVisible(true);
-                pause();
+            if (gameStatus != GOLD_SHOP) {
+                if (gameStatus == GAME_PAUSED) {
+                    resume();
+                    table.setVisible(true);
+                    pauseTable.setVisible(false);
+                } else {
+                    table.setVisible(false);
+                    pauseTable.setVisible(true);
+                    pause();
+                }
             }
         }
 
         Body body = getPlayer().b2body;
         Vector2 position = body.getPosition();
+        shopLabel = new Label("Press \"E\" to enter the Gold Shop", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+        Table table1 = new Table(); // Shop text
+        table1.add(shopLabel).padTop(20).top();
+        table1.top();
+        table1.setFillParent(true);
         for (Map.Entry<CollegeMetadata, College> college : colleges.entrySet()) {
             if (college.getValue().getMetaData().isPlayer()) {
                 float distance = position.dst(college.getValue().getMetaData().getCentrePosition());
                 if (distance < college.getValue().getMetaData().getDistance()) {
+                    //System.out.println(distance);
+                    shopLabel.setVisible(true);
+
                     if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
-                        System.out.println("close");
+                        if (gameStatus == GOLD_SHOP) {
+                            closeShop();
+                        } else if (gameStatus == GAME_RUNNING) {
+                            openShop();
+                        }
+                    } else if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+                        if (gameStatus == GOLD_SHOP) {
+                            closeShop();
+                        }
                     }
+                } else {
+
+                    shopLabel.setVisible(false);
                 }
             }
         }
-        System.out.println(String.format("%f, %f", player.getX(), player.getY()));
+        stage.addActor(table1);
     }
 
     /**
@@ -447,11 +480,6 @@ public class GameScreen implements Screen {
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
             tutorials.setAlpha(0);
             tutorialTexture.dispose();
-        }
-
-        if (Gdx.input.isKeyPressed(Input.Keys.H) && goldShop == null) {
-            goldShop = new GoldShop(GameScreen.game, camera, this);
-            goldShop.show();
         }
 
         // Clears gold shop instance
@@ -482,6 +510,12 @@ public class GameScreen implements Screen {
         for (int i = 0; i < PowerUps.size(); i++) {
             PowerUps.get(i).update();
         }
+
+        //Updates tornados
+        for (int i = 0; i < Tornados.size(); i++) {
+            Tornados.get(i).update(dt);
+        }
+
         //After a delay check if a college is destroyed. If not, if can fire
         if (stateTime > 1) {
             for (CollegeMetadata college : CollegeMetadata.values()) {
@@ -490,6 +524,18 @@ public class GameScreen implements Screen {
                 }
             }
             stateTime = 0;
+        }
+
+        timeTornado += dt;
+        // Once it has been 60 seconds, release a tornado
+        if (timeTornado > 60) {
+            // Release a tornado
+            int[] loc = getRandomLocation();
+            // Add a tornado at the random location
+            Tornados.add(new Tornado(this, loc[0], loc[1]));
+            System.out.println("Tornado Released");
+            // Reset timer to 0, every 60 seconds a tornado is released
+            timeTornado = 0;
         }
 
         hud.update(dt);
@@ -537,6 +583,11 @@ public class GameScreen implements Screen {
             PowerUps.get(i).draw(game.batch);
         }
 
+        //Renders tornados
+        for (int i = 0; i < Tornados.size(); i++) {
+            Tornados.get(i).draw(game.batch);
+        }
+
         //Renders colleges
         player.draw(game.batch);
         for (Map.Entry<CollegeMetadata, College> college : colleges.entrySet()) {
@@ -574,7 +625,8 @@ public class GameScreen implements Screen {
         }
 
         // draw the gold shop if it is open
-        if (goldShop != null && goldShop.display) {
+        if (goldShop != null && gameStatus == GOLD_SHOP) {
+
             goldShop.render(Gdx.graphics.getDeltaTime());
         }
 
@@ -834,7 +886,7 @@ public class GameScreen implements Screen {
      */
     @Override
     public void pause() {
-        gameStatus = GAME_PAUSED;
+        this.gameStatus = GAME_PAUSED;
     }
 
     /**
@@ -842,7 +894,50 @@ public class GameScreen implements Screen {
      */
     @Override
     public void resume() {
-        gameStatus = GAME_RUNNING;
+        this.gameStatus = GAME_RUNNING;
+    }
+
+    /**
+     * Opens gold shop
+     */
+    public void openShop() {
+
+
+        goldShop = new GoldShop(GameScreen.game, camera, this);
+        goldShop.show();
+        //table.setVisible(false);
+        gameStatus = GOLD_SHOP;
+
+    }
+
+    /**
+     * Closes gold shop
+     */
+
+    public void closeShop() {
+        goldShop = new GoldShop(GameScreen.game, camera, this);
+        goldShop.dispose();
+        resume();
+        //table.setVisible(true);
+
+    }
+
+    /**
+     * Finds the nearest Tornado to the Player
+     *
+     * @return The nearest Tornado
+     */
+    public static Tornado getNearestTornado() {
+        int nearest = 0;
+        double nearestDistance = 100000;
+        for (int i = 0; i < Tornados.size(); i++) {
+            double currentDistance = Tornados.get(i).getDistance();
+            if (currentDistance < nearestDistance) {
+                nearest = i;
+                nearestDistance = currentDistance;
+            }
+        }
+        return Tornados.get(nearest);
     }
 
     /**
@@ -889,5 +984,17 @@ public class GameScreen implements Screen {
     public HashMap<CollegeMetadata, College> getColleges() {
         return colleges;
 
+    }
+
+    public ArrayList<EnemyShip> getEnemyShips(){
+        return ships;
+    }
+
+    /**
+     * Get Hud object
+     * @return Hud object which handles scores, coins etc.
+     */
+    public Hud getHud(){
+        return hud;
     }
 }
