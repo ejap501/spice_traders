@@ -1,13 +1,11 @@
 package com.mygdx.pirategame.gameobjects.enemy;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -23,7 +21,6 @@ import com.mygdx.pirategame.pathfinding.PathFinder;
 import com.mygdx.pirategame.pathfinding.pathManager.AttackPath;
 import com.mygdx.pirategame.pathfinding.pathManager.PathManager;
 import com.mygdx.pirategame.pathfinding.pathManager.PatrolPath;
-import com.mygdx.pirategame.pathfinding.pathManager.RandomPath;
 import com.mygdx.pirategame.screen.GameScreen;
 
 import java.util.ArrayList;
@@ -33,14 +30,16 @@ public class SeaMonster extends Enemy {
 
     public static final int COLLISIONRADIUS = 100;
     public static final int COLLISIONOFFSET = 15;
-    public static boolean movement = false;
-    public static boolean fire = true;
+    public boolean movement = false;
+    public boolean fire = true;
+    float angle;
 
-    private final Sound destroy;
-    private final Sound hit;
+    private static Sound destroy;
+    private static Sound hit;
     private Array<CollegeFire> projectiles;
+    private static Texture waterSlashTexture;
 
-    private PathManager pathManager;
+    private PathManager pathManager = null;
 
     /**
      * used to delay pathfinding when the ship collides with something
@@ -58,12 +57,12 @@ public class SeaMonster extends Enemy {
      */
     public SeaMonster(GameScreen screen, float x, float y) {
         super(screen, x, y);
-
         //Set audios
         destroy = Gdx.audio.newSound(Gdx.files.internal("sfx_and_music/ship-explosion-2.wav"));
         hit = Gdx.audio.newSound(Gdx.files.internal("sfx_and_music/ship-hit.wav"));
 
         projectiles = new Array<>();
+        waterSlashTexture = new Texture(Gdx.files.internal("sea_monster/waterslash.png"));
 
         // use idle animation by default
         loadAnimation();
@@ -72,20 +71,16 @@ public class SeaMonster extends Enemy {
         setBounds(0, 0, 300 / PirateGame.PPM, 300 / PirateGame.PPM);
         setOrigin(90 / PirateGame.PPM, COLLISIONRADIUS / PirateGame.PPM);
 
-        damage = 20;
-
-        // use placeholder enemy ship to get path for sea monster
-        //this.pathManager = new RandomPath(this, screen);
-
+        damage = 5;
     }
 
     /**
      * Loads the textures used in the movement animations
      */
-    static Animation idleAnimation;
-    static Animation movingAnimation;
-    static TextureRegion current_frame;
-    static float state_time;
+    private static Animation idleAnimation;
+    private static Animation movingAnimation;
+    private TextureRegion current_frame;
+    private float state_time = 0f;
 
     public static void loadAnimation() {
         int idleCols = 7;
@@ -100,19 +95,17 @@ public class SeaMonster extends Enemy {
         TextureRegion[] moving_animation_frames = new TextureRegion[movingCols];
         int index = 0;
 
+        // idle sprite sheet has 7 frames and moving sprite sheet has 8 frames
         for (int x=0; x<idleCols; x++) {
-            // idle sprite sheet has 7 frames and moving sprite sheet has 8 frames
             idle_animation_frames[index++] = idleTmp[0][x];
         }
         index = 0;
         for (int x=0; x<movingCols; x++) {
-            // idle sprite sheet has 7 frames and moving sprite sheet has 8 frames
             moving_animation_frames[index++] = movingTmp[0][x];
         }
 
         idleAnimation = new Animation(0.1f, idle_animation_frames);
         movingAnimation = new Animation(0.1f, moving_animation_frames);
-        state_time = 0f;
         idleAnimation.setPlayMode(Animation.PlayMode.LOOP);
         movingAnimation.setPlayMode(Animation.PlayMode.LOOP);
     }
@@ -218,7 +211,8 @@ public class SeaMonster extends Enemy {
      * Shoot projectiles
      */
     public void fire() {
-        projectiles.add(new CollegeFire(screen, b2body.getPosition().x, b2body.getPosition().y));
+
+        projectiles.add(new CollegeFire(screen, waterSlashTexture, b2body.getPosition().x, b2body.getPosition().y, 120, 120, angle));
     }
 
     public void setPathManager(PathManager pathManager) {
@@ -262,7 +256,7 @@ public class SeaMonster extends Enemy {
         if (movement) {
             // rotate sea monster when in moving animation
             setPosition(b2body.getPosition().x - getWidth() / 4f, b2body.getPosition().y - getHeight() / 2f);
-            float angle = (float) Math.atan2(b2body.getLinearVelocity().y, b2body.getLinearVelocity().x);
+            angle = (float) Math.atan2(b2body.getLinearVelocity().y, b2body.getLinearVelocity().x);
             b2body.setTransform(b2body.getWorldCenter(), angle - ((float) Math.PI) / 2.0f);
             setRotation((float) (b2body.getAngle() * 180 / Math.PI) + 90);
         }
@@ -297,7 +291,8 @@ public class SeaMonster extends Enemy {
             movement = true;
         }
 
-        if (path == null || path.isEmpty() && pathManager != null) {
+        // If there is no path set, generate a new one
+        if ((path == null || path.isEmpty()) && pathManager != null) {
             generateNewPath();
             return;
         }
@@ -306,6 +301,8 @@ public class SeaMonster extends Enemy {
 
             // updating the pathing manager
             pathManager.update(dt);
+
+            if (path  == null) return;
 
             if (path.isEmpty()) return;
             Checkpoint cp = path.get(0);
@@ -343,7 +340,6 @@ public class SeaMonster extends Enemy {
             //Render health bar
             bar.render(batch);
 
-            System.out.println(movement);
             // Draw each frame in the animation
             state_time += Gdx.graphics.getDeltaTime();
             if (movement) current_frame = (TextureRegion) movingAnimation.getKeyFrame(state_time, true);
@@ -374,5 +370,8 @@ public class SeaMonster extends Enemy {
     }
 
     public static void dispose(){
+        waterSlashTexture.dispose();
+        hit.dispose();
+        destroy.dispose();
     }
 }

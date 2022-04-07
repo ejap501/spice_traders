@@ -179,16 +179,12 @@ public class GameScreen implements Screen {
             ships.add(new EnemyShip(this, loc[0], loc[1], "college/Ships/unaligned_ship.png", null));
         }
 
-
-        monsters.add(new SeaMonster(this, 30, 30));
-        monsters.add(new SeaMonster(this, 35, 30));
-        //monsters.add(new SeaMonster(this, 50, 30));
         //Random sea monsters
-        /*for (int i = 0; i < 7; i++) {
+        for (int i = 0; i < 7; i++) {
             int[] loc = getRandomLocation();
-            //Add a ship at the random coords
+            //Add a sea monster at the random coords
             monsters.add(new SeaMonster(this, loc[0], loc[1]));
-        }*/
+        }
 
         //Random coins
         Coins = new ArrayList<>();
