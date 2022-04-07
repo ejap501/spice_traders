@@ -32,6 +32,7 @@ import com.mygdx.pirategame.gameobjects.Player;
 import com.mygdx.pirategame.gameobjects.enemy.College;
 import com.mygdx.pirategame.gameobjects.enemy.CollegeMetadata;
 import com.mygdx.pirategame.gameobjects.enemy.EnemyShip;
+import com.mygdx.pirategame.gameobjects.enemy.SeaMonster;
 import com.mygdx.pirategame.gameobjects.entity.Coin;
 import com.mygdx.pirategame.pathfinding.PathFinder;
 
@@ -80,13 +81,13 @@ public class GameScreen implements Screen {
     private final Player player;
     private static HashMap<CollegeMetadata, College> colleges = new HashMap<>();
     private static ArrayList<EnemyShip> ships = new ArrayList<>();
+    private static ArrayList<SeaMonster> monsters = new ArrayList<>();
     private static ArrayList<Coin> Coins = new ArrayList<>();
     private static ArrayList<PowerUp> PowerUps = new ArrayList<>();
     private static ArrayList<Tornado> Tornados = new ArrayList<>();
 
     private final AvailableSpawn invalidSpawn = new AvailableSpawn();
     private final Hud hud;
-
 
     public static final int GAME_RUNNING = 0;
     public static final int GAME_PAUSED = 1;
@@ -165,6 +166,7 @@ public class GameScreen implements Screen {
         colleges.put(CollegeMetadata.GOODRICKE, new College(this, CollegeMetadata.GOODRICKE, 8, invalidSpawn));
 
         ships = new ArrayList<>();
+        monsters = new ArrayList<>();
 
         for (CollegeMetadata college : CollegeMetadata.values()) {
             ships.addAll(getCollege(college).fleet);
@@ -175,6 +177,13 @@ public class GameScreen implements Screen {
             int[] loc = getRandomLocation();
             //Add a ship at the random coords
             ships.add(new EnemyShip(this, loc[0], loc[1], "college/Ships/unaligned_ship.png", null));
+        }
+
+        //Random sea monsters
+        for (int i = 0; i < 7; i++) {
+            int[] loc = getRandomLocation();
+            //Add a sea monster at the random coords
+            monsters.add(new SeaMonster(this, loc[0], loc[1]));
         }
 
         //Random coins
@@ -488,6 +497,11 @@ public class GameScreen implements Screen {
             ships.get(i).update(dt);
         }
 
+        //Update ships
+        for (int i = 0; i < monsters.size(); i++) {
+            monsters.get(i).update(dt);
+        }
+
         //Updates coin
         for (int i = 0; i < Coins.size(); i++) {
             Coins.get(i).update();
@@ -603,6 +617,11 @@ public class GameScreen implements Screen {
                 }
             }
             ships.get(i).draw(game.batch);
+        }
+
+        //Update ships
+        for (int i = 0; i < monsters.size(); i++) {
+            monsters.get(i).draw(game.batch);
         }
 
         // draw the gold shop if it is open

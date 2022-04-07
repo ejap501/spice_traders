@@ -5,6 +5,7 @@ import java.util.Random;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.pirategame.PirateGame;
 import com.mygdx.pirategame.gameobjects.enemy.EnemyShip;
+import com.mygdx.pirategame.gameobjects.enemy.SeaMonster;
 import com.mygdx.pirategame.screen.GameScreen;
 
 /**
@@ -25,8 +26,10 @@ public class RandomPath extends WaitingPath {
         int tileWidth = (int) PirateGame.PPM;
         while (true) {
             // generate random position for ship to go
+
             int x = rnd.nextInt(2000) - 1000 + (int) (ship.b2body.getPosition().x * tileWidth);
             int y = rnd.nextInt(2000) - 1000 + (int) (ship.b2body.getPosition().y * tileWidth);
+
             // bounding the location
             if (x < 0) {
                 x = 0;
