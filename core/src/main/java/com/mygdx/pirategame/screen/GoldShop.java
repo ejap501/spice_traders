@@ -17,6 +17,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.mygdx.pirategame.Hud;
 import com.mygdx.pirategame.PirateGame;
+import com.mygdx.pirategame.gameobjects.enemy.College;
+import com.mygdx.pirategame.gameobjects.enemy.CollegeMetadata;
+import com.mygdx.pirategame.gameobjects.enemy.EnemyShip;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -25,6 +28,7 @@ import java.util.List;
 
 import static com.mygdx.pirategame.screen.GameScreen.GAME_RUNNING;
 import static com.badlogic.gdx.math.MathUtils.ceil;
+import static com.mygdx.pirategame.screen.GameScreen.game;
 
 
 public class GoldShop implements Screen {
@@ -48,13 +52,13 @@ public class GoldShop implements Screen {
         //0 = enabled, 1 = disabled
         states.add(0);
         states.add(0);
-        states.add(1);
+        states.add(0);
         states.add(1);
     }
 
     private static TextButton fasterCannonBtn;
     private TextButton healthBoostBtn;
-    private TextButton item3;
+    private TextButton increaseCannonDamageBtn;
     private TextButton item4;
 
     public GoldShop(PirateGame pirateGame, OrthographicCamera camera, GameScreen gameScreen) {
@@ -104,9 +108,9 @@ public class GoldShop implements Screen {
         if (states.get(1) == 1){
             healthBoostBtn.setDisabled(true);
         }
-        item3 = new TextButton("????????????", skin);
+        increaseCannonDamageBtn = new TextButton("Increase Cannon Damage +20%", skin);
         if (states.get(2) == 1){
-            item3.setDisabled(true);
+            increaseCannonDamageBtn.setDisabled(true);
         }
 
         item4 = new TextButton("????????????", skin);
@@ -119,7 +123,7 @@ public class GoldShop implements Screen {
         // Item price labels
         final Label unlock100 = new Label("50 gold",skin);
         final Label unlock200 = new Label("75 gold",skin);
-        final Label unlock300 = new Label("300 gold",skin);
+        final Label unlock300 = new Label("150 gold",skin);
         final Label unlock400 = new Label("400 gold",skin);
         final Label goldShop = new Label("Gold Shop",skin);
         goldShop.setFontScale(1.2f);
@@ -153,6 +157,13 @@ public class GoldShop implements Screen {
             }
         });
 
+        increaseCannonDamageBtn.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                purchaseIncreaseCannonDamage();
+            }
+        });
+
         //add buttons and labels to main table
         table.row().pad(100, 0, 10, 0);
         table.add(goldShop);
@@ -163,7 +174,7 @@ public class GoldShop implements Screen {
         table.add(healthBoostBtn).width(stage.getCamera().viewportWidth / 5f).height(stage.getCamera().viewportHeight / 9f);
         table.add(unlock200);
         table.row().pad(10, 0, 10, 0);
-        table.add(item3).width(stage.getCamera().viewportWidth / 5f).height(stage.getCamera().viewportHeight / 9f);
+        table.add(increaseCannonDamageBtn).width(stage.getCamera().viewportWidth / 5f).height(stage.getCamera().viewportHeight / 9f);
         table.add(unlock300);
         table.row().pad(10, 0, 10, 0);
         table.add(item4).width(stage.getCamera().viewportWidth / 5f).height(stage.getCamera().viewportHeight / 9f);
@@ -195,7 +206,7 @@ public class GoldShop implements Screen {
             // purchase this powerup multiple times
             if (currentVelocity * 1.2f <= 12) {
                 Hud.setCoins(Hud.getCoins() - fasterCannonPrice);
-                gameScreen.getHud().update(0);
+                Hud.updateCoins();
                 int newVelocity = ceil(currentVelocity * 1.2f);
                 gameScreen.getPlayer().setCannonVelocity(newVelocity);
                 playPurchaseSound();
@@ -213,11 +224,12 @@ public class GoldShop implements Screen {
      * Method which handles purchase of health boost
      */
     public void purchaseHealthBoost(){
-        int healthBoostPrice = 75;
+        int healthBoostPrice = 75; 
 
         //Check if player has enough coins
         if (Hud.getCoins() >= healthBoostPrice){
             Hud.setCoins(Hud.getCoins() - healthBoostPrice);
+            Hud.updateCoins();
             Hud.changeHealth(50);
             playPurchaseSound();
             JOptionPane.showMessageDialog(null, "You have received a health boost of 50!", "Success", JOptionPane.INFORMATION_MESSAGE);
@@ -225,6 +237,38 @@ public class GoldShop implements Screen {
             JOptionPane.showMessageDialog(null, "You do not have enough coins to purchase this boost", "Error", JOptionPane.ERROR_MESSAGE);
         }
 
+    }
+
+    public void purchaseIncreaseCannonDamage(){
+        int price = 150;
+
+        if (Hud.getCoins() >= price){
+            Hud.setCoins(Hud.getCoins() - price);
+            Hud.updateCoins();
+
+            /**
+             * Note we use the round function  when increasing damage.
+             * Increasing by 20% will likely result in a decimal value,
+             * so we round to give us an int (which is the variable type
+             * of damage)
+             */
+
+            // Iterate through each college and increase damage
+            for (College col : gameScreen.getColleges().values()){
+
+                col.damage = Math.round(col.damage * 1.2f);
+            }
+
+            // Iterate through each enemy ship and increase damage
+            for (EnemyShip ship: gameScreen.getEnemyShips()){
+                ship.damage = Math.round(ship.damage * 1.2f);
+            }
+
+            playPurchaseSound();
+            JOptionPane.showMessageDialog(null, "Cannon damage has been increased by 20%", "Success", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(null, "You do not have enough coins to purchase this powerup", "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     /**
