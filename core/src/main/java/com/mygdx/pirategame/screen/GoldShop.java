@@ -47,13 +47,13 @@ public class GoldShop implements Screen {
     static {
         //0 = enabled, 1 = disabled
         states.add(0);
-        states.add(1);
+        states.add(0);
         states.add(1);
         states.add(1);
     }
 
-    private static TextButton item1;
-    private TextButton item2;
+    private static TextButton fasterCannonBtn;
+    private TextButton healthBoostBtn;
     private TextButton item3;
     private TextButton item4;
 
@@ -94,15 +94,15 @@ public class GoldShop implements Screen {
 
 
         //create skill tree buttons
-        item1 = new TextButton("Cannon ball speed + 20%", skin);
+        fasterCannonBtn = new TextButton("Cannon ball speed +20%", skin);
 
         //Sets enabled or disabled
         if (states.get(0) == 1){
-            item1.setDisabled(true);
+            fasterCannonBtn.setDisabled(true);
         }
-        item2 = new TextButton("????????????", skin);
+        healthBoostBtn = new TextButton("Health Boost +50", skin);
         if (states.get(1) == 1){
-            item2.setDisabled(true);
+            healthBoostBtn.setDisabled(true);
         }
         item3 = new TextButton("????????????", skin);
         if (states.get(2) == 1){
@@ -118,7 +118,7 @@ public class GoldShop implements Screen {
 
         // Item price labels
         final Label unlock100 = new Label("50 gold",skin);
-        final Label unlock200 = new Label("200 gold",skin);
+        final Label unlock200 = new Label("75 gold",skin);
         final Label unlock300 = new Label("300 gold",skin);
         final Label unlock400 = new Label("400 gold",skin);
         final Label goldShop = new Label("Gold Shop",skin);
@@ -138,11 +138,18 @@ public class GoldShop implements Screen {
             }
         });
 
-        item1.addListener(new ChangeListener() {
+        fasterCannonBtn.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                // Purchase better cannon
-                purchaseBetterCannon();
+                // Purchase faster cannon
+                purchaseFasterCannon();
+            }
+        });
+
+        healthBoostBtn.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                purchaseHealthBoost();
             }
         });
 
@@ -150,10 +157,10 @@ public class GoldShop implements Screen {
         table.row().pad(100, 0, 10, 0);
         table.add(goldShop);
         table.row().pad(10, 0, 10, 0);
-        table.add(item1).width(stage.getCamera().viewportWidth / 5f).height(stage.getCamera().viewportHeight / 9f);
+        table.add(fasterCannonBtn).width(stage.getCamera().viewportWidth / 5f).height(stage.getCamera().viewportHeight / 9f);
         table.add(unlock100);
         table.row().pad(10, 0, 10, 0);
-        table.add(item2).width(stage.getCamera().viewportWidth / 5f).height(stage.getCamera().viewportHeight / 9f);
+        table.add(healthBoostBtn).width(stage.getCamera().viewportWidth / 5f).height(stage.getCamera().viewportHeight / 9f);
         table.add(unlock200);
         table.row().pad(10, 0, 10, 0);
         table.add(item3).width(stage.getCamera().viewportWidth / 5f).height(stage.getCamera().viewportHeight / 9f);
@@ -176,18 +183,18 @@ public class GoldShop implements Screen {
     }
 
     /**
-     * Method which handles purchase of better cannon
+     * Method which handles purchase of Faster cannon
      */
-    public void purchaseBetterCannon(){
-        int betterCannonPrice = 50;
+    public void purchaseFasterCannon(){
+        int fasterCannonPrice = 50;
 
         // Check player has enough coins
-        if (Hud.getCoins() >= betterCannonPrice){
+        if (Hud.getCoins() >= fasterCannonPrice){
             int currentVelocity = gameScreen.getPlayer().getCannonVelocity();
             // Limit max velocity of cannon to 12, as players can
             // purchase this powerup multiple times
             if (currentVelocity * 1.2f <= 12) {
-                Hud.setCoins(Hud.getCoins() - betterCannonPrice);
+                Hud.setCoins(Hud.getCoins() - fasterCannonPrice);
                 gameScreen.getHud().update(0);
                 int newVelocity = ceil(currentVelocity * 1.2f);
                 gameScreen.getPlayer().setCannonVelocity(newVelocity);
@@ -198,6 +205,24 @@ public class GoldShop implements Screen {
             }
         } else {
             JOptionPane.showMessageDialog(null, "You do not have enough coins to purchase this powerup", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+
+    }
+
+    /**
+     * Method which handles purchase of health boost
+     */
+    public void purchaseHealthBoost(){
+        int healthBoostPrice = 75;
+
+        //Check if player has enough coins
+        if (Hud.getCoins() >= healthBoostPrice){
+            Hud.setCoins(Hud.getCoins() - healthBoostPrice);
+            Hud.changeHealth(50);
+            playPurchaseSound();
+            JOptionPane.showMessageDialog(null, "You have received a health boost of 50!", "Success", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(null, "You do not have enough coins to purchase this boost", "Error", JOptionPane.ERROR_MESSAGE);
         }
 
     }
