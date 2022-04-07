@@ -221,10 +221,10 @@ public class GoldShop implements Screen {
     }
 
     /**
-     * Method which handles purchase of health boost
+     * Method which handles purchase of health boost (i.e. repairs ship)
      */
     public void purchaseHealthBoost(){
-        int healthBoostPrice = 75; 
+        int healthBoostPrice = 75;
 
         //Check if player has enough coins
         if (Hud.getCoins() >= healthBoostPrice){

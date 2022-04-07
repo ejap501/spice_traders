@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.mygdx.pirategame.Hud;
 import com.mygdx.pirategame.PirateGame;
 
 /**
@@ -64,6 +65,13 @@ public class VictoryScreen implements Screen {
             table.add(victoryMsg).center();
             table.row();
             table.add(victoryMsg2).center().padTop(20);
+
+            table.row();
+            Integer points = Hud.getPoints();
+            Label pointsMsg = new Label("You scored " + points.toString() + " points!", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+            pointsMsg.setFontScale(3f);
+            table.add(pointsMsg).center().padTop(20);
+
             stage.addActor(table);
 
             //Create return button
