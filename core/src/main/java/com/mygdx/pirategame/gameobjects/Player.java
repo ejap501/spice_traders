@@ -1,14 +1,18 @@
 package com.mygdx.pirategame.gameobjects;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.pirategame.PirateGame;
+import com.mygdx.pirategame.gameobjects.entity.Entity;
+import com.mygdx.pirategame.gameobjects.entity.Tornado;
 import com.mygdx.pirategame.screen.GameScreen;
 
 /**
@@ -24,6 +28,9 @@ public class Player extends Sprite {
     private Sound breakSound, cannonballHitSound;
     private Array<CannonFire> cannonBalls;
     private float timeFired = 0;
+    private int cannonVelocity = 5;
+
+    public static boolean inTornadoRange = false;
 
     /**
      * Instantiates a new Player. Constructor only called once per game
@@ -46,8 +53,7 @@ public class Player extends Sprite {
         breakSound = Gdx.audio.newSound(Gdx.files.internal("sfx_and_music/wood-bump.mp3"));
         // Sound effect for cannonball hit
         cannonballHitSound = Gdx.audio.newSound(Gdx.files.internal("sfx_and_music/ship-hit.wav"));
-
-
+        
         // Sets cannonball array
         cannonBalls = new Array<>();
     }
@@ -69,6 +75,41 @@ public class Player extends Sprite {
             ball.update(dt);
             if(ball.isDestroyed())
                 cannonBalls.removeValue(ball, true);
+        }
+
+        if (inTornadoRange) {
+            System.out.println("close");
+            // move player towards tornado if in range
+
+            // position of target to move towards
+            float targetX = 0;
+            float targetY = 0;
+
+            // position of player
+            float sourceX = b2body.getPosition().x;
+            float sourceY = b2body.getPosition().y;
+
+            // If the tornado is close to the player, move away from it
+            double distance = Math.sqrt(Math.pow(targetX - b2body.getWorldCenter().x, 2) + Math.pow(targetY - b2body.getWorldCenter().y, 2));
+
+            double tornadoDistance = GameScreen.getNearestTornado().getDistance();
+
+            if (tornadoDistance > 8) {
+                //System.out.println("far");
+                Player.inTornadoRange = false;
+                //Entity.tornadoContact();
+
+            }
+            // Uses a triangle to calculate the new trajectory
+            double newAngle = Math.atan2(targetY - sourceY, targetX - sourceX);
+            float velocity = 0.1f;
+            float velX = (float) (Math.cos(newAngle) * velocity);
+            float velY = (float) (Math.sin(newAngle) * velocity);
+
+            // move the sprite then the collider
+            setPosition(sourceX + velX, sourceY + velY);
+            Vector2 newPos = new Vector2(sourceX, sourceY).add(new Vector2(velX, velY));
+            b2body.setTransform(newPos, 0);
         }
 
         // Add delay timer between shots
@@ -121,7 +162,7 @@ public class Player extends Sprite {
                 | PirateGame.ABSORPTION_HEART_BIT | PirateGame.FASTER_SHOOTING_BIT
                 | PirateGame.FREEZE_ENEMY_BIT | PirateGame.ENEMY_BIT
                 | PirateGame.COLLEGE_BIT | PirateGame.COLLEGE_SENSOR_BIT
-                | PirateGame.COLLEGE_FIRE_BIT;
+                | PirateGame.COLLEGE_FIRE_BIT | PirateGame.TORNADO_BIT;
         fdef.shape = shape;
         b2body.createFixture(fdef).setUserData(this);
     }
@@ -135,9 +176,25 @@ public class Player extends Sprite {
     public void fire(OrthographicCamera camera) {
         // Fires cannon if specified delay time has passed
         if (timeFired > GameScreen.getShootingDelay()) {
-            cannonBalls.add(new CannonFire(screen, b2body, camera, 5));
+            cannonBalls.add(new CannonFire(screen, b2body, camera, cannonVelocity));
             timeFired = 0;
         }
+    }
+
+    /**
+     * Set velocity of cannon balls
+     * @param velocity The speed of the cannon ball when it is fired
+     */
+    public void setCannonVelocity(int velocity){
+        this.cannonVelocity = velocity;
+    }
+
+    /**
+     * Get velocity of cannon balls
+     * @return the speed of the cannon ball when it is fired
+     */
+    public int getCannonVelocity(){
+        return this.cannonVelocity;
     }
 
     /**

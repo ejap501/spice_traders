@@ -43,5 +43,6 @@ public abstract class Entity extends Sprite {
     /**
      * Defines contact with other objects, The only entity that is able to do so is the player ship
      */
-    public abstract void entityContact();
+    public void entityContact() {
+    }
 }

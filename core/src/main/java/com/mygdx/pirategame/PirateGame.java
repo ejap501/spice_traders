@@ -35,6 +35,7 @@ public class PirateGame extends Game {
 	public static final short ABSORPTION_HEART_BIT = 1024;
 	public static final short FASTER_SHOOTING_BIT = 2048;
 	public static final short FREEZE_ENEMY_BIT = 4096;
+	public static final short TORNADO_BIT = 8192;
 
 	public SpriteBatch batch;
 

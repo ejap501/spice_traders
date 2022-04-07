@@ -39,6 +39,7 @@ public class AttackPath implements PathManager {
 
         // limiting attempts at finding a valid attack path
         for (int i = 0; i < 10; i++) {
+        	System.out.println("attempting i = " + i);
             // generate random position for ship to go around the college
             // making the player position the origin
             Vector2 diff;
@@ -83,13 +84,13 @@ public class AttackPath implements PathManager {
                 }
             }
         }
-
+        System.out.println("reverting to previous path");
         // attack path could not be found, reverting to passive
         ship.setPathManager(previousPath);
         return null;
     }
 
-    int fireDelay = 0;
+    private int fireDelay = 0;
 
     @Override
     public void update(float dt) {
