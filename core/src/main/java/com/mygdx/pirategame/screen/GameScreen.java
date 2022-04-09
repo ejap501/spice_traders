@@ -111,6 +111,8 @@ public class GameScreen implements Screen {
     private GoldShop goldShop;
     private static Label shopLabel;
 
+    public float difficulty;
+
     /**
      * Initialises the Game Screen,
      * generates the world data and data for entities that exist upon it,
@@ -125,6 +127,9 @@ public class GameScreen implements Screen {
         camera.zoom = 0.0155f;
         viewport = new FitViewport(1280, 720, camera);
         camera.position.set(viewport.getWorldWidth() / 3, viewport.getWorldHeight() / 3, 0);
+
+        // set the difficulty of the game
+        difficulty = game.DIFFICULTY;
 
         // Initialize a hud
         hud = new Hud(game.batch);
@@ -172,24 +177,26 @@ public class GameScreen implements Screen {
             ships.addAll(getCollege(college).fleet);
         }
 
-        //Random ships
-        for (int i = 0; i < 20; i++) {
-            int[] loc = getRandomLocation();
-            //Add a ship at the random coords
-            ships.add(new EnemyShip(this, loc[0], loc[1], "college/Ships/unaligned_ship.png", null));
-        }
-
         //Random sea monsters
-        for (int i = 0; i < 7; i++) {
+        int[] loc = getRandomLocation();
+        monsters.add(new SeaMonster(this, loc[0], loc[1]));
+        /*for (int i = 0; i < 7; i++) {
             int[] loc = getRandomLocation();
             //Add a sea monster at the random coords
             monsters.add(new SeaMonster(this, loc[0], loc[1]));
+        }*/
+
+        //Random ships
+        for (int i = 0; i < 20; i++) {
+            loc = getRandomLocation();
+            //Add a ship at the random coords
+            ships.add(new EnemyShip(this, loc[0], loc[1], "college/Ships/unaligned_ship.png", null));
         }
 
         //Random coins
         Coins = new ArrayList<>();
         for (int i = 0; i < 100; i++) {
-            int[] loc = getRandomLocation();
+            loc = getRandomLocation();
             //Add a coins at the random coords
             Coins.add(new Coin(this, loc[0], loc[1]));
         }
