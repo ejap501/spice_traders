@@ -58,6 +58,12 @@ public class PirateGame extends Game {
 	public final static int HELP = 4;
 	public final static int VICTORY = 5;
 
+	// Constant for selecting difficulty
+	public final static float EASY = 1.3f;
+	public final static float NORMAL = 1f;
+	public final static float HARD = 0.7f;
+	public float DIFFICULTY = 1;
+
 
 	/**
 	 * Creates the main body of the game.
@@ -80,6 +86,19 @@ public class PirateGame extends Game {
 			song.play();
 		}
 		song.setVolume(getPreferences().getMusicVolume());
+	}
+
+	/**
+	 * Change the difficulty of the game
+	 * @param difficulty
+	 */
+	public void changeDifficulty(float difficulty) {
+		// Ensure that only easy, normal or hard can be selected
+		if (difficulty == EASY || difficulty == HARD) {
+			DIFFICULTY = difficulty;
+		} else {
+			DIFFICULTY = NORMAL;
+		}
 	}
 
 	/**

@@ -71,7 +71,8 @@ public class SeaMonster extends Enemy {
         setBounds(0, 0, 300 / PirateGame.PPM, 300 / PirateGame.PPM);
         setOrigin(90 / PirateGame.PPM, COLLISIONRADIUS / PirateGame.PPM);
 
-        damage = 5;
+        // Scale the damage that the entity takes with the difficulty
+        damage = 5 * screen.difficulty;
     }
 
     /**
