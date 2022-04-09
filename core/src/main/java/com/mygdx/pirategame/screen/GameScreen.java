@@ -178,8 +178,8 @@ public class GameScreen implements Screen {
         }
 
         //Random sea monsters
-        int[] loc = getRandomLocation();
-        monsters.add(new SeaMonster(this, loc[0], loc[1]));
+        int[] pos = getRandomLocation();
+        monsters.add(new SeaMonster(this, pos[0], pos[1]));
         /*for (int i = 0; i < 7; i++) {
             int[] loc = getRandomLocation();
             //Add a sea monster at the random coords
@@ -188,17 +188,17 @@ public class GameScreen implements Screen {
 
         //Random ships
         for (int i = 0; i < 20; i++) {
-            loc = getRandomLocation();
+            pos = getRandomLocation();
             //Add a ship at the random coords
-            ships.add(new EnemyShip(this, loc[0], loc[1], "college/Ships/unaligned_ship.png", null));
+            ships.add(new EnemyShip(this, pos[0], pos[1], "college/Ships/unaligned_ship.png", null));
         }
 
         //Random coins
         Coins = new ArrayList<>();
         for (int i = 0; i < 100; i++) {
-            loc = getRandomLocation();
+            pos = getRandomLocation();
             //Add a coins at the random coords
-            Coins.add(new Coin(this, loc[0], loc[1]));
+            Coins.add(new Coin(this, pos[0], pos[1]));
         }
 
         //Random power ups
@@ -208,9 +208,9 @@ public class GameScreen implements Screen {
         //Random tornado
         Tornados = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
-            int[] loc = getRandomLocation();
+            pos = getRandomLocation();
             //Add a tornado at the random coords
-            Tornados.add(new Tornado(this, loc[0], loc[1]));
+            Tornados.add(new Tornado(this, pos[0], pos[1]));
         }
         */
 
@@ -242,7 +242,7 @@ public class GameScreen implements Screen {
         //Random powerups
         PowerUps = new ArrayList<>();
 
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 40; i++) {
             //Add a powerup at the random coords
             int[] loc = getRandomLocation();
 
