@@ -58,7 +58,7 @@ public class College extends Enemy {
         setBounds(0,0,64 / PirateGame.PPM, 110 / PirateGame.PPM);
         setRegion(enemyCollege);
         setOrigin(32 / PirateGame.PPM,55 / PirateGame.PPM);
-        damage = 10;
+        damage = 5 * screen.difficulty;;
         cannonBalls = new Array<>();
         int ranX = 0;
         int ranY = 0;

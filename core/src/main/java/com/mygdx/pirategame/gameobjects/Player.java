@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Array;
+import com.mygdx.pirategame.Hud;
 import com.mygdx.pirategame.PirateGame;
 import com.mygdx.pirategame.gameobjects.entity.Entity;
 import com.mygdx.pirategame.gameobjects.entity.Tornado;
@@ -56,6 +57,12 @@ public class Player extends Sprite {
         
         // Sets cannonball array
         cannonBalls = new Array<>();
+        // Decrease health if playing on hard mode
+        System.out.println(screen.difficulty);
+        if (screen.difficulty < 1){
+            Hud.changeHealth(-(int) (Hud.getHealth() * screen.difficulty / 4));
+        }
+        System.out.println(Hud.getHealth());
     }
 
     /**
