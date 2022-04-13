@@ -8,7 +8,7 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.mygdx.pirategame.Hud;
 import com.mygdx.pirategame.PirateGame;
 import com.mygdx.pirategame.gameobjects.enemy.EnemyShip;
-import com.mygdx.pirategame.screen.GameScreen;
+import com.mygdx.pirategame.save.GameScreen;
 
 /**
  * Heals the player when picked up

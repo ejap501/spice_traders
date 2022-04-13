@@ -9,7 +9,7 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.mygdx.pirategame.Hud;
 import com.mygdx.pirategame.PirateGame;
 import com.mygdx.pirategame.gameobjects.Player;
-import com.mygdx.pirategame.screen.GameScreen;
+import com.mygdx.pirategame.save.GameScreen;
 
 /**
  * Coin

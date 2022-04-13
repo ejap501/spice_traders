@@ -20,7 +20,7 @@ import com.mygdx.pirategame.pathfinding.pathManager.AttackPath;
 import com.mygdx.pirategame.pathfinding.pathManager.PathManager;
 import com.mygdx.pirategame.pathfinding.pathManager.PatrolPath;
 import com.mygdx.pirategame.pathfinding.pathManager.RandomPath;
-import com.mygdx.pirategame.screen.GameScreen;
+import com.mygdx.pirategame.save.GameScreen;
 
 import java.util.ArrayList;
 import java.util.List;

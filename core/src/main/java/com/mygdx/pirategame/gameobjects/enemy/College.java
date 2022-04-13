@@ -11,7 +11,7 @@ import com.badlogic.gdx.utils.Array;
 import com.mygdx.pirategame.Hud;
 import com.mygdx.pirategame.PirateGame;
 import com.mygdx.pirategame.gameobjects.CollegeFire;
-import com.mygdx.pirategame.screen.GameScreen;
+import com.mygdx.pirategame.save.GameScreen;
 import com.mygdx.pirategame.world.AvailableSpawn;
 import java.util.ArrayList;
 import java.util.Random;

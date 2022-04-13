@@ -3,7 +3,7 @@ package com.mygdx.pirategame.gameobjects.entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.mygdx.pirategame.screen.GameScreen;
+import com.mygdx.pirategame.save.GameScreen;
 
 public abstract class PowerUp extends Entity {
     private Sound pickupSound;

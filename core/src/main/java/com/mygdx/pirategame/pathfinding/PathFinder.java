@@ -2,7 +2,7 @@ package com.mygdx.pirategame.pathfinding;
 
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Vector2;
-import com.mygdx.pirategame.screen.GameScreen;
+import com.mygdx.pirategame.save.GameScreen;
 
 import java.util.*;
 
