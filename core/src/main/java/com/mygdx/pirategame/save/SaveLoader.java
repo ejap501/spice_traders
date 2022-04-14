@@ -1,5 +1,6 @@
 package com.mygdx.pirategame.save;
 
+import com.mygdx.pirategame.Hud;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -33,9 +34,15 @@ public abstract class SaveLoader {
 
             Element root = document.createElement("game");
 
+            // saving player information
             Element player = document.createElement("player");
             screen.getPlayer().save(document, player);
             root.appendChild(player);
+
+            // saving points / gold
+            Element hud = document.createElement("hud");
+            Hud.save(document, hud);
+            root.appendChild(hud);
 
 
 

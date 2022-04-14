@@ -63,8 +63,8 @@ public class Player extends Sprite {
      */
     public Player(GameScreen screen, Element element) {
         this(screen);
-        setX(Float.parseFloat(element.getElementsByTagName("x").item(0).getTextContent()));
-        setY(Float.parseFloat(element.getElementsByTagName("y").item(0).getTextContent()));
+        setX(Float.parseFloat(element.getElementsByTagName("x").item(0).getTextContent()) * PirateGame.PPM);
+        setY(Float.parseFloat(element.getElementsByTagName("y").item(0).getTextContent()) * PirateGame.PPM);
         b2body.setTransform(getX()/PirateGame.PPM, getY()/PirateGame.PPM, 0);
     }
 
