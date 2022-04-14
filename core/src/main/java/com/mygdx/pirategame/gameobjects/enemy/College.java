@@ -33,7 +33,7 @@ public class College extends Enemy {
     private AvailableSpawn noSpawn;
     public ArrayList<EnemyShip> fleet = new ArrayList<>();
     private Sound cannonballHitSound;
-    private CollegeMetadata collegeMeta;
+    private final CollegeMetadata collegeMeta;
     private String flag;
     private String ship;
 
