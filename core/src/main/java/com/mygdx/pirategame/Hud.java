@@ -12,6 +12,8 @@ import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.pirategame.screen.SkillTreeScreen;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 /**
  * Hud
@@ -422,6 +424,41 @@ public class Hud implements Disposable {
 
     public static Integer getPoints() {
         return score;
+    }
+
+    /**
+     * Used to save the values for the hud from save
+     * @param document The document mananging the save
+     * @param hud The elemnent created for the hud
+     */
+    public static void save(Document document, Element hud) {
+        Element gold = document.createElement("gold");
+        gold.appendChild(document.createTextNode(Integer.toString(coins)));
+        hud.appendChild(gold);
+
+        Element score = document.createElement("score");
+        score.appendChild(document.createTextNode(Integer.toString(Hud.score)));
+        hud.appendChild(score);
+
+        Element health = document.createElement("health");
+        health.appendChild(document.createTextNode(Integer.toString(Hud.health)));
+        hud.appendChild(health);
+
+        Element coinMulti = document.createElement("coinMulti");
+        coinMulti.appendChild(document.createTextNode(Integer.toString(Hud.coinMulti)));
+        hud.appendChild(coinMulti);
+    }
+
+    /**
+     * Used to load the values for the hud from save
+     * @param hud The element storing the information
+     */
+    public static void load(Element hud) {
+        setCoins(Integer.parseInt(hud.getElementsByTagName("gold").item(0).getTextContent()));
+        health = (Integer.parseInt(hud.getElementsByTagName("health").item(0).getTextContent()));
+        // changing health so the health displayed to the player is accurate
+        changeHealth(0);
+        coinMulti = (Integer.parseInt(hud.getElementsByTagName("coinMulti").item(0).getTextContent()));
     }
 
     /**

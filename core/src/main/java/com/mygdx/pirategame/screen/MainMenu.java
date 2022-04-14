@@ -3,7 +3,6 @@ package com.mygdx.pirategame.screen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -14,6 +13,11 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.Scaling;
 import com.mygdx.pirategame.PirateGame;
+import com.mygdx.pirategame.save.GameScreen;
+import com.mygdx.pirategame.save.XmlSaveLoader;
+
+import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  * Main menu is the first screen the player sees. Allows them to navigate where they want to go to
@@ -61,6 +65,7 @@ public class MainMenu implements Screen {
 
         //create buttons
         TextButton newGame = new TextButton("New Game", skin);
+        TextButton loadGame = new TextButton("Load Game", skin);
         TextButton help = new TextButton("Help", skin);
         TextButton options = new TextButton("Options", skin);
         TextButton exit = new TextButton("Exit", skin);
@@ -68,6 +73,8 @@ public class MainMenu implements Screen {
         //add buttons to table
         table.add(newGame).fillX().uniformX();
         table.row().pad(10, 0, 10, 0);
+        table.add(loadGame).fillX().uniformX();
+        table.row();
         table.add(help).fillX().uniformX();
         table.row();
         table.add(options).fillX().uniformX();
@@ -83,6 +90,22 @@ public class MainMenu implements Screen {
                 parent.setScreen(new DifficultyScreen(parent));
             }
         });
+
+        // load a game
+        loadGame.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                JFileChooser fc = new JFileChooser();
+                FileNameExtensionFilter filter = new FileNameExtensionFilter("Game File (.spice)", "spice");
+                fc.setFileFilter(filter);
+                int returnVal = fc.showOpenDialog(null);
+                if(returnVal == JFileChooser.APPROVE_OPTION && fc.getSelectedFile() != null){
+                    parent.changeScreen(new GameScreen(parent, new XmlSaveLoader(fc.getSelectedFile())));
+                }
+
+            }
+        });
+
         //Help Screen
         help.addListener(new ChangeListener() {
             @Override

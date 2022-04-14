@@ -1,10 +1,8 @@
 package com.mygdx.pirategame.pathfinding.pathManager;
 
-import com.badlogic.gdx.math.Vector2;
-import com.mygdx.pirategame.gameobjects.enemy.Enemy;
 import com.mygdx.pirategame.gameobjects.enemy.EnemyShip;
 import com.mygdx.pirategame.gameobjects.enemy.SeaMonster;
-import com.mygdx.pirategame.screen.GameScreen;
+import com.mygdx.pirategame.save.GameScreen;
 
 /**
  * Superclass used for all pathing managers which are in a passive state waiting for a ship to come into range to attack

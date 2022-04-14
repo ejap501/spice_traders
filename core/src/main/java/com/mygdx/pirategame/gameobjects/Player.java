@@ -1,6 +1,5 @@
 package com.mygdx.pirategame.gameobjects;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -12,9 +11,9 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.pirategame.Hud;
 import com.mygdx.pirategame.PirateGame;
-import com.mygdx.pirategame.gameobjects.entity.Entity;
-import com.mygdx.pirategame.gameobjects.entity.Tornado;
-import com.mygdx.pirategame.screen.GameScreen;
+import com.mygdx.pirategame.save.GameScreen;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 /**
  * Creates the class of the player. Everything that involves actions coming from the player boat
@@ -63,6 +62,17 @@ public class Player extends Sprite {
             Hud.changeHealth(-(int) (Hud.getHealth() * screen.difficulty / 4));
         }
         System.out.println(Hud.getHealth());
+    }
+
+    /**
+     * used to load player information from file
+      * @param element The element that stores the player information
+     */
+    public Player(GameScreen screen, Element element) {
+        this(screen);
+        setX(Float.parseFloat(element.getElementsByTagName("x").item(0).getTextContent()) * PirateGame.PPM);
+        setY(Float.parseFloat(element.getElementsByTagName("y").item(0).getTextContent()) * PirateGame.PPM);
+        b2body.setTransform(getX()/PirateGame.PPM, getY()/PirateGame.PPM, 0);
     }
 
     /**
@@ -149,7 +159,7 @@ public class Player extends Sprite {
     private void definePlayer() {
         // Defines a players position
         BodyDef bdef = new BodyDef();
-        bdef.position.set(1200  / PirateGame.PPM, 2500 / PirateGame.PPM); // Default Pos: 1800,2500
+        bdef.position.set(1200  / PirateGame.PPM, 2500 / PirateGame.PPM); // Default Pos: 1200,2500
         bdef.type = BodyDef.BodyType.DynamicBody;
         // linear damping slows the player if no movement key is pressed
         bdef.linearDamping = 1f;
@@ -215,5 +225,19 @@ public class Player extends Sprite {
         super.draw(batch);
         for(CannonFire ball : cannonBalls)
             ball.draw(batch);
+    }
+
+    /**
+     * Used to save the player information into the given element
+     * @param element The given element
+     */
+    public void save(Document document, Element element) {
+        Element xCoord = document.createElement("x");
+        xCoord.appendChild(document.createTextNode(Float.toString(getX())));
+        element.appendChild(xCoord);
+
+        Element yCoord = document.createElement("y");
+        yCoord.appendChild(document.createTextNode(Float.toString(getY())));
+        element.appendChild(yCoord);
     }
 }

@@ -11,7 +11,7 @@ import com.badlogic.gdx.utils.Array;
 import com.mygdx.pirategame.Hud;
 import com.mygdx.pirategame.PirateGame;
 import com.mygdx.pirategame.gameobjects.CollegeFire;
-import com.mygdx.pirategame.screen.GameScreen;
+import com.mygdx.pirategame.save.GameScreen;
 import com.mygdx.pirategame.world.AvailableSpawn;
 import java.util.ArrayList;
 import java.util.Random;
@@ -33,7 +33,7 @@ public class College extends Enemy {
     private AvailableSpawn noSpawn;
     public ArrayList<EnemyShip> fleet = new ArrayList<>();
     private Sound cannonballHitSound;
-    private CollegeMetadata collegeMeta;
+    private final CollegeMetadata collegeMeta;
     private String flag;
     private String ship;
 

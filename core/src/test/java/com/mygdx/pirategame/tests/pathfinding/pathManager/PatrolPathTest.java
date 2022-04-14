@@ -16,7 +16,7 @@ import com.mygdx.pirategame.gameobjects.enemy.CollegeMetadata;
 import com.mygdx.pirategame.gameobjects.enemy.EnemyShip;
 import com.mygdx.pirategame.pathfinding.PathFinder;
 import com.mygdx.pirategame.pathfinding.pathManager.PatrolPath;
-import com.mygdx.pirategame.screen.GameScreen;
+import com.mygdx.pirategame.save.GameScreen;
 import com.mygdx.pirategame.tests.FakeGL20;
 
 /**

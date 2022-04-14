@@ -3,10 +3,7 @@ package com.mygdx.pirategame.screen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -18,17 +15,16 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.mygdx.pirategame.Hud;
 import com.mygdx.pirategame.PirateGame;
 import com.mygdx.pirategame.gameobjects.enemy.College;
-import com.mygdx.pirategame.gameobjects.enemy.CollegeMetadata;
 import com.mygdx.pirategame.gameobjects.enemy.EnemyShip;
+import com.mygdx.pirategame.save.GameScreen;
 
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
 
-import static com.mygdx.pirategame.screen.GameScreen.GAME_RUNNING;
+import static com.mygdx.pirategame.save.GameScreen.GAME_RUNNING;
 import static com.badlogic.gdx.math.MathUtils.ceil;
-import static com.mygdx.pirategame.screen.GameScreen.game;
 
 
 public class GoldShop implements Screen {

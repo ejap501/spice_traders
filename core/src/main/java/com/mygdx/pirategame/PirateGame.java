@@ -6,8 +6,8 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-import com.mygdx.pirategame.gameobjects.entity.CoinMagnet;
-import com.mygdx.pirategame.gameobjects.entity.SpeedBoost;
+import com.mygdx.pirategame.save.GameScreen;
+import com.mygdx.pirategame.save.NewGameSaveLoader;
 import com.mygdx.pirategame.screen.*;
 
 
@@ -115,7 +115,7 @@ public class PirateGame extends Game {
 				break;
 
 			case GAME:
-				if (gameScreen == null) gameScreen = new GameScreen(this);
+				if (gameScreen == null) gameScreen = new GameScreen(this, new NewGameSaveLoader());
 				if (skillTreeScreen == null) skillTreeScreen = new SkillTreeScreen(this);
 				this.setScreen(gameScreen);
 				break;
@@ -140,6 +140,10 @@ public class PirateGame extends Game {
 				this.setScreen(victoryScreen);
 				break;
 		}//
+	}
+
+	public void changeScreen(GameScreen screen){
+		this.setScreen(screen);
 	}
 
 	/**

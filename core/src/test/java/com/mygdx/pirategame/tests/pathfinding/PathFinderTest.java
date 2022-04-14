@@ -6,7 +6,7 @@ import com.mygdx.pirategame.MockClass;
 import com.mygdx.pirategame.PirateGameTest;
 import com.mygdx.pirategame.pathfinding.Checkpoint;
 import com.mygdx.pirategame.pathfinding.PathFinder;
-import com.mygdx.pirategame.screen.GameScreen;
+import com.mygdx.pirategame.save.GameScreen;
 import com.mygdx.pirategame.tests.FakeGL20;
 import org.junit.Assert;
 import org.junit.BeforeClass;

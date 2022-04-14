@@ -1,4 +1,4 @@
-package com.mygdx.pirategame.screen;
+package com.mygdx.pirategame.save;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -38,10 +38,15 @@ import com.mygdx.pirategame.pathfinding.PathFinder;
 
 import com.mygdx.pirategame.gameobjects.entity.*;
 
+import com.mygdx.pirategame.screen.GoldShop;
+import com.mygdx.pirategame.screen.OptionsScreen;
 import com.mygdx.pirategame.world.AvailableSpawn;
 import com.mygdx.pirategame.world.WorldContactListener;
 import com.mygdx.pirategame.world.WorldCreator;
 
+import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import java.io.File;
 import java.util.*;
 
 
@@ -78,7 +83,7 @@ public class GameScreen implements Screen {
     private final World world;
     private final Box2DDebugRenderer b2dr;
 
-    private final Player player;
+    Player player;
     private static HashMap<CollegeMetadata, College> colleges = new HashMap<>();
     private static ArrayList<EnemyShip> ships = new ArrayList<>();
     private static ArrayList<SeaMonster> monsters = new ArrayList<>();
@@ -110,6 +115,7 @@ public class GameScreen implements Screen {
 
     private GoldShop goldShop;
     private static Label shopLabel;
+    private final SaveLoader loadManager;
 
     public float difficulty;
 
@@ -119,9 +125,10 @@ public class GameScreen implements Screen {
      *
      * @param game passes game data to current class,
      */
-    public GameScreen(PirateGame game) {
+    public GameScreen(PirateGame game, SaveLoader loadManager) {
         gameStatus = GAME_RUNNING;
         GameScreen.game = game;
+        this.loadManager = loadManager;
         // Initialising camera and extendable viewport for viewing game
         camera = new OrthographicCamera();
         camera.zoom = 0.0155f;
@@ -141,7 +148,6 @@ public class GameScreen implements Screen {
         } else {
             b2dr = null;
         }
-        player = new Player(this);
 
         // making the Tiled tmx file render as a map
         maploader = new TmxMapLoader();
@@ -161,48 +167,11 @@ public class GameScreen implements Screen {
         // Spawning enemy ship and coin. x and y is spawn location
         colleges = new HashMap<>();
 
-        // Alcuin college
-        colleges.put(CollegeMetadata.ALCUIN, new College(this, CollegeMetadata.ALCUIN, 6, invalidSpawn));
-        // Anne Lister college
-        colleges.put(CollegeMetadata.ANNELISTER, new College(this, CollegeMetadata.ANNELISTER, 8, invalidSpawn));
-        // Constantine college
-        colleges.put(CollegeMetadata.CONSTANTINE, new College(this, CollegeMetadata.CONSTANTINE, 8, invalidSpawn));
-        // Goodricke college
-        colleges.put(CollegeMetadata.GOODRICKE, new College(this, CollegeMetadata.GOODRICKE, 8, invalidSpawn));
-
         ships = new ArrayList<>();
         monsters = new ArrayList<>();
-
-        for (CollegeMetadata college : CollegeMetadata.values()) {
-            ships.addAll(getCollege(college).fleet);
-        }
-
-        //Random sea monsters
-        int[] pos = getRandomLocation();
-        monsters.add(new SeaMonster(this, pos[0], pos[1]));
-        /*for (int i = 0; i < 7; i++) {
-            int[] loc = getRandomLocation();
-            //Add a sea monster at the random coords
-            monsters.add(new SeaMonster(this, loc[0], loc[1]));
-        }*/
-
-        //Random ships
-        for (int i = 0; i < 20; i++) {
-            pos = getRandomLocation();
-            //Add a ship at the random coords
-            ships.add(new EnemyShip(this, pos[0], pos[1], "college/Ships/unaligned_ship.png", null));
-        }
-
-        //Random coins
         Coins = new ArrayList<>();
-        for (int i = 0; i < 100; i++) {
-            pos = getRandomLocation();
-            //Add a coins at the random coords
-            Coins.add(new Coin(this, pos[0], pos[1]));
-        }
 
-        //Random power ups
-        addPowerUps();
+        loadManager.load(this);
 
         /*
         //Random tornado
@@ -297,6 +266,7 @@ public class GameScreen implements Screen {
         //PAUSE MENU BUTTONS
         final TextButton start = new TextButton("Resume", skin);
         final TextButton options = new TextButton("Options", skin);
+        final TextButton save = new TextButton("Save", skin);
         TextButton exit = new TextButton("Exit", skin);
 
         //Create main table and pause tables
@@ -325,6 +295,8 @@ public class GameScreen implements Screen {
         pauseTable.add(start).fillX().uniformX();
         pauseTable.row().pad(20, 0, 10, 0);
         pauseTable.add(skill).fillX().uniformX();
+        pauseTable.row().pad(20, 0, 10, 0);
+        pauseTable.add(save).fillX().uniformX();
         pauseTable.row().pad(20, 0, 10, 0);
         pauseTable.add(options).fillX().uniformX();
         pauseTable.row().pad(20, 0, 10, 0);
@@ -364,6 +336,24 @@ public class GameScreen implements Screen {
                                 }
                             }
         );
+        save.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+
+                JFileChooser fc = new JFileChooser();
+                FileNameExtensionFilter filter = new FileNameExtensionFilter("Game File (.spice)", "spice");
+                fc.setFileFilter(filter);
+                int returnVal = fc.showSaveDialog(null);
+                if(returnVal == JFileChooser.APPROVE_OPTION && fc.getSelectedFile() != null){
+                    File f = fc.getSelectedFile();
+                    if(!f.getPath().endsWith(".spice")){
+                        f = new File(f.getPath() + ".spice");
+                    }
+                    loadManager.save(GameScreen.this, f);
+                }
+
+            }
+        });
         exit.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -1003,5 +993,9 @@ public class GameScreen implements Screen {
      */
     public Hud getHud(){
         return hud;
+    }
+
+    public List<SeaMonster> getMonsters() {
+        return monsters;
     }
 }

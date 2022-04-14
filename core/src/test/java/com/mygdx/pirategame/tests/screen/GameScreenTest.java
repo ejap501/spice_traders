@@ -1,6 +1,6 @@
 package com.mygdx.pirategame.tests.screen;
 
-import com.mygdx.pirategame.screen.GameScreen;
+import com.mygdx.pirategame.save.GameScreen;
 import org.junit.Test;
 
 import static org.junit.Assert.assertFalse;
