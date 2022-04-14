@@ -117,6 +117,8 @@ public class GameScreen implements Screen {
     private static Label shopLabel;
     private final SaveLoader loadManager;
 
+    public float difficulty;
+
     /**
      * Initialises the Game Screen,
      * generates the world data and data for entities that exist upon it,
@@ -132,6 +134,9 @@ public class GameScreen implements Screen {
         camera.zoom = 0.0155f;
         viewport = new FitViewport(1280, 720, camera);
         camera.position.set(viewport.getWorldWidth() / 3, viewport.getWorldHeight() / 3, 0);
+
+        // set the difficulty of the game
+        difficulty = game.DIFFICULTY;
 
         // Initialize a hud
         hud = new Hud(game.batch);
@@ -172,9 +177,9 @@ public class GameScreen implements Screen {
         //Random tornado
         Tornados = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
-            int[] loc = getRandomLocation();
+            pos = getRandomLocation();
             //Add a tornado at the random coords
-            Tornados.add(new Tornado(this, loc[0], loc[1]));
+            Tornados.add(new Tornado(this, pos[0], pos[1]));
         }
         */
 
@@ -206,7 +211,7 @@ public class GameScreen implements Screen {
         //Random powerups
         PowerUps = new ArrayList<>();
 
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 40; i++) {
             //Add a powerup at the random coords
             int[] loc = getRandomLocation();
 

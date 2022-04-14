@@ -21,7 +21,7 @@ public abstract class Enemy extends Sprite {
     public boolean setToDestroy;
     public boolean destroyed;
     public int health;
-    public int damage;
+    public float damage;
     protected HealthBar bar;
 
     /**

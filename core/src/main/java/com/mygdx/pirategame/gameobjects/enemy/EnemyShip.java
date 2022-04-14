@@ -80,13 +80,14 @@ public class EnemyShip extends Enemy {
         setRegion(enemyShip);
         setOrigin(32 / PirateGame.PPM, COLLISIONRADIUS / PirateGame.PPM);
 
-        damage = 20;
+        // Scale the damage that the entity takes with the difficulty
+        damage = 20 * screen.difficulty;
+
         if (collegeMeta != null) {
             this.pathManager = new PatrolPath(this, screen);
         } else {
             this.pathManager = new RandomPath(this, screen);
         }
-
     }
 
     /**
@@ -99,14 +100,11 @@ public class EnemyShip extends Enemy {
             // destination will be regenerated next update
             return;
         }
-        int tilewidth = screen.getTileWidth();
         path = screen.getPathFinder().getPath((b2body.getPosition().x * PirateGame.PPM), (b2body.getPosition().y * PirateGame.PPM), destination.x, destination.y, COLLISIONRADIUS + COLLISIONOFFSET, COLLISIONRADIUS + COLLISIONOFFSET);
         if (path != null && path.size() > 1) {
             // removing the start node from the path as ship is already at it
             path.remove(0);
-
         }
-
     }
 
     /**
@@ -283,6 +281,7 @@ public class EnemyShip extends Enemy {
         if (GameScreen.game.getPreferences().isEffectsEnabled()) {
             hit.play(GameScreen.game.getPreferences().getEffectsVolume());
         }
+        System.out.println(damage);
         //Deal with the damage
         health -= damage;
         bar.changeHealth(damage);
