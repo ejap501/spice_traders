@@ -46,11 +46,8 @@ public class NewGameSaveLoader extends  SaveLoader{
         }
 
         //Random sea monsters
-        for (int i = 0; i < 7; i++) {
-            int[] loc = screen.getRandomLocation();
-            //Add a sea monster at the random coords
-            screen.getMonsters().add(new SeaMonster(screen, loc[0], loc[1]));
-        }
+        int[] pos = screen.getRandomLocation();
+        screen.getMonsters().add(new SeaMonster(screen, pos[0], pos[1]));
 
         //Random coins
         for (int i = 0; i < 100; i++) {
